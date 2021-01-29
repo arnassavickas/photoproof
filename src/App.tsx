@@ -6,10 +6,10 @@ import NewCollection from './components/NewCollection';
 import Settings from './components/Settings';
 import SignIn from './components/SignIn';
 import firebase from 'firebase/app';
-import { getCollections } from './firebase';
 
 function App() {
   const [user, setUser] = useState<null | string>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(function (user) {
@@ -18,8 +18,13 @@ function App() {
       } else {
         setUser(null);
       }
+      setLoading(false);
     });
   }, []);
+
+  if (loading) {
+    return <div>loading...</div>;
+  }
 
   return (
     <div>
@@ -27,10 +32,10 @@ function App() {
       <div>{user}</div>
       <Router>
         <Switch>
-          {user ? <Route path='/settings' render={() => <Settings />} /> : null}
-          {user ? <Route path='/new' render={() => <NewCollection />} /> : null}
-          {user ? <Route path='/' render={() => <Dashboard />} /> : null}
-          <Route path='/' render={() => <SignIn />} />
+          {!user ? <Route path='/' render={() => <SignIn />} /> : null}
+          <Route path='/settings' render={() => <Settings />} />
+          <Route path='/new' render={() => <NewCollection />} />
+          <Route path='/' render={() => <Dashboard />} />
         </Switch>
       </Router>
     </div>

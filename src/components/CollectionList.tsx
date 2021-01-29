@@ -29,10 +29,9 @@ const CollectionList: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {collections.map((collection) => {
-              console.log('map');
+            {collections.map((collection, index) => {
               return (
-                <tr key={collection.title}>
+                <tr key={collection.title + index}>
                   <td>
                     <img
                       src={collection.photos[0].cloudUrl}
