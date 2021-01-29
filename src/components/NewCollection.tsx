@@ -34,7 +34,7 @@ const NewCollection: React.FC = () => {
 
   return (
     <div>
-      <Link to='/'>
+      <Link to='/dashboard'>
         <button>cancel</button>
       </Link>
       <h2>new collection</h2>
