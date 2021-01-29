@@ -21,7 +21,7 @@ export const firestore = firebase.firestore();
 export const storage = firebase.storage();
 
 export const generateNewCollection = async (
-  data: Omit<Collection, 'status' | 'finalComment'>,
+  data: Omit<Collection, 'status' | 'finalComment' | 'photos'>,
   files: FileList
 ) => {
   if (!data || !files) return;
@@ -83,4 +83,39 @@ const uploadPhotos = async (id: string, files: FileList) => {
     });
   }
   return photosArray;
+};
+
+export const getCollections = async () => {
+  console.log('getting collections');
+  const collectionsArray: Collection[] = [];
+  const collections = await firestore.collection('collections').get();
+  for (const collection of collections.docs) {
+    const photos = await firestore
+      .collection('collections')
+      .doc(collection.id)
+      .collection('photos')
+      .get();
+    const photosArray: Photo[] = [];
+    photos.forEach((photo) => {
+      const photoObj = {
+        cloudUrl: photo.data().cloudUrl,
+        filename: photo.data().filename,
+        selected: photo.data().selected,
+        comment: photo.data().comment,
+      };
+      photosArray.push(photoObj);
+    });
+    console.log(collection.data());
+    const collectionObj = {
+      title: collection.data().title,
+      minSelect: collection.data().minSelect,
+      maxSelect: collection.data().maxSelect,
+      allowComments: collection.data().allowComments,
+      status: collection.data().status,
+      finalComment: collection.data().finalComment,
+      photos: photosArray,
+    };
+    collectionsArray.push(collectionObj);
+  }
+  return collectionsArray;
 };

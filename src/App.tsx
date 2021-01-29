@@ -6,6 +6,7 @@ import NewCollection from './components/NewCollection';
 import Settings from './components/Settings';
 import SignIn from './components/SignIn';
 import firebase from 'firebase/app';
+import { getCollections } from './firebase';
 
 function App() {
   const [user, setUser] = useState<null | string>(null);

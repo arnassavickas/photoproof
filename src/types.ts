@@ -5,6 +5,7 @@ export interface Collection {
   allowComments: boolean;
   status: 'editing' | 'selecting' | 'confirmed';
   finalComment: string;
+  photos: Photo[];
 }
 
 export type SelectionGoal = {

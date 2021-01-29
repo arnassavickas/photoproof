@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import CollectionList from './CollectionList';
-import { collections } from '../tempData/tempData';
-import { auth } from '../firebase';
+import { auth, getCollections } from '../firebase';
+import { Collection } from '../types';
 
 const Dashboard: React.FC = () => {
   const handleLogout = () => {
@@ -24,7 +24,7 @@ const Dashboard: React.FC = () => {
           <button>Create New Collection</button>
         </Link>
       </div>
-      <CollectionList collections={collections} />
+      <CollectionList/>
     </div>
   );
 };
