@@ -3,7 +3,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { makeId } from './utils/makeId';
-import { Collection } from './types';
+import { Collection, Photo } from './types';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDHmQizp773R-suNhqIN1be1of5CDmZfeA',
@@ -19,25 +19,6 @@ firebase.initializeApp(firebaseConfig);
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 export const storage = firebase.storage();
-
-export const updateUserDocument = async (
-  uid: string,
-  newData?: {
-    photoURL?: string;
-    displayName?: string;
-    email?: string;
-  }
-) => {
-  if (!uid) return null;
-  try {
-    const userDocument = firestore.doc(`users/${uid}`);
-    console.log(await userDocument.get());
-    await userDocument.update({ ...newData });
-    console.log('update successful');
-  } catch (err) {
-    console.error('error updating user', err);
-  }
-};
 
 export const generateNewCollection = async (
   data: Omit<Collection, 'status' | 'finalComment'>,
@@ -67,16 +48,15 @@ export const generateNewCollection = async (
     console.error('error creating collection document', err);
     return;
   }
+
   const photosRef = collectionRef.collection('photos');
   const batch = firestore.batch();
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i];
-    batch.set(photosRef.doc(), {
-      fileName: file.name,
-      cloudUrl: 'TODO',
-      selected: false,
-      comment: '',
-    });
+
+  const photos = await uploadPhotos(id, files);
+
+  for (let i = 0; i < photos.length; i++) {
+    const photo = photos[i];
+    batch.set(photosRef.doc(), photo);
   }
   try {
     await batch.commit();
@@ -85,24 +65,22 @@ export const generateNewCollection = async (
     return;
   }
   return;
-
-  //return getCollectionDocument(id);
 };
 
-const getCollectionDocument = async (uid: string) => {
-  if (!uid) return null;
-  try {
-    const userDocument = await firestore.doc(`users/${uid}`).get();
-    const documentData = userDocument.data();
-    if (documentData) {
-      return {
-        uid,
-        photoURL: documentData.photoURL,
-        displayName: documentData.displayName,
-        email: documentData.email,
-      };
-    }
-  } catch (err) {
-    console.error('error fetching user', err);
+const uploadPhotos = async (id: string, files: FileList) => {
+  const photosArray: Photo[] = [];
+  for (let i = 0; i < files.length; i++) {
+    console.log('fileNumber :>> ', i);
+    console.log(files[i]);
+    const storageRef = storage.ref(`${id}/${files[i].name}`);
+    const uploadTask = await storageRef.put(files[i]);
+    const downloadUrl = await uploadTask.ref.getDownloadURL();
+    photosArray.push({
+      filename: files[i].name,
+      cloudUrl: downloadUrl,
+      selected: false,
+      comment: '',
+    });
   }
+  return photosArray;
 };

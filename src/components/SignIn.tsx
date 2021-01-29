@@ -17,7 +17,6 @@ const SignIn = () => {
 
     try {
       await auth.signInWithEmailAndPassword(email, password);
-      history.push('/dashboard');
     } catch (err) {
       setError('error signin in with password and email');
       console.error('error signin in with password and email', err);

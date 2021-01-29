@@ -8,14 +8,14 @@ import SignIn from './components/SignIn';
 import firebase from 'firebase/app';
 
 function App() {
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState<null | string>(null);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
-        setUser(JSON.stringify(user.uid));
+        setUser(user.uid);
       } else {
-        // No user is signed in.
+        setUser(null);
       }
     });
   }, []);
@@ -26,11 +26,10 @@ function App() {
       <div>{user}</div>
       <Router>
         <Switch>
-          <Route path='/settings' render={() => <Settings />} />
-          <Route path='/new' render={() => <NewCollection />} />
-          <Route path='/dashboard' render={() => <Dashboard />} />
-          <Route path='/login' render={() => <SignIn />} />
-          <Route path='/' render={() => <div>hi</div>} />
+          {user ? <Route path='/settings' render={() => <Settings />} /> : null}
+          {user ? <Route path='/new' render={() => <NewCollection />} /> : null}
+          {user ? <Route path='/' render={() => <Dashboard />} /> : null}
+          <Route path='/' render={() => <SignIn />} />
         </Switch>
       </Router>
     </div>
