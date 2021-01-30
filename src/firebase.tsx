@@ -4,6 +4,7 @@ import 'firebase/firestore';
 import 'firebase/storage';
 import { makeId } from './utils/makeId';
 import { Collection, Photo } from './types';
+import { cpuUsage } from 'process';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDHmQizp773R-suNhqIN1be1of5CDmZfeA',
@@ -68,7 +69,7 @@ export const generateNewCollection = async (
 };
 
 const uploadPhotos = async (id: string, files: FileList) => {
-  const photosArray: Photo[] = [];
+  const photosArray: Omit<Photo, 'id'>[] = [];
   for (let i = 0; i < files.length; i++) {
     console.log('fileNumber :>> ', i);
     console.log(files[i]);
@@ -98,6 +99,7 @@ export const getCollections = async () => {
     const photosArray: Photo[] = [];
     photos.forEach((photo) => {
       const photoObj = {
+        id: photo.id,
         cloudUrl: photo.data().cloudUrl,
         filename: photo.data().filename,
         selected: photo.data().selected,
@@ -118,4 +120,57 @@ export const getCollections = async () => {
     collectionsArray.push(collectionObj);
   }
   return collectionsArray;
+};
+
+export const getSingleCollection = async (id: string) => {
+  console.log('getting single collection');
+  try {
+    const collection = await firestore.collection('collections').doc(id).get();
+    const photos = await firestore
+      .collection('collections')
+      .doc(id)
+      .collection('photos')
+      .get();
+    const photosArray: Photo[] = [];
+    photos.forEach((photo) => {
+      const photoObj = {
+        id: photo.id,
+        cloudUrl: photo.data().cloudUrl,
+        filename: photo.data().filename,
+        selected: photo.data().selected,
+        comment: photo.data().comment,
+      };
+      photosArray.push(photoObj);
+    });
+
+    const collectionObj = {
+      title: collection.data()?.title,
+      minSelect: collection.data()?.minSelect,
+      maxSelect: collection.data()?.maxSelect,
+      allowComments: collection.data()?.allowComments,
+      status: collection.data()?.status,
+      finalComment: collection.data()?.finalComment,
+      photos: photosArray,
+    };
+    return collectionObj;
+  } catch (err) {
+    throw new Error('failed getting single collection');
+  }
+};
+
+export const updatePhotoSelection = async (
+  collectionId: string,
+  photoId: string,
+  selected: boolean
+) => {
+  const photoRef = firestore
+    .collection('collections')
+    .doc(collectionId)
+    .collection('photos')
+    .doc(photoId);
+  try {
+    await photoRef.update({ selected });
+  } catch (err) {
+    throw new Error('failed updating database');
+  }
 };
