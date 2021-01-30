@@ -7,7 +7,7 @@ const NewCollection: React.FC = () => {
   const [minSelect, setMinSelect] = useState({ required: false, goal: 0 });
   const [maxSelect, setMaxSelect] = useState({ required: false, goal: 0 });
   const [title, setTitle] = useState('');
-  const [allowComments] = useState(false);
+  const [allowComments, setAllowComments] = useState(false);
 
   const handleFileSelect = (e: { target: HTMLInputElement }) => {
     if (!e || !e.target || !e.target.files) {
@@ -25,13 +25,16 @@ const NewCollection: React.FC = () => {
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
-  const toggleMinSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAllowCommentsChange = () => {
+    setAllowComments(!allowComments);
+  };
+  const toggleMinSelect = () => {
     setMinSelect({
       goal: minSelect.goal > maxSelect.goal ? maxSelect.goal : minSelect.goal,
       required: !minSelect.required,
     });
   };
-  const toggleMaxSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const toggleMaxSelect = () => {
     console.log('toggle max');
     setMaxSelect({
       goal: minSelect.goal > maxSelect.goal ? minSelect.goal : maxSelect.goal,
@@ -108,7 +111,8 @@ const NewCollection: React.FC = () => {
           add watermark<input type='checkbox'></input>
         </div>
         <div>
-          allow comments<input type='checkbox'></input>
+          allow comments
+          <input type='checkbox' onChange={handleAllowCommentsChange}></input>
         </div>
         <div>selection goals</div>
         <div>
