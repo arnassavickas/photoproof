@@ -32,6 +32,7 @@ const NewCollection: React.FC = () => {
     });
   };
   const toggleMaxSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('toggle max');
     setMaxSelect({
       goal: minSelect.goal > maxSelect.goal ? minSelect.goal : maxSelect.goal,
       required: !maxSelect.required,
@@ -49,12 +50,12 @@ const NewCollection: React.FC = () => {
   };
 
   const onMinBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (Number(e.target.value) > maxSelect.goal) {
+    if (Number(e.target.value) > maxSelect.goal && maxSelect.required) {
       setMinSelect({ ...minSelect, goal: maxSelect.goal });
     }
   };
   const onMaxBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (Number(e.target.value) < minSelect.goal) {
+    if (Number(e.target.value) < minSelect.goal && minSelect.required) {
       setMaxSelect({ ...maxSelect, goal: minSelect.goal });
     }
   };
@@ -74,10 +75,10 @@ const NewCollection: React.FC = () => {
     if (files) {
       generateNewCollection(
         {
-          title: 'new title',
-          minSelect: { required: true, goal: 3 },
-          maxSelect: { required: false, goal: 0 },
-          allowComments: true,
+          title,
+          minSelect,
+          maxSelect,
+          allowComments,
         },
         files
       );
@@ -113,30 +114,28 @@ const NewCollection: React.FC = () => {
         <div>
           minimum:
           <input type='checkbox' onChange={toggleMinSelect} />
-          {minSelect.required ? (
-            <input
-              min='0'
-              max='999'
-              value={minSelect.goal}
-              type='number'
-              onChange={handleMinSelect}
-              onBlur={onMinBlur}
-            ></input>
-          ) : null}
+          <input
+            style={{ display: minSelect.required ? 'inline' : 'none' }}
+            min='0'
+            max='999'
+            value={minSelect.goal}
+            type='number'
+            onChange={handleMinSelect}
+            onBlur={onMinBlur}
+          ></input>
         </div>
         <div>
           maximum:
           <input type='checkbox' onChange={toggleMaxSelect} />
-          {maxSelect.required ? (
-            <input
-              min='0'
-              max='999'
-              value={maxSelect.goal}
-              type='number'
-              onChange={handleMaxSelect}
-              onBlur={onMaxBlur}
-            ></input>
-          ) : null}
+          <input
+            style={{ display: maxSelect.required ? 'inline' : 'none' }}
+            min='0'
+            max='999'
+            value={maxSelect.goal}
+            type='number'
+            onChange={handleMaxSelect}
+            onBlur={onMaxBlur}
+          ></input>
         </div>
         <div>
           <button type='button' onClick={handleSave}>
