@@ -174,3 +174,19 @@ export const updatePhotoSelection = async (
     throw new Error('failed updating database');
   }
 };
+export const updatePhotoComment = async (
+  collectionId: string,
+  photoId: string,
+  comment: string
+) => {
+  const photoRef = firestore
+    .collection('collections')
+    .doc(collectionId)
+    .collection('photos')
+    .doc(photoId);
+  try {
+    await photoRef.update({ comment });
+  } catch (err) {
+    throw new Error('failed updating database');
+  }
+};
