@@ -1,94 +1,49 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { generateNewCollection } from '../firebase';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 
+type Inputs = {
+  files: FileList;
+  title: string;
+  minSelectRequired: boolean;
+  minSelectGoal: number;
+  maxSelectRequired: boolean;
+  maxSelectGoal: number;
+  allowComments: boolean;
+};
 
 const NewCollection: React.FC = () => {
-  const [files, setFiles] = useState<FileList | null>(null);
+  //const [files, setFiles] = useState<FileList | null>(null);
   const [minSelect, setMinSelect] = useState({ required: false, goal: 0 });
   const [maxSelect, setMaxSelect] = useState({ required: false, goal: 0 });
-  const [title, setTitle] = useState('');
-  const [allowComments, setAllowComments] = useState(false);
+  //const [title, setTitle] = useState('');
+  //const [allowComments, setAllowComments] = useState(false);
 
+  const { register, handleSubmit, watch, errors, getValues } = useForm<Inputs>({
+    mode: 'onChange',
+  });
 
-  const handleFileSelect = (e: { target: HTMLInputElement }) => {
-    if (!e || !e.target || !e.target.files) {
-      return;
-    }
-    console.log('handlechange');
-    if (e.target.files) {
-      let files = e.target.files;
-      if (files !== null) {
-        setFiles(files);
-      }
-    }
-  };
+  const minToggle = watch('minSelectRequired');
+  const maxToggle = watch('maxSelectRequired');
 
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
-  };
-  const handleAllowCommentsChange = () => {
-    setAllowComments(!allowComments);
-  };
-  const toggleMinSelect = () => {
-    setMinSelect({
-      goal: minSelect.goal > maxSelect.goal ? maxSelect.goal : minSelect.goal,
-      required: !minSelect.required,
-    });
-  };
-  const toggleMaxSelect = () => {
-    console.log('toggle max');
-    setMaxSelect({
-      goal: minSelect.goal > maxSelect.goal ? minSelect.goal : maxSelect.goal,
-      required: !maxSelect.required,
-    });
-  };
-  const handleMinSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!maxSelect.required) {
-      setMinSelect({ ...minSelect, goal: Number(e.target.value) });
-    } else if (
-      minSelect.goal < maxSelect.goal ||
-      minSelect.goal > Number(e.target.value)
-    ) {
-      setMinSelect({ ...minSelect, goal: Number(e.target.value) });
-    }
-  };
-
-  const onMinBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (Number(e.target.value) > maxSelect.goal && maxSelect.required) {
-      setMinSelect({ ...minSelect, goal: maxSelect.goal });
-    }
-  };
-  const onMaxBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (Number(e.target.value) < minSelect.goal && minSelect.required) {
-      setMaxSelect({ ...maxSelect, goal: minSelect.goal });
-    }
-  };
-
-  const handleMaxSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!minSelect.required) {
-      setMaxSelect({ ...maxSelect, goal: Number(e.target.value) });
-    } else if (
-      minSelect.goal < maxSelect.goal ||
-      maxSelect.goal < Number(e.target.value)
-    ) {
-      setMaxSelect({ ...maxSelect, goal: Number(e.target.value) });
-    }
-  };
-
-  const handleSave = () => {
-    if (files) {
-      generateNewCollection(
-        {
-          title,
-          minSelect,
-          maxSelect,
-          allowComments,
+  const onSubmit = (data: Inputs) => {
+    console.log(data);
+    /* generateNewCollection(
+      {
+        title: data.title,
+        minSelect: {
+          required: data.minSelectRequired,
+          goal: data.minSelectGoal,
         },
-        files
-      );
-    }
+        maxSelect: {
+          required: data.maxSelectRequired,
+          goal: data.maxSelectGoal,
+        },
+        allowComments: data.allowComments,
+      },
+      data.files
+    ); */
   };
 
   return (
@@ -97,57 +52,80 @@ const NewCollection: React.FC = () => {
         <button>cancel</button>
       </Link>
       <h2>new collection</h2>
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          title<input value={title} onChange={handleTitleChange}></input>
+          title
+          <input
+            name='title'
+            ref={register({ required: true, maxLength: 50 })}
+          />
         </div>
         <div>
           upload photos
           <input
-            name='file'
+            name='files'
             type='file'
-            onChange={handleFileSelect}
+            ref={register({ required: true })}
             multiple
-          ></input>
+          />
         </div>
         <div>
-          add watermark<input type='checkbox'></input>
+          add watermark
+          <input type='checkbox' />
         </div>
         <div>
           allow comments
-          <input type='checkbox' onChange={handleAllowCommentsChange}></input>
+          <input name='allowComments' type='checkbox' ref={register} />
         </div>
         <div>selection goals</div>
         <div>
           minimum:
-          <input type='checkbox' onChange={toggleMinSelect} />
-          <input
-            style={{ display: minSelect.required ? 'inline' : 'none' }}
-            min='0'
-            max='999'
-            value={minSelect.goal}
-            type='number'
-            onChange={handleMinSelect}
-            onBlur={onMinBlur}
-          ></input>
+          <input name='minSelectRequired' type='checkbox' ref={register} />
+          <div style={{ display: minToggle ? 'inline' : 'none' }}>
+            <input
+              name='minSelectGoal'
+              type='number'
+              min='1'
+              ref={register({
+                min: '1',
+                max: '999',
+                valueAsNumber: true,
+                validate: {
+                  lowerThanMax: (value) =>
+                    !getValues('maxSelectRequired') ||
+                    getValues('maxSelectGoal') >= value,
+                },
+              })}
+            />
+            {errors.minSelectGoal && (
+              <span>Must be higher than maximum value</span>
+            )}
+          </div>
         </div>
         <div>
           maximum:
-          <input type='checkbox' onChange={toggleMaxSelect} />
-          <input
-            style={{ display: maxSelect.required ? 'inline' : 'none' }}
-            min='0'
-            max='999'
-            value={maxSelect.goal}
-            type='number'
-            onChange={handleMaxSelect}
-            onBlur={onMaxBlur}
-          ></input>
+          <input name='maxSelectRequired' type='checkbox' ref={register} />
+          <div style={{ display: maxToggle ? 'inline' : 'none' }}>
+            <input
+              name='maxSelectGoal'
+              type='number'
+              min='1'
+              ref={register({
+                min: '1',
+                max: '999',
+                valueAsNumber: true,
+                validate: {
+                  higherThanMin: (value) => getValues('minSelectGoal') <= value,
+                },
+              })}
+            />
+            {errors.maxSelectGoal && (
+              <span>Must be higher than minimum value</span>
+            )}
+          </div>
         </div>
         <div>
-          <button type='button' onClick={handleSave}>
-            save
-          </button>
+          <button type='submit'>save</button>
         </div>
       </form>
     </div>
