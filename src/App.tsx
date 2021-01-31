@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
+import './App.scss';
 import 'react-image-lightbox/style.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Dashboard from './components/Dashboard';
+import Dashboard from './components/Dashboard/Dashboard';
 import NewCollection from './components/NewCollection';
 import Settings from './components/Settings';
 import SignIn from './components/SignIn';

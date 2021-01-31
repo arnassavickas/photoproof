@@ -21,7 +21,7 @@ export const firestore = firebase.firestore();
 export const storage = firebase.storage();
 
 export const generateNewCollection = async (
-  data: Omit<Collection, 'status' | 'finalComment' | 'photos'>,
+  data: Omit<Collection, 'status' | 'finalComment' | 'photos' | 'id'>,
   files: FileList
 ) => {
   if (!data || !files) return;
@@ -108,6 +108,7 @@ export const getCollections = async () => {
     });
     console.log(collection.data());
     const collectionObj = {
+      id: collection.id,
       title: collection.data().title,
       minSelect: collection.data().minSelect,
       maxSelect: collection.data().maxSelect,
@@ -143,6 +144,7 @@ export const getSingleCollection = async (id: string) => {
     });
 
     const collectionObj = {
+      id: collection.id,
       title: collection.data()?.title,
       minSelect: collection.data()?.minSelect,
       maxSelect: collection.data()?.maxSelect,

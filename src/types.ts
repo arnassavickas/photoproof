@@ -1,4 +1,5 @@
 export interface Collection {
+  id: string;
   title: string;
   minSelect: SelectionGoal;
   maxSelect: SelectionGoal;

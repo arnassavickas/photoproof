@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { generateNewCollection } from '../firebase';
+import { useForm } from 'react-hook-form';
+
 
 const NewCollection: React.FC = () => {
   const [files, setFiles] = useState<FileList | null>(null);
@@ -8,6 +10,7 @@ const NewCollection: React.FC = () => {
   const [maxSelect, setMaxSelect] = useState({ required: false, goal: 0 });
   const [title, setTitle] = useState('');
   const [allowComments, setAllowComments] = useState(false);
+
 
   const handleFileSelect = (e: { target: HTMLInputElement }) => {
     if (!e || !e.target || !e.target.files) {
