@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import CollectionList from './CollectionList';
-import { auth, getCollections } from '../firebase';
-import { Collection } from '../types';
+import { auth} from '../firebase';
 
 const Dashboard: React.FC = () => {
   const handleLogout = () => {

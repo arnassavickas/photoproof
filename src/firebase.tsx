@@ -4,7 +4,6 @@ import 'firebase/firestore';
 import 'firebase/storage';
 import { makeId } from './utils/makeId';
 import { Collection, Photo } from './types';
-import { cpuUsage } from 'process';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDHmQizp773R-suNhqIN1be1of5CDmZfeA',

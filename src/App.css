@@ -4,4 +4,5 @@
 
 .photo-grid {
   display: flex;
+  flex-wrap: wrap;
 }

@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { makeId } from '../utils/makeId';
 
 const Settings: React.FC = () => {
   return (
