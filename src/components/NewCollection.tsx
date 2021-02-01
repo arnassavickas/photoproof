@@ -14,12 +14,6 @@ type Inputs = {
 };
 
 const NewCollection: React.FC = () => {
-  //const [files, setFiles] = useState<FileList | null>(null);
-  const [minSelect, setMinSelect] = useState({ required: false, goal: 0 });
-  const [maxSelect, setMaxSelect] = useState({ required: false, goal: 0 });
-  //const [title, setTitle] = useState('');
-  //const [allowComments, setAllowComments] = useState(false);
-
   const { register, handleSubmit, watch, errors, getValues } = useForm<Inputs>({
     mode: 'onChange',
   });
@@ -29,7 +23,7 @@ const NewCollection: React.FC = () => {
 
   const onSubmit = (data: Inputs) => {
     console.log(data);
-    /* generateNewCollection(
+    generateNewCollection(
       {
         title: data.title,
         minSelect: {
@@ -43,7 +37,7 @@ const NewCollection: React.FC = () => {
         allowComments: data.allowComments,
       },
       data.files
-    ); */
+    );
   };
 
   return (

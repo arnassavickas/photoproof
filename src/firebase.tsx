@@ -2,6 +2,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
+
 import { makeId } from './utils/makeId';
 import { Collection, Photo } from './types';
 
@@ -72,12 +73,21 @@ const uploadPhotos = async (id: string, files: FileList) => {
   for (let i = 0; i < files.length; i++) {
     console.log('fileNumber :>> ', i);
     console.log(files[i]);
+    if (files[i].size > 500000) {
+      throw new Error(`${files[i].name} filesize exceeds 0.5 MB`);
+    }
     const storageRef = storage.ref(`${id}/${files[i].name}`);
     const uploadTask = await storageRef.put(files[i]);
     const downloadUrl = await uploadTask.ref.getDownloadURL();
+    const urlWithoutEnding = downloadUrl.match(/.+?(?=.jpg\?alt=media)/);
+    const jpegFilename = `${urlWithoutEnding}.jpg?alt=media`;
+    const webpFilename = `${urlWithoutEnding}_1400x1000.webp?alt=media`;
+    console.log(jpegFilename);
+    console.log(webpFilename);
     photosArray.push({
       filename: files[i].name,
-      cloudUrl: downloadUrl,
+      cloudUrl: jpegFilename,
+      cloudUrlWebp: webpFilename,
       selected: false,
       comment: '',
     });
@@ -100,6 +110,7 @@ export const getCollections = async () => {
       const photoObj = {
         id: photo.id,
         cloudUrl: photo.data().cloudUrl,
+        cloudUrlWebp: photo.data().cloudUrlWebp,
         filename: photo.data().filename,
         selected: photo.data().selected,
         comment: photo.data().comment,
@@ -136,6 +147,7 @@ export const getSingleCollection = async (id: string) => {
       const photoObj = {
         id: photo.id,
         cloudUrl: photo.data().cloudUrl,
+        cloudUrlWebp: photo.data().cloudUrlWebp,
         filename: photo.data().filename,
         selected: photo.data().selected,
         comment: photo.data().comment,

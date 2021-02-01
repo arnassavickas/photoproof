@@ -18,6 +18,7 @@ export type Photo = {
   id: string;
   filename: string;
   cloudUrl: string;
+  cloudUrlWebp: string;
   selected: boolean;
   comment: string;
 };

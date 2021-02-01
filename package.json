@@ -46,6 +46,7 @@
     ]
   },
   "devDependencies": {
-    "@types/react-router-dom": "^5.1.7"
+    "@types/react-router-dom": "^5.1.7",
+    "react-image-webp": "^0.7.0"
   }
 }
