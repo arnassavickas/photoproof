@@ -80,14 +80,16 @@ const uploadPhotos = async (id: string, files: FileList) => {
     const uploadTask = await storageRef.put(files[i]);
     const downloadUrl = await uploadTask.ref.getDownloadURL();
     const urlWithoutEnding = downloadUrl.match(/.+?(?=.jpg\?alt=media)/);
-    const jpegFilename = `${urlWithoutEnding}.jpg?alt=media`;
-    const webpFilename = `${urlWithoutEnding}_1400x1000.webp?alt=media`;
-    console.log(jpegFilename);
-    console.log(webpFilename);
+    const jpegUrl = `${urlWithoutEnding}.jpg?alt=media`;
+    const webpUrl = `${urlWithoutEnding}_1400x1000.webp?alt=media`;
+    const jpegThumbnailUrl = `${urlWithoutEnding}_400x700.jpeg?alt=media`;
+    const webpThumbnailUrl = `${urlWithoutEnding}_400x700.webp?alt=media`;
     photosArray.push({
       filename: files[i].name,
-      cloudUrl: jpegFilename,
-      cloudUrlWebp: webpFilename,
+      cloudUrl: jpegUrl,
+      cloudUrlWebp: webpUrl,
+      thumbnail: jpegThumbnailUrl,
+      thumbnailWebp: webpThumbnailUrl,
       selected: false,
       comment: '',
     });
@@ -111,6 +113,8 @@ export const getCollections = async () => {
         id: photo.id,
         cloudUrl: photo.data().cloudUrl,
         cloudUrlWebp: photo.data().cloudUrlWebp,
+        thumbnail: photo.data().thumbnail,
+        thumbnailWebp: photo.data().thumbnailWebp,
         filename: photo.data().filename,
         selected: photo.data().selected,
         comment: photo.data().comment,
@@ -148,6 +152,8 @@ export const getSingleCollection = async (id: string) => {
         id: photo.id,
         cloudUrl: photo.data().cloudUrl,
         cloudUrlWebp: photo.data().cloudUrlWebp,
+        thumbnail: photo.data().thumbnail,
+        thumbnailWebp: photo.data().thumbnailWebp,
         filename: photo.data().filename,
         selected: photo.data().selected,
         comment: photo.data().comment,
