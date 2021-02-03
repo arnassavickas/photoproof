@@ -81,10 +81,13 @@ const uploadPhotos = async (id: string, files: FileList) => {
 
     const uuid = uuidv4();
 
-    const storageRef = storage.ref(`${id}/${uuid}`);
+    const storageRef = storage.ref(`${id}/${uuid}.jpg`);
     const uploadTask = await storageRef.put(files[i]);
     const downloadUrl = await uploadTask.ref.getDownloadURL();
+    console.log(uuid);
+    console.log(downloadUrl);
     const urlWithoutEnding = downloadUrl.match(/.+?(?=.jpg\?alt=media)/);
+    console.log(urlWithoutEnding);
     const jpegUrl = `${urlWithoutEnding}.jpg?alt=media`;
     const webpUrl = `${urlWithoutEnding}_1400x1000.webp?alt=media`;
     const jpegThumbnailUrl = `${urlWithoutEnding}_400x700.jpg?alt=media`;
@@ -232,13 +235,46 @@ export const deletePhotos = async (
 
   try {
     for (let id of photoIds) {
-      const storageRef = storage.ref(`${collectionId}/${id}`);
+      const storageRef = storage.ref(collectionId);
       const docRef = photosRef.doc(id);
-      await storageRef.delete();
+      await storageRef.child(`${id}.jpg`).delete();
+      await storageRef.child(`${id}_1400x1000.webp`).delete();
+      await storageRef.child(`${id}_400x700.jpg`).delete();
+      await storageRef.child(`${id}_400x700.webp`).delete();
       await docRef.delete();
     }
   } catch (err) {
     console.error('error deleting photos', err);
+    return;
+  }
+  return;
+};
+
+export const deleteCollection = async (collectionId: string) => {
+  const photosRef = firestore
+    .collection('collections')
+    .doc(collectionId)
+    .collection('photos');
+
+  const collectionRef = await firestore
+    .collection('collections')
+    .doc(collectionId);
+
+  const photos = await photosRef.get();
+
+  try {
+    photos.forEach(async (photo) => {
+      const storageRef = storage.ref(collectionId);
+      const docRef = photosRef.doc(photo.data().id);
+      await storageRef.child(`${photo.data().id}.jpg`).delete();
+      await storageRef.child(`${photo.data().id}_1400x1000.webp`).delete();
+      await storageRef.child(`${photo.data().id}_400x700.jpg`).delete();
+      await storageRef.child(`${photo.data().id}_400x700.webp`).delete();
+      await docRef.delete();
+    });
+    await collectionRef.delete();
+  } catch (err) {
+    console.error('error deleting collection', err);
     return;
   }
   return;
