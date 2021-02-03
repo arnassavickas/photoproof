@@ -3,11 +3,18 @@ import './App.scss';
 import 'react-image-lightbox/style.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Dashboard from './components/Dashboard/Dashboard';
-import NewCollection from './components/NewCollection';
-import Settings from './components/Settings';
-import SignIn from './components/SignIn';
-import CollectionPage from './components/CollectionPage';
+import NewCollection from './components/NewCollectionPage/NewCollection';
+import Settings from './components/Settings/Settings';
+import SignIn from './components/SignIn/SignIn';
+import CollectionPage from './components/CollectionPage/CollectionPage';
+import EditCollection from './components/EditCollection/EditCollection';
 import firebase from 'firebase/app';
+import {
+  Container,
+  Typography,
+  Backdrop,
+  CircularProgress,
+} from '@material-ui/core';
 
 function App() {
   const [user, setUser] = useState<null | string>(null);
@@ -25,12 +32,16 @@ function App() {
   }, []);
 
   if (loading) {
-    return <div>loading...</div>;
+    return (
+      <Backdrop open={true}>
+        <CircularProgress color='inherit' />.
+      </Backdrop>
+    );
   }
 
   return (
-    <div>
-      <h1>photoproof</h1>
+    <Container>
+      <Typography variant='h2'>photoproof</Typography>
       <div>{user}</div>
       <Router>
         <Switch>
@@ -38,10 +49,11 @@ function App() {
           {!user ? <Route path='/' render={() => <SignIn />} /> : null}
           <Route path='/settings' render={() => <Settings />} />
           <Route path='/new' render={() => <NewCollection />} />
+          <Route path='/edit/:id' render={() => <EditCollection />} />
           <Route path='/' render={() => <Dashboard />} />
         </Switch>
       </Router>
-    </div>
+    </Container>
   );
 }
 

@@ -17,6 +17,7 @@ export type SelectionGoal = {
 export type Photo = {
   id: string;
   filename: string;
+  filenameNumber: number;
   cloudUrl: string;
   cloudUrlWebp: string;
   thumbnail: string;

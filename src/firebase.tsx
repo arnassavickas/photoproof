@@ -2,6 +2,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
+import { v4 as uuidv4 } from 'uuid';
 
 import { makeId } from './utils/makeId';
 import { Collection, Photo } from './types';
@@ -57,7 +58,7 @@ export const generateNewCollection = async (
 
   for (let i = 0; i < photos.length; i++) {
     const photo = photos[i];
-    batch.set(photosRef.doc(), photo);
+    batch.set(photosRef.doc(photos[i].id), photo);
   }
   try {
     await batch.commit();
@@ -69,23 +70,29 @@ export const generateNewCollection = async (
 };
 
 const uploadPhotos = async (id: string, files: FileList) => {
-  const photosArray: Omit<Photo, 'id'>[] = [];
+  const photosArray: Photo[] = [];
   for (let i = 0; i < files.length; i++) {
     console.log('fileNumber :>> ', i);
     console.log(files[i]);
+
     if (files[i].size > 500000) {
       throw new Error(`${files[i].name} filesize exceeds 0.5 MB`);
     }
-    const storageRef = storage.ref(`${id}/${files[i].name}`);
+
+    const uuid = uuidv4();
+
+    const storageRef = storage.ref(`${id}/${uuid}`);
     const uploadTask = await storageRef.put(files[i]);
     const downloadUrl = await uploadTask.ref.getDownloadURL();
     const urlWithoutEnding = downloadUrl.match(/.+?(?=.jpg\?alt=media)/);
     const jpegUrl = `${urlWithoutEnding}.jpg?alt=media`;
     const webpUrl = `${urlWithoutEnding}_1400x1000.webp?alt=media`;
-    const jpegThumbnailUrl = `${urlWithoutEnding}_400x700.jpeg?alt=media`;
+    const jpegThumbnailUrl = `${urlWithoutEnding}_400x700.jpg?alt=media`;
     const webpThumbnailUrl = `${urlWithoutEnding}_400x700.webp?alt=media`;
     photosArray.push({
+      id: uuid,
       filename: files[i].name,
+      filenameNumber: Number(files[i].name.match(/\d+/)),
       cloudUrl: jpegUrl,
       cloudUrlWebp: webpUrl,
       thumbnail: jpegThumbnailUrl,
@@ -106,16 +113,18 @@ export const getCollections = async () => {
       .collection('collections')
       .doc(collection.id)
       .collection('photos')
+      .orderBy('filenameNumber')
       .get();
     const photosArray: Photo[] = [];
     photos.forEach((photo) => {
       const photoObj = {
-        id: photo.id,
+        id: photo.data().id,
         cloudUrl: photo.data().cloudUrl,
         cloudUrlWebp: photo.data().cloudUrlWebp,
         thumbnail: photo.data().thumbnail,
         thumbnailWebp: photo.data().thumbnailWebp,
         filename: photo.data().filename,
+        filenameNumber: photo.data().filenameNumber,
         selected: photo.data().selected,
         comment: photo.data().comment,
       };
@@ -145,16 +154,18 @@ export const getSingleCollection = async (id: string) => {
       .collection('collections')
       .doc(id)
       .collection('photos')
+      .orderBy('filenameNumber')
       .get();
     const photosArray: Photo[] = [];
     photos.forEach((photo) => {
       const photoObj = {
-        id: photo.id,
+        id: photo.data().id,
         cloudUrl: photo.data().cloudUrl,
         cloudUrlWebp: photo.data().cloudUrlWebp,
         thumbnail: photo.data().thumbnail,
         thumbnailWebp: photo.data().thumbnailWebp,
         filename: photo.data().filename,
+        filenameNumber: photo.data().filenameNumber,
         selected: photo.data().selected,
         comment: photo.data().comment,
       };
@@ -208,4 +219,27 @@ export const updatePhotoComment = async (
   } catch (err) {
     throw new Error('failed updating database');
   }
+};
+
+export const deletePhotos = async (
+  collectionId: string,
+  photoIds: string[]
+) => {
+  const photosRef = firestore
+    .collection('collections')
+    .doc(collectionId)
+    .collection('photos');
+
+  try {
+    for (let id of photoIds) {
+      const storageRef = storage.ref(`${collectionId}/${id}`);
+      const docRef = photosRef.doc(id);
+      await storageRef.delete();
+      await docRef.delete();
+    }
+  } catch (err) {
+    console.error('error deleting photos', err);
+    return;
+  }
+  return;
 };
