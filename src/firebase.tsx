@@ -24,7 +24,8 @@ export const storage = firebase.storage();
 
 export const generateNewCollection = async (
   data: Omit<Collection, 'status' | 'finalComment' | 'photos' | 'id'>,
-  files: FileList
+  files: FileList,
+  setUploadProgress: React.Dispatch<React.SetStateAction<number>>
 ) => {
   if (!data || !files) return;
 
@@ -35,7 +36,7 @@ export const generateNewCollection = async (
     collectionRef = firestore.collection('collections').doc(id);
     snapshot = await collectionRef.get();
   } while (snapshot.exists);
-
+  setUploadProgress(5);
   const { title, minSelect, maxSelect, allowComments } = data;
   try {
     await collectionRef.set({
@@ -50,11 +51,12 @@ export const generateNewCollection = async (
     console.error('error creating collection document', err);
     return;
   }
+  setUploadProgress(10);
 
   const photosRef = collectionRef.collection('photos');
   const batch = firestore.batch();
 
-  const photos = await uploadPhotos(id, files);
+  const photos = await uploadPhotos(id, files, setUploadProgress);
 
   for (let i = 0; i < photos.length; i++) {
     const photo = photos[i];
@@ -66,11 +68,18 @@ export const generateNewCollection = async (
     console.error('error creating photos documents', err);
     return;
   }
+  setUploadProgress(100);
   return;
 };
 
-const uploadPhotos = async (id: string, files: FileList) => {
+const uploadPhotos = async (
+  id: string,
+  files: FileList,
+  setUploadProgress: React.Dispatch<React.SetStateAction<number>>
+) => {
   const photosArray: Photo[] = [];
+  const progressStep = 85 / files.length;
+  let progress = 10;
   for (let i = 0; i < files.length; i++) {
     console.log('fileNumber :>> ', i);
     console.log(files[i]);
@@ -103,6 +112,8 @@ const uploadPhotos = async (id: string, files: FileList) => {
       selected: false,
       comment: '',
     });
+    progress += progressStep;
+    setUploadProgress(progress);
   }
   return photosArray;
 };
