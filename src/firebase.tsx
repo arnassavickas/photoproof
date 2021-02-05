@@ -261,7 +261,10 @@ export const deletePhotos = async (
   return;
 };
 
-export const deleteCollection = async (collectionId: string) => {
+export const deleteCollection = async (
+  collectionId: string,
+  setDeleteProgress: React.Dispatch<React.SetStateAction<number>>
+) => {
   const photosRef = firestore
     .collection('collections')
     .doc(collectionId)
@@ -273,8 +276,11 @@ export const deleteCollection = async (collectionId: string) => {
 
   const photos = await photosRef.get();
 
+  const progressStep = 100 / photos.size;
+  let progress = 0;
+
   try {
-    photos.forEach(async (photo) => {
+    for (let photo of photos.docs) {
       const storageRef = storage.ref(collectionId);
       const docRef = photosRef.doc(photo.data().id);
       await storageRef.child(`${photo.data().id}.jpg`).delete();
@@ -282,7 +288,9 @@ export const deleteCollection = async (collectionId: string) => {
       await storageRef.child(`${photo.data().id}_400x700.jpg`).delete();
       await storageRef.child(`${photo.data().id}_400x700.webp`).delete();
       await docRef.delete();
-    });
+      progress += progressStep;
+      setDeleteProgress(progress);
+    }
     await collectionRef.delete();
   } catch (err) {
     console.error('error deleting collection', err);
