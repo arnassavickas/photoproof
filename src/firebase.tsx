@@ -30,6 +30,7 @@ export const generateNewCollection = async (
   if (!data || !files) {
     throw new Error('missing data or files');
   }
+  setUploadProgress(1);
 
   let collectionRef, id, snapshot;
 
@@ -73,6 +74,34 @@ export const generateNewCollection = async (
     collectionId: id,
     firstThumbnailUrl: photos[photos.length - 1].cloudUrlWebp,
   };
+};
+
+export const addMorePhotos = async (
+  id: string,
+  files: FileList,
+  setUploadProgress: React.Dispatch<React.SetStateAction<number>>
+) => {
+  const photosRef = firestore
+    .collection('collections')
+    .doc(id)
+    .collection('photos');
+
+  const batch = firestore.batch();
+
+  const photos = await uploadPhotos(id, files, setUploadProgress);
+
+  for (let i = 0; i < photos.length; i++) {
+    const photo = photos[i];
+    batch.set(photosRef.doc(photos[i].id), photo);
+  }
+  try {
+    await batch.commit();
+  } catch (err) {
+    throw new Error(`error creating photos documents: ${err}`);
+  }
+  setUploadProgress(100);
+
+  return;
 };
 
 const uploadPhotos = async (
@@ -119,90 +148,6 @@ const uploadPhotos = async (
     setUploadProgress(progress);
   }
   return photosArray;
-};
-
-export const getCollections = async () => {
-  console.log('getting collections');
-  const collectionsArray: Collection[] = [];
-  const collections = await firestore.collection('collections').get();
-  for (const collection of collections.docs) {
-    const photos = await firestore
-      .collection('collections')
-      .doc(collection.id)
-      .collection('photos')
-      .orderBy('filenameNumber')
-      .get();
-    const photosArray: Photo[] = [];
-    photos.forEach((photo) => {
-      const photoObj = {
-        id: photo.data().id,
-        cloudUrl: photo.data().cloudUrl,
-        cloudUrlWebp: photo.data().cloudUrlWebp,
-        thumbnail: photo.data().thumbnail,
-        thumbnailWebp: photo.data().thumbnailWebp,
-        filename: photo.data().filename,
-        filenameNumber: photo.data().filenameNumber,
-        selected: photo.data().selected,
-        comment: photo.data().comment,
-      };
-      photosArray.push(photoObj);
-    });
-    console.log(collection.data());
-    const collectionObj = {
-      id: collection.id,
-      title: collection.data().title,
-      minSelect: collection.data().minSelect,
-      maxSelect: collection.data().maxSelect,
-      allowComments: collection.data().allowComments,
-      status: collection.data().status,
-      finalComment: collection.data().finalComment,
-      photos: photosArray,
-    };
-    collectionsArray.push(collectionObj);
-  }
-  return collectionsArray;
-};
-
-export const getSingleCollection = async (id: string) => {
-  console.log('getting single collection');
-  try {
-    const collection = await firestore.collection('collections').doc(id).get();
-    const photos = await firestore
-      .collection('collections')
-      .doc(id)
-      .collection('photos')
-      .orderBy('filenameNumber')
-      .get();
-    const photosArray: Photo[] = [];
-    photos.forEach((photo) => {
-      const photoObj = {
-        id: photo.data().id,
-        cloudUrl: photo.data().cloudUrl,
-        cloudUrlWebp: photo.data().cloudUrlWebp,
-        thumbnail: photo.data().thumbnail,
-        thumbnailWebp: photo.data().thumbnailWebp,
-        filename: photo.data().filename,
-        filenameNumber: photo.data().filenameNumber,
-        selected: photo.data().selected,
-        comment: photo.data().comment,
-      };
-      photosArray.push(photoObj);
-    });
-
-    const collectionObj = {
-      id: collection.id,
-      title: collection.data()?.title,
-      minSelect: collection.data()?.minSelect,
-      maxSelect: collection.data()?.maxSelect,
-      allowComments: collection.data()?.allowComments,
-      status: collection.data()?.status,
-      finalComment: collection.data()?.finalComment,
-      photos: photosArray,
-    };
-    return collectionObj;
-  } catch (err) {
-    throw new Error('failed getting single collection');
-  }
 };
 
 export const updatePhotoSelection = async (
@@ -308,4 +253,88 @@ export const deleteCollection = async (
     return;
   }
   return;
+};
+
+export const getCollections = async () => {
+  console.log('getting collections');
+  const collectionsArray: Collection[] = [];
+  const collections = await firestore.collection('collections').get();
+  for (const collection of collections.docs) {
+    const photos = await firestore
+      .collection('collections')
+      .doc(collection.id)
+      .collection('photos')
+      .orderBy('filenameNumber')
+      .get();
+    const photosArray: Photo[] = [];
+    photos.forEach((photo) => {
+      const photoObj = {
+        id: photo.data().id,
+        cloudUrl: photo.data().cloudUrl,
+        cloudUrlWebp: photo.data().cloudUrlWebp,
+        thumbnail: photo.data().thumbnail,
+        thumbnailWebp: photo.data().thumbnailWebp,
+        filename: photo.data().filename,
+        filenameNumber: photo.data().filenameNumber,
+        selected: photo.data().selected,
+        comment: photo.data().comment,
+      };
+      photosArray.push(photoObj);
+    });
+    console.log(collection.data());
+    const collectionObj = {
+      id: collection.id,
+      title: collection.data().title,
+      minSelect: collection.data().minSelect,
+      maxSelect: collection.data().maxSelect,
+      allowComments: collection.data().allowComments,
+      status: collection.data().status,
+      finalComment: collection.data().finalComment,
+      photos: photosArray,
+    };
+    collectionsArray.push(collectionObj);
+  }
+  return collectionsArray;
+};
+
+export const getSingleCollection = async (id: string) => {
+  console.log('getting single collection');
+  try {
+    const collection = await firestore.collection('collections').doc(id).get();
+    const photos = await firestore
+      .collection('collections')
+      .doc(id)
+      .collection('photos')
+      .orderBy('filenameNumber')
+      .get();
+    const photosArray: Photo[] = [];
+    photos.forEach((photo) => {
+      const photoObj = {
+        id: photo.data().id,
+        cloudUrl: photo.data().cloudUrl,
+        cloudUrlWebp: photo.data().cloudUrlWebp,
+        thumbnail: photo.data().thumbnail,
+        thumbnailWebp: photo.data().thumbnailWebp,
+        filename: photo.data().filename,
+        filenameNumber: photo.data().filenameNumber,
+        selected: photo.data().selected,
+        comment: photo.data().comment,
+      };
+      photosArray.push(photoObj);
+    });
+
+    const collectionObj = {
+      id: collection.id,
+      title: collection.data()?.title,
+      minSelect: collection.data()?.minSelect,
+      maxSelect: collection.data()?.maxSelect,
+      allowComments: collection.data()?.allowComments,
+      status: collection.data()?.status,
+      finalComment: collection.data()?.finalComment,
+      photos: photosArray,
+    };
+    return collectionObj;
+  } catch (err) {
+    throw new Error('failed getting single collection');
+  }
 };
