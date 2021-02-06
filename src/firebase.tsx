@@ -26,8 +26,10 @@ export const generateNewCollection = async (
   data: Omit<Collection, 'status' | 'finalComment' | 'photos' | 'id'>,
   files: FileList,
   setUploadProgress: React.Dispatch<React.SetStateAction<number>>
-) => {
-  if (!data || !files) return;
+): Promise<{ collectionId: string; firstThumbnailUrl: string }> => {
+  if (!data || !files) {
+    throw new Error('missing data or files');
+  }
 
   let collectionRef, id, snapshot;
 
@@ -48,8 +50,7 @@ export const generateNewCollection = async (
       finalComment: '',
     });
   } catch (err) {
-    console.error('error creating collection document', err);
-    return;
+    throw new Error(`error creating collection document: ${err}`);
   }
   setUploadProgress(10);
 
@@ -65,11 +66,13 @@ export const generateNewCollection = async (
   try {
     await batch.commit();
   } catch (err) {
-    console.error('error creating photos documents', err);
-    return;
+    throw new Error(`error creating photos documents: ${err}`);
   }
   setUploadProgress(100);
-  return;
+  return {
+    collectionId: id,
+    firstThumbnailUrl: photos[photos.length - 1].cloudUrlWebp,
+  };
 };
 
 const uploadPhotos = async (
@@ -237,12 +240,17 @@ export const updatePhotoComment = async (
 
 export const deletePhotos = async (
   collectionId: string,
-  photoIds: string[]
+  photoIds: string[],
+  setDeleteProgress: React.Dispatch<React.SetStateAction<number>>
 ) => {
+  setDeleteProgress(1);
   const photosRef = firestore
     .collection('collections')
     .doc(collectionId)
     .collection('photos');
+
+  const progressStep = 100 / photoIds.length;
+  let progress = 0;
 
   try {
     for (let id of photoIds) {
@@ -253,6 +261,8 @@ export const deletePhotos = async (
       await storageRef.child(`${id}_400x700.jpg`).delete();
       await storageRef.child(`${id}_400x700.webp`).delete();
       await docRef.delete();
+      progress += progressStep;
+      setDeleteProgress(progress);
     }
   } catch (err) {
     console.error('error deleting photos', err);
@@ -265,6 +275,7 @@ export const deleteCollection = async (
   collectionId: string,
   setDeleteProgress: React.Dispatch<React.SetStateAction<number>>
 ) => {
+  setDeleteProgress(1);
   const photosRef = firestore
     .collection('collections')
     .doc(collectionId)
