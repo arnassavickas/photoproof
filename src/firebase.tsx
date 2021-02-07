@@ -26,7 +26,7 @@ export const generateNewCollection = async (
   data: Omit<Collection, 'status' | 'finalComment' | 'photos' | 'id'>,
   files: FileList,
   setUploadProgress: React.Dispatch<React.SetStateAction<number>>
-): Promise<{ collectionId: string; firstThumbnailUrl: string }> => {
+): Promise<string> => {
   if (!data || !files) {
     throw new Error('missing data or files');
   }
@@ -70,10 +70,7 @@ export const generateNewCollection = async (
     throw new Error(`error creating photos documents: ${err}`);
   }
   setUploadProgress(100);
-  return {
-    collectionId: id,
-    firstThumbnailUrl: photos[photos.length - 1].cloudUrlWebp,
-  };
+  return id;
 };
 
 export const addMorePhotos = async (
@@ -128,6 +125,7 @@ const uploadPhotos = async (
     console.log(uuid);
     console.log(downloadUrl);
     const urlWithoutEnding = downloadUrl.match(/.+?(?=.jpg\?alt=media)/);
+    const filenameWithoutExt = files[i].name.match(/.+?(?=.jpg)/);
     console.log(urlWithoutEnding);
     const jpegUrl = `${urlWithoutEnding}.jpg?alt=media`;
     const webpUrl = `${urlWithoutEnding}_1400x1000.webp?alt=media`;
@@ -135,7 +133,7 @@ const uploadPhotos = async (
     const webpThumbnailUrl = `${urlWithoutEnding}_400x700.webp?alt=media`;
     photosArray.push({
       id: uuid,
-      filename: files[i].name,
+      filename: `${filenameWithoutExt}`,
       filenameNumber: Number(files[i].name.match(/\d+/)),
       cloudUrl: jpegUrl,
       cloudUrlWebp: webpUrl,
