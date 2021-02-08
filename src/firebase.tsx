@@ -181,6 +181,21 @@ export const updatePhotoComment = async (
   }
 };
 
+export const confirmCollection = async (
+  collectionId: string,
+  finalComment?: string
+) => {
+  const collectionRef = firestore.collection('collections').doc(collectionId);
+  try {
+    await collectionRef.update({
+      status: 'locked',
+      finalComment: finalComment || '',
+    });
+  } catch (err) {
+    throw new Error('failed confirming collection');
+  }
+};
+
 export const deletePhotos = async (
   collectionId: string,
   photoIds: string[],
