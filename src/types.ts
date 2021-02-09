@@ -15,6 +15,7 @@ export type SelectionGoal = {
 };
 
 export type Photo = {
+  index: number;
   id: string;
   filename: string;
   filenameNumber: number;
@@ -24,4 +25,5 @@ export type Photo = {
   thumbnailWebp: string;
   selected: boolean;
   comment: string;
+  dateTaken: Date | null;
 };

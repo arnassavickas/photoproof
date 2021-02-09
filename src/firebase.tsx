@@ -3,6 +3,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
+import { parse } from 'exifr';
 
 import { makeId } from './utils/makeId';
 import { Collection, Photo } from './types';
@@ -106,31 +107,27 @@ const uploadPhotos = async (
   files: FileList,
   setUploadProgress: React.Dispatch<React.SetStateAction<number>>
 ) => {
-  const photosArray: Photo[] = [];
+  const photosArray: Omit<Photo, 'index'>[] = [];
   const progressStep = 85 / files.length;
   let progress = 10;
   for (let i = 0; i < files.length; i++) {
-    console.log('fileNumber :>> ', i);
-    console.log(files[i]);
-
     if (files[i].size > 500000) {
       throw new Error(`${files[i].name} filesize exceeds 0.5 MB`);
     }
 
     const uuid = uuidv4();
+    const data = await parse(files[i], ['ModifyDate']);
 
     const storageRef = storage.ref(`${id}/${uuid}.jpg`);
     const uploadTask = await storageRef.put(files[i]);
     const downloadUrl = await uploadTask.ref.getDownloadURL();
-    console.log(uuid);
-    console.log(downloadUrl);
     const urlWithoutEnding = downloadUrl.match(/.+?(?=.jpg\?alt=media)/);
     const filenameWithoutExt = files[i].name.match(/.+?(?=.jpg)/);
-    console.log(urlWithoutEnding);
     const jpegUrl = `${urlWithoutEnding}.jpg?alt=media`;
     const webpUrl = `${urlWithoutEnding}_1400x1000.webp?alt=media`;
     const jpegThumbnailUrl = `${urlWithoutEnding}_400x700.jpg?alt=media`;
     const webpThumbnailUrl = `${urlWithoutEnding}_400x700.webp?alt=media`;
+
     photosArray.push({
       id: uuid,
       filename: `${filenameWithoutExt}`,
@@ -141,6 +138,7 @@ const uploadPhotos = async (
       thumbnailWebp: webpThumbnailUrl,
       selected: false,
       comment: '',
+      dateTaken: data ? data.ModifyDate : null,
     });
     progress += progressStep;
     setUploadProgress(progress);
@@ -277,11 +275,13 @@ export const getCollections = async () => {
       .collection('collections')
       .doc(collection.id)
       .collection('photos')
-      .orderBy('filenameNumber')
+      .orderBy('dateTaken')
       .get();
     const photosArray: Photo[] = [];
+    let index = 1;
     photos.forEach((photo) => {
       const photoObj = {
+        index,
         id: photo.data().id,
         cloudUrl: photo.data().cloudUrl,
         cloudUrlWebp: photo.data().cloudUrlWebp,
@@ -291,10 +291,11 @@ export const getCollections = async () => {
         filenameNumber: photo.data().filenameNumber,
         selected: photo.data().selected,
         comment: photo.data().comment,
+        dateTaken: photo.data().dateTaken,
       };
       photosArray.push(photoObj);
+      index++;
     });
-    console.log(collection.data());
     const collectionObj = {
       id: collection.id,
       title: collection.data().title,
@@ -318,11 +319,13 @@ export const getSingleCollection = async (id: string) => {
       .collection('collections')
       .doc(id)
       .collection('photos')
-      .orderBy('filenameNumber')
+      .orderBy('dateTaken')
       .get();
     const photosArray: Photo[] = [];
+    let index = 1;
     photos.forEach((photo) => {
       const photoObj = {
+        index,
         id: photo.data().id,
         cloudUrl: photo.data().cloudUrl,
         cloudUrlWebp: photo.data().cloudUrlWebp,
@@ -332,8 +335,10 @@ export const getSingleCollection = async (id: string) => {
         filenameNumber: photo.data().filenameNumber,
         selected: photo.data().selected,
         comment: photo.data().comment,
+        dateTaken: photo.data().dateTaken,
       };
       photosArray.push(photoObj);
+      index++;
     });
 
     const collectionObj = {
