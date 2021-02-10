@@ -24,7 +24,10 @@ export const firestore = firebase.firestore();
 export const storage = firebase.storage();
 
 export const generateNewCollection = async (
-  data: Omit<Collection, 'status' | 'finalComment' | 'photos' | 'id'>,
+  data: Omit<
+    Collection,
+    'status' | 'finalComment' | 'photos' | 'id' | 'dateCreated'
+  >,
   files: FileList,
   setUploadProgress: React.Dispatch<React.SetStateAction<number>>
 ): Promise<string> => {
@@ -45,6 +48,7 @@ export const generateNewCollection = async (
   try {
     await collectionRef.set({
       title,
+      dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
       minSelect,
       maxSelect,
       allowComments,
@@ -159,7 +163,7 @@ export const updatePhotoSelection = async (
   try {
     await photoRef.update({ selected });
   } catch (err) {
-    throw new Error('failed updating database');
+    throw new Error('failed updating selection');
   }
 };
 export const updatePhotoComment = async (
@@ -175,7 +179,7 @@ export const updatePhotoComment = async (
   try {
     await photoRef.update({ comment });
   } catch (err) {
-    throw new Error('failed updating database');
+    throw new Error('failed updating comment');
   }
 };
 
@@ -186,7 +190,7 @@ export const confirmCollection = async (
   const collectionRef = firestore.collection('collections').doc(collectionId);
   try {
     await collectionRef.update({
-      status: 'locked',
+      status: 'confirmed',
       finalComment: finalComment || '',
     });
   } catch (err) {
@@ -269,7 +273,10 @@ export const deleteCollection = async (
 export const getCollections = async () => {
   console.log('getting collections');
   const collectionsArray: Collection[] = [];
-  const collections = await firestore.collection('collections').get();
+  const collections = await firestore
+    .collection('collections')
+    .orderBy('dateCreated')
+    .get();
   for (const collection of collections.docs) {
     const photos = await firestore
       .collection('collections')
@@ -299,6 +306,7 @@ export const getCollections = async () => {
     const collectionObj = {
       id: collection.id,
       title: collection.data().title,
+      dateCreated: collection.data().dateCreated,
       minSelect: collection.data().minSelect,
       maxSelect: collection.data().maxSelect,
       allowComments: collection.data().allowComments,
@@ -344,6 +352,7 @@ export const getSingleCollection = async (id: string) => {
     const collectionObj = {
       id: collection.id,
       title: collection.data()?.title,
+      dateCreated: collection.data()?.dateCreated,
       minSelect: collection.data()?.minSelect,
       maxSelect: collection.data()?.maxSelect,
       allowComments: collection.data()?.allowComments,
