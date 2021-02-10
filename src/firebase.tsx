@@ -275,7 +275,7 @@ export const getCollections = async () => {
   const collectionsArray: Collection[] = [];
   const collections = await firestore
     .collection('collections')
-    .orderBy('dateCreated')
+    .orderBy('dateCreated', 'desc')
     .get();
   for (const collection of collections.docs) {
     const photos = await firestore
@@ -363,5 +363,18 @@ export const getSingleCollection = async (id: string) => {
     return collectionObj;
   } catch (err) {
     throw new Error('failed getting single collection');
+  }
+};
+
+export const collectionStatus = async (
+  collectionId: string,
+  status: Collection['status']
+) => {
+  const collectionRef = firestore.collection('collections').doc(collectionId);
+
+  try {
+    await collectionRef.update({ status });
+  } catch (err) {
+    throw new Error('failed changing collection status');
   }
 };
