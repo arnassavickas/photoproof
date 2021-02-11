@@ -78,6 +78,28 @@ export const generateNewCollection = async (
   return id;
 };
 
+export const updateSettings = async (
+  data: Omit<
+    Collection,
+    'status' | 'finalComment' | 'photos' | 'id' | 'dateCreated'
+  >,
+  collectionId: string
+) => {
+  const { title, minSelect, maxSelect, allowComments } = data;
+  const collectionRef = firestore.collection('collections').doc(collectionId);
+  try {
+    await collectionRef.update({
+      title,
+      minSelect,
+      maxSelect,
+      allowComments,
+      status: 'selecting',
+    });
+  } catch (err) {
+    throw new Error(`error updating collection settings`);
+  }
+};
+
 export const addMorePhotos = async (
   id: string,
   files: FileList,
