@@ -49,3 +49,19 @@ export interface SelectionViewProps extends LockedViewProps {
   setCommentTextarea: React.Dispatch<React.SetStateAction<string>>;
   selectedPhotos: number | undefined;
 }
+
+export interface CollectionDetailsProps {
+  collectionId: string;
+  collection: Collection;
+  setCollection: React.Dispatch<React.SetStateAction<Collection | null>>;
+  filteredPhotos: Photo[];
+  setConfirmationDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setConfirmationDialogTitle: React.Dispatch<React.SetStateAction<string>>;
+  setConfirmationDialogContentText: React.Dispatch<
+    React.SetStateAction<string>
+  >;
+  setConfirmationDialogAgree: React.Dispatch<
+    React.SetStateAction<(value: any) => void>
+  >;
+  setProgress: React.Dispatch<React.SetStateAction<number>>;
+}

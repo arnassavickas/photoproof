@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './App.scss';
+import styles from './styles.module.scss';
 import 'react-image-lightbox/style.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Dashboard from './components/Dashboard/Dashboard';
@@ -8,12 +8,13 @@ import Settings from './components/Settings/Settings';
 import SignIn from './components/SignIn/SignIn';
 import CollectionPage from './components/CollectionPage/CollectionPage';
 import EditCollection from './components/EditCollection/EditCollection';
-import firebase from 'firebase/app';
+import { auth } from './firebase';
 import {
   Container,
   Typography,
   Backdrop,
   CircularProgress,
+  Button,
 } from '@material-ui/core';
 
 function App() {
@@ -21,7 +22,7 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(function (user) {
+    auth.onAuthStateChanged(function (user) {
       if (user) {
         setUser(user.uid);
       } else {
@@ -42,7 +43,13 @@ function App() {
   return (
     <Container>
       <Typography variant='h2'>photoproof</Typography>
-      <div>{user}</div>
+      {user && (
+        <div className={styles.logoutBtn}>
+          <Button onClick={() => auth.signOut()} variant='outlined'>
+            Logout
+          </Button>
+        </div>
+      )}
       <Router>
         <Switch>
           <Route path='/collection/:id' render={() => <CollectionPage />} />
