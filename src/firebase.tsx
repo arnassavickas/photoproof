@@ -253,6 +253,23 @@ export const deletePhotos = async (
   return;
 };
 
+export const resetPhotos = async (collectionId: string, photos: Photo[]) => {
+  const photosRef = firestore
+    .collection('collections')
+    .doc(collectionId)
+    .collection('photos');
+  const batch = firestore.batch();
+
+  for (const photo of photos) {
+    batch.update(photosRef.doc(photo.id), { selected: false, comment: '' });
+  }
+  try {
+    await batch.commit();
+  } catch (err) {
+    throw new Error(`error reseting photos: ${err}`);
+  }
+};
+
 export const deleteCollection = async (
   collectionId: string,
   setDeleteProgress: React.Dispatch<React.SetStateAction<number>>
