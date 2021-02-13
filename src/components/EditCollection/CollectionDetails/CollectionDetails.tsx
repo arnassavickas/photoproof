@@ -7,8 +7,6 @@ import {
   Checkbox,
   Typography,
   Tooltip,
-  Backdrop,
-  CircularProgress,
   Button,
   TextField,
   FormControlLabel,
@@ -163,14 +161,6 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
 
   const selectedPhotos = collection?.photos.filter((photo) => photo.selected)
     .length;
-
-  if (collection === null || filteredPhotos === null) {
-    return (
-      <Backdrop open={true}>
-        <CircularProgress color='inherit' />.
-      </Backdrop>
-    );
-  }
 
   return (
     <div>

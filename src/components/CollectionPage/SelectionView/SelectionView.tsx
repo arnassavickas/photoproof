@@ -23,6 +23,7 @@ import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 import MessageIcon from '@material-ui/icons/Message';
 
 import Lightbox from '../../Lightbox/Lightbox';
+import CommentDialog from '../../CommentDialog/CommentDialog';
 import { useForm } from 'react-hook-form';
 
 const SelectionView: React.FC<SelectionViewProps> = ({
@@ -113,11 +114,6 @@ const SelectionView: React.FC<SelectionViewProps> = ({
     }
   };
 
-  const handleCommentTextarea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    e.preventDefault();
-    setCommentTextarea(e.target.value);
-  };
-
   const confirmSelections = async (data: { finalComment: string }) => {
     console.log(data);
     await confirmCollection(collectionId, data.finalComment);
@@ -201,30 +197,25 @@ const SelectionView: React.FC<SelectionViewProps> = ({
         />
       )}
 
-      <Dialog open={commentOpen} onClose={() => setCommentOpen(false)}>
-        <DialogTitle id='alert-dialog-title'>Comment</DialogTitle>
-        <DialogContent>
-          <TextField
-            multiline
-            rows={4}
-            variant='outlined'
-            value={commentTextarea}
-            onChange={handleCommentTextarea}
-          />
-        </DialogContent>
-        <DialogActions>
+      <CommentDialog
+        commentOpen={commentOpen}
+        setCommentOpen={setCommentOpen}
+        commentTextarea={commentTextarea}
+        setCommentTextarea={setCommentTextarea}
+        disabled={true}
+        actionButtons={[
           <Button
             onClick={() => setCommentOpen(false)}
             color='secondary'
             autoFocus
           >
             Cancel
-          </Button>
+          </Button>,
           <Button onClick={savePhotoComment} color='primary'>
             Save
-          </Button>
-        </DialogActions>
-      </Dialog>
+          </Button>,
+        ]}
+      />
 
       <Button
         variant='contained'

@@ -1,0 +1,68 @@
+.thumbnail {
+  width: 150px;
+  vertical-align: bottom;
+  margin: 3px 0;
+}
+
+.thumbnail:hover {
+  cursor: pointer;
+}
+
+.thumbnailCell {
+  padding: 1px;
+}
+
+.toolbarSelected {
+  display: flex;
+  flex: 1 1 100%;
+  align-items: center;
+}
+
+.toolbarFilter {
+  flex: 1 5 100%;
+}
+
+.dropzone {
+  min-height: 100px !important;
+  margin: auto;
+}
+
+.toolbarIcon {
+  color: white !important;
+  opacity: 0.8;
+  min-width: 48px;
+}
+
+.exitBtn {
+  position: absolute !important;
+  right: 0;
+  top: 0;
+}
+
+.commentTextContainer {
+  min-width: 200px;
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.titleTextarea {
+  margin-top: 1rem;
+  input {
+    font-size: 2.125rem;
+    font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    font-weight: 400;
+    line-height: 1.235;
+    letter-spacing: 0.00735em;
+  }
+}
+
+.centeredContainer {
+  padding: 1rem;
+  width: fit-content;
+  margin: 1rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

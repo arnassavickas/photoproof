@@ -1,13 +1,7 @@
 import React from 'react';
 import styles from './styles.module.scss';
 import { LockedViewProps } from '../../../types';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  TextField,
-} from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
@@ -15,6 +9,7 @@ import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 import MessageIcon from '@material-ui/icons/Message';
 
 import Lightbox from '../../Lightbox/Lightbox';
+import CommentDialog from '../../CommentDialog/CommentDialog';
 
 const LockedView: React.FC<LockedViewProps> = ({
   collection,
@@ -88,18 +83,12 @@ const LockedView: React.FC<LockedViewProps> = ({
           ]}
         />
       )}
-      <Dialog open={commentOpen} onClose={() => setCommentOpen(false)}>
-        <DialogTitle id='alert-dialog-title'>Comment</DialogTitle>
-        <DialogContent>
-          <TextField
-            multiline
-            rows={4}
-            variant='outlined'
-            value={commentTextarea}
-            disabled
-          />
-        </DialogContent>
-      </Dialog>
+      <CommentDialog
+        commentOpen={commentOpen}
+        setCommentOpen={setCommentOpen}
+        commentTextarea={commentTextarea}
+        disabled={true}
+      />
     </div>
   );
 };

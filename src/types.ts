@@ -65,3 +65,41 @@ export interface CollectionDetailsProps {
   >;
   setProgress: React.Dispatch<React.SetStateAction<number>>;
 }
+
+export interface PhotoTableToolbarProps {
+  collectionId: string;
+  collection: Collection;
+  setCollection: React.Dispatch<React.SetStateAction<Collection | null>>;
+  filteredPhotos: Photo[];
+  setFilteredPhotos: React.Dispatch<React.SetStateAction<Photo[] | null>>;
+  setConfirmationDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setConfirmationDialogTitle: React.Dispatch<React.SetStateAction<string>>;
+  setConfirmationDialogContentText: React.Dispatch<
+    React.SetStateAction<string>
+  >;
+  setConfirmationDialogAgree: React.Dispatch<
+    React.SetStateAction<(value: any) => void>
+  >;
+  setProgress: React.Dispatch<React.SetStateAction<number>>;
+  selected: string[];
+  setSelected: React.Dispatch<React.SetStateAction<string[]>>;
+  setAddPhotosDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface PhotoTableProps {
+  collection: Collection;
+  filteredPhotos: Photo[];
+  selected: string[];
+  setSelected: React.Dispatch<React.SetStateAction<string[]>>;
+  setPhotoIndex: React.Dispatch<React.SetStateAction<number>>;
+  setLightboxOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface AddPhotosDialogProps {
+  collectionId: string;
+  setCollection: React.Dispatch<React.SetStateAction<Collection | null>>;
+  setProgress: React.Dispatch<React.SetStateAction<number>>;
+  addPhotosDialogOpen: boolean;
+  setAddPhotosDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  progress: number;
+}
