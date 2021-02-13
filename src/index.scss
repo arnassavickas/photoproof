@@ -1,0 +1,63 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.dropzoneClass {
+  width: 50% !important;
+  min-width: 300px;
+  max-width: 500px;
+  min-height: 100px !important;
+  margin: auto;
+}
+
+.itemReference {
+  img {
+    object-fit: contain;
+    height: auto;
+  }
+
+  .MuiTypography-body1 {
+    font-size: 0.7rem;
+    word-break: break-all;
+  }
+
+  .MuiDropzonePreviewList-removeButton {
+    top: 6px;
+    right: 6px;
+    width: 25px;
+    height: 25px;
+    min-height: 25px;
+    opacity: 0;
+    position: absolute;
+    transition: 0.5s ease;
+    background: none;
+
+    .button {
+      font-size: 1rem;
+    }
+  }
+}
+
+.itemReference:hover {
+  img {
+    opacity: 0.9 !important;
+  }
+}
+
+.ril__toolbar {
+  background: none !important;
+}
+
+.ril__navButtons:focus {
+  outline: none;
+}
