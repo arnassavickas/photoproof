@@ -7,16 +7,7 @@ import { parse } from 'exifr';
 
 import { makeId } from './utils/makeId';
 import { Collection, Photo } from './types';
-
-const firebaseConfig = {
-  apiKey: 'AIzaSyDHmQizp773R-suNhqIN1be1of5CDmZfeA',
-  authDomain: 'photo-proof-6b9c0.firebaseapp.com',
-  projectId: 'photo-proof-6b9c0',
-  storageBucket: 'photo-proof-6b9c0.appspot.com',
-  messagingSenderId: '845535406744',
-  appId: '1:845535406744:web:ea79f61dc4ab063be9beed',
-  measurementId: 'G-2T5LPCQMXT',
-};
+import {firebaseConfig} from './config'
 
 firebase.initializeApp(firebaseConfig);
 export const auth = firebase.auth();

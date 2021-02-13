@@ -25,3 +25,5 @@ yarn-error.log*
 /photos
 
 .env
+
+/src/config.js
