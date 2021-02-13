@@ -50,7 +50,7 @@ function App() {
           </Button>
         </div>
       )}
-      <Router>
+      <Router basename={'/photoproof/'}>
         <Switch>
           <Route path='/collection/:id' render={() => <CollectionPage />} />
           {!user ? <Route path='/' render={() => <SignIn />} /> : null}
