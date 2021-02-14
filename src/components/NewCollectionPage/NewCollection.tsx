@@ -77,7 +77,7 @@ const NewCollection: React.FC = () => {
 
   return (
     <div>
-      <Button to='/' component={Link} variant='outlined'>
+      <Button className={styles.no} to='/' component={Link} variant='outlined'>
         Cancel
       </Button>
       <Typography variant='h4'>new collection</Typography>
