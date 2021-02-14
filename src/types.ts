@@ -127,3 +127,11 @@ export interface SelectionConfirmationDialogProps {
   confirmDialogOpen: boolean;
   setConfirmDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+export interface LightboxProps {
+  filteredPhotos: Photo[];
+  setLightboxOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  lightboxIndex: number;
+  setLightboxIndex: React.Dispatch<React.SetStateAction<number>>;
+  toolbarButtons: React.ReactNode[];
+}

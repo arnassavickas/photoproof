@@ -10,7 +10,9 @@ import {
   DialogActions,
   LinearProgress,
   Box,
+  IconButton,
 } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 
 import { DropzoneArea } from 'material-ui-dropzone';
 import { useForm, Controller } from 'react-hook-form';
@@ -46,6 +48,12 @@ const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
     <Dialog open={addPhotosDialogOpen}>
       <form onSubmit={handleSubmitFiles(onConfirmUpload)}>
         <DialogTitle id='alert-dialog-title'>Add photos</DialogTitle>
+        <IconButton
+          onClick={() => setAddPhotosDialogOpen(false)}
+          className={styles.exitBtn}
+        >
+          <CloseIcon />
+        </IconButton>
         <DialogContent>
           {progress ? (
             <Box p={'3px'}>
@@ -66,9 +74,7 @@ const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
                 }}
                 filesLimit={999}
                 previewGridClasses={{
-                  container: styles.previewContainer,
-                  item: `${styles.previewItem} itemReference`,
-                  image: styles.previewImage,
+                  item: 'itemReference',
                 }}
                 previewGridProps={{
                   container: {

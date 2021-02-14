@@ -7,7 +7,11 @@ import {
   LinearProgress,
   DialogActions,
   Button,
+  IconButton,
 } from '@material-ui/core';
+import styles from './styles.module.scss';
+
+import CloseIcon from '@material-ui/icons/Close';
 
 interface ConfirmationDialogProps {
   dialogOpen: boolean;
@@ -29,6 +33,9 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   return (
     <Dialog open={dialogOpen}>
       <DialogTitle id='alert-dialog-title'>{dialogTitle}</DialogTitle>
+      <IconButton onClick={onClickCancel} className={styles.exitBtn}>
+        <CloseIcon />
+      </IconButton>
       <DialogContent>
         <DialogContentText id='alert-dialog-description'>
           {dialogContentText}

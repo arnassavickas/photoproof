@@ -8,7 +8,9 @@ import {
   DialogActions,
   Button,
   DialogContentText,
+  IconButton,
 } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 
 const ConfirmationForbiddenDialog: React.FC<ConfirmationForbiddenProps> = ({
   collection,
@@ -58,6 +60,12 @@ const ConfirmationForbiddenDialog: React.FC<ConfirmationForbiddenProps> = ({
       <DialogTitle id='alert-dialog-title'>
         Please adjust your selections!
       </DialogTitle>
+      <IconButton
+        onClick={() => setConfirmForbidDialogOpen(false)}
+        className={styles.exitBtn}
+      >
+        <CloseIcon />
+      </IconButton>
       <DialogContent>
         <DialogContentText>
           You have selected <strong>{selectedPhotos}</strong> photos, but{' '}

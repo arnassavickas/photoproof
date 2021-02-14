@@ -10,7 +10,9 @@ import {
   DialogActions,
   Button,
   DialogContentText,
+  IconButton,
 } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 
 import { useForm } from 'react-hook-form';
 
@@ -44,6 +46,12 @@ const SelectionConfirmationDialog: React.FC<SelectionConfirmationDialogProps> = 
     >
       <form onSubmit={handleSubmit(confirmSelections)}>
         <DialogTitle id='alert-dialog-title'>Confirm selections</DialogTitle>
+        <IconButton
+          onClick={() => setConfirmDialogOpen(false)}
+          className={styles.exitBtn}
+        >
+          <CloseIcon />
+        </IconButton>
         <DialogContent>
           <DialogContentText>
             You have selected <strong>{selectedPhotos} photos</strong>.

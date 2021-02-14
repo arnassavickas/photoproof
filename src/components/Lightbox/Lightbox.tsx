@@ -1,18 +1,10 @@
 import React from 'react';
-import { Photo } from '../../types';
+import { LightboxProps } from '../../types';
 import styles from './styles.module.scss';
 // @ts-ignore
 import { isWebpSupported } from 'react-image-webp/dist/utils';
 import Lightbox from 'react-image-lightbox';
 import { Typography } from '@material-ui/core';
-
-interface LightboxProps {
-  filteredPhotos: Photo[];
-  setLightboxOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  lightboxIndex: number;
-  setLightboxIndex: React.Dispatch<React.SetStateAction<number>>;
-  toolbarButtons: React.ReactNode[];
-}
 
 //TODO toolbar obstructs photo
 //TODO arrow buttons obstruct photo

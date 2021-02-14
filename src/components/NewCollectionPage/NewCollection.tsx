@@ -193,9 +193,7 @@ const NewCollection: React.FC = () => {
               }}
               filesLimit={999}
               previewGridClasses={{
-                container: styles.previewContainer,
-                item: `${styles.previewItem} itemReference`,
-                image: styles.previewImage,
+                item: 'itemReference',
               }}
               previewGridProps={{
                 container: {

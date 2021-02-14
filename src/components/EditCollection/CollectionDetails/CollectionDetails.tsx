@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './styles.module.scss';
 import { Link } from 'react-router-dom';
 import { Collection, CollectionDetailsProps } from '../../../types';
