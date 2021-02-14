@@ -1,21 +1,8 @@
 import React, { useState } from 'react';
 import styles from './styles.module.scss';
 import { SelectionViewProps } from '../../../types';
-import {
-  updatePhotoSelection,
-  updatePhotoComment,
-  confirmCollection,
-} from '../../../firebase';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  TextField,
-  DialogActions,
-  Button,
-  DialogContentText,
-} from '@material-ui/core';
+import { updatePhotoSelection, updatePhotoComment } from '../../../firebase';
+import { IconButton, Button } from '@material-ui/core';
 
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
@@ -24,9 +11,9 @@ import MessageIcon from '@material-ui/icons/Message';
 
 import Lightbox from '../../Lightbox/Lightbox';
 import CommentDialog from '../../CommentDialog/CommentDialog';
-import { useForm } from 'react-hook-form';
 import PhotoGrid from '../PhotoGrid/PhotoGrid';
 import ConfirmationForbiddenDialog from './ConfirmationForbiddenDialog/ConfirmationForbiddenDialog';
+import SelectionConfirmationDialog from './SelectionConfirmationDialog/SelectionConfirmationDialog';
 
 const SelectionView: React.FC<SelectionViewProps> = ({
   collection,
@@ -46,9 +33,6 @@ const SelectionView: React.FC<SelectionViewProps> = ({
   selectedPhotos,
 }) => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const { register, handleSubmit } = useForm<any>({
-    defaultValues: { files: [] },
-  });
   const [confirmForbidDialogOpen, setConfirmForbidDialogOpen] = useState(false);
 
   const selectPhotoLightbox = () => {
@@ -94,17 +78,6 @@ const SelectionView: React.FC<SelectionViewProps> = ({
         console.error(err);
       }
     }
-  };
-
-  const confirmSelections = async (data: { finalComment: string }) => {
-    console.log(data);
-    await confirmCollection(collectionId, data.finalComment);
-    setConfirmDialogOpen(false);
-    setCollection({
-      ...collection,
-      status: 'confirmed',
-      finalComment: data.finalComment,
-    });
   };
 
   return (
@@ -192,47 +165,14 @@ const SelectionView: React.FC<SelectionViewProps> = ({
         setConfirmForbidDialogOpen={setConfirmForbidDialogOpen}
       />
 
-      <Dialog
-        open={confirmDialogOpen}
-        onClose={() => setConfirmDialogOpen(false)}
-      >
-        <form onSubmit={handleSubmit(confirmSelections)}>
-          <DialogTitle id='alert-dialog-title'>Confirm selections</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              You have selected <strong>{selectedPhotos} photos</strong>.
-            </DialogContentText>
-            <DialogContentText>
-              Do you want to leave a final comment?
-            </DialogContentText>
-            <TextField
-              multiline
-              rows={3}
-              fullWidth
-              variant='outlined'
-              placeholder='Final comment'
-              name='finalComment'
-              inputRef={register}
-            />
-            <DialogContentText>
-              <strong>Warning:</strong> you will not be able to select more
-              photos after confirming!
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={() => setConfirmDialogOpen(false)}
-              color='secondary'
-              autoFocus
-            >
-              Cancel
-            </Button>
-            <Button type='submit' color='primary'>
-              Confirm
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
+      <SelectionConfirmationDialog
+        collection={collection}
+        setCollection={setCollection}
+        collectionId={collectionId}
+        selectedPhotos={selectedPhotos}
+        confirmDialogOpen={confirmDialogOpen}
+        setConfirmDialogOpen={setConfirmDialogOpen}
+      />
     </div>
   );
 };

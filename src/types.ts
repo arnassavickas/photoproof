@@ -118,3 +118,12 @@ export interface PhotoGridProps {
   openLightbox: (index: number) => (event: any) => void;
   openCommentModal: (index?: number | undefined) => void;
 }
+
+export interface SelectionConfirmationDialogProps {
+  collection: Collection;
+  setCollection: React.Dispatch<React.SetStateAction<Collection | null>>;
+  collectionId: string;
+  selectedPhotos: number | undefined;
+  confirmDialogOpen: boolean;
+  setConfirmDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
