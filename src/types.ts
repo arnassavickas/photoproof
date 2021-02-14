@@ -103,3 +103,18 @@ export interface AddPhotosDialogProps {
   setAddPhotosDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   progress: number;
 }
+export interface ConfirmationForbiddenProps {
+  collection: Collection;
+  selectedPhotos: number | undefined;
+  confirmForbidDialogOpen: boolean;
+  setConfirmForbidDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface PhotoGridProps {
+  collectionId?: string;
+  collection: Collection;
+  setCollection?: React.Dispatch<React.SetStateAction<Collection | null>>;
+  filteredPhotos: Photo[];
+  openLightbox: (index: number) => (event: any) => void;
+  openCommentModal: (index?: number | undefined) => void;
+}

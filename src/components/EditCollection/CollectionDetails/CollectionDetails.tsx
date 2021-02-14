@@ -34,28 +34,20 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
     watch: watchSettings,
     errors: errorsSettings,
     getValues: getValuesSettings,
-    setValue: setValueSettings,
-    reset: resetSettings,
     control: controlSettings,
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      title: collection.title,
+      allowComments: collection.allowComments,
+      maxSelectRequired: collection.maxSelect.required,
+      minSelectRequired: collection.minSelect.required,
+      minSelectGoal: collection.minSelect.goal,
+      maxSelectGoal: collection.maxSelect.goal,
+    },
+  });
 
   const minToggle = watchSettings('minSelectRequired');
   const maxToggle = watchSettings('maxSelectRequired');
-
-  useEffect(() => {
-    if (collection) {
-      resetSettings({
-        title: collection.title,
-        allowComments: collection.allowComments,
-        maxSelectRequired: collection.maxSelect.required,
-        minSelectRequired: collection.minSelect.required,
-        minSelectGoal: collection.minSelect.goal,
-        maxSelectGoal: collection.maxSelect.goal,
-      });
-      setValueSettings('allowComments', true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collection, resetSettings]);
 
   const copyUrl = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const button = e.target as HTMLElement;

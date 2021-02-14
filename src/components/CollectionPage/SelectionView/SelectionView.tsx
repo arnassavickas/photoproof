@@ -25,6 +25,8 @@ import MessageIcon from '@material-ui/icons/Message';
 import Lightbox from '../../Lightbox/Lightbox';
 import CommentDialog from '../../CommentDialog/CommentDialog';
 import { useForm } from 'react-hook-form';
+import PhotoGrid from '../PhotoGrid/PhotoGrid';
+import ConfirmationForbiddenDialog from './ConfirmationForbiddenDialog/ConfirmationForbiddenDialog';
 
 const SelectionView: React.FC<SelectionViewProps> = ({
   collection,
@@ -48,26 +50,6 @@ const SelectionView: React.FC<SelectionViewProps> = ({
     defaultValues: { files: [] },
   });
   const [confirmForbidDialogOpen, setConfirmForbidDialogOpen] = useState(false);
-
-  const selectPhoto = (photoId: string) => (event: any) => {
-    try {
-      const clickedPhoto = collection?.photos.find(
-        (photo) => photo.id === photoId
-      );
-      if (clickedPhoto && collection) {
-        updatePhotoSelection(collectionId, photoId, !clickedPhoto.selected);
-        clickedPhoto.selected = !clickedPhoto?.selected;
-        setCollection({
-          ...collection,
-          photos: collection.photos.map((photo) =>
-            photo.id === photoId ? clickedPhoto : photo
-          ),
-        });
-      }
-    } catch (err) {
-      //
-    }
-  };
 
   const selectPhotoLightbox = () => {
     if (filteredPhotos && collection) {
@@ -127,49 +109,14 @@ const SelectionView: React.FC<SelectionViewProps> = ({
 
   return (
     <div>
-      <div className={styles.photoGrid}>
-        {filteredPhotos.map((photo, index) => {
-          return (
-            <div className={styles.photoThumbnailGrid} key={photo.id}>
-              <div className={styles.imgBorder}>
-                <picture>
-                  <source srcSet={photo.thumbnailWebp} type='image/webp' />
-                  <img
-                    src={photo.thumbnail}
-                    alt={collection.title}
-                    onClick={openLightbox(Number(index))}
-                  />
-                </picture>
-                {collection.allowComments ? (
-                  <IconButton
-                    className={
-                      photo.comment.length > 0
-                        ? styles.commentBtnFilled
-                        : styles.commentBtn
-                    }
-                    onClick={() => openCommentModal(index)}
-                  >
-                    {photo.comment.length > 0 ? (
-                      <MessageIcon />
-                    ) : (
-                      <ChatBubbleOutlineIcon />
-                    )}
-                  </IconButton>
-                ) : null}
-
-                <IconButton
-                  className={
-                    photo.selected ? styles.starBtnSelected : styles.starBtn
-                  }
-                  onClick={selectPhoto(photo.id)}
-                >
-                  {photo.selected ? <StarIcon /> : <StarBorderIcon />}
-                </IconButton>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      <PhotoGrid
+        collectionId={collectionId}
+        collection={collection}
+        setCollection={setCollection}
+        filteredPhotos={filteredPhotos}
+        openLightbox={openLightbox}
+        openCommentModal={openCommentModal}
+      />
       {lightboxOpen && filteredPhotos.length > 0 && (
         <Lightbox
           filteredPhotos={filteredPhotos}
@@ -205,13 +152,14 @@ const SelectionView: React.FC<SelectionViewProps> = ({
         disabled={true}
         actionButtons={[
           <Button
+            key={'cancel'}
             onClick={() => setCommentOpen(false)}
             color='secondary'
             autoFocus
           >
             Cancel
           </Button>,
-          <Button onClick={savePhotoComment} color='primary'>
+          <Button key={'save'} onClick={savePhotoComment} color='primary'>
             Save
           </Button>,
         ]}
@@ -221,7 +169,7 @@ const SelectionView: React.FC<SelectionViewProps> = ({
         variant='contained'
         classes={{ root: styles.fixedBtn }}
         onClick={() => {
-          if (selectedPhotos) {
+          if (selectedPhotos != null) {
             if (
               (collection.minSelect.required &&
                 selectedPhotos < collection.minSelect.goal) ||
@@ -230,58 +178,19 @@ const SelectionView: React.FC<SelectionViewProps> = ({
             ) {
               return setConfirmForbidDialogOpen(true);
             }
+            return setConfirmDialogOpen(true);
           }
-          return setConfirmDialogOpen(true);
         }}
       >
         Confirm selections
       </Button>
 
-      <Dialog
-        open={confirmForbidDialogOpen}
-        onClose={() => setConfirmForbidDialogOpen(false)}
-      >
-        <DialogTitle id='alert-dialog-title'>
-          Please adjust your selections!
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            You have selected <strong>{selectedPhotos}</strong> photos, but{' '}
-            {collection.minSelect.required && collection.maxSelect.required ? (
-              <span>
-                you must select{' '}
-                <strong>
-                  from {collection.minSelect.goal} to{' '}
-                  {collection.maxSelect.goal}
-                </strong>{' '}
-                photos.
-              </span>
-            ) : collection.minSelect.required &&
-              !collection.maxSelect.required ? (
-              <span>
-                you must select{' '}
-                <strong>at least {collection.minSelect.goal}</strong> photos.
-              </span>
-            ) : !collection.minSelect.required &&
-              collection.maxSelect.required ? (
-              <span>
-                you must select{' '}
-                <strong>a maximum of {collection.maxSelect.goal}</strong>{' '}
-                photos.
-              </span>
-            ) : null}{' '}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setConfirmForbidDialogOpen(false)}
-            color='primary'
-            autoFocus
-          >
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ConfirmationForbiddenDialog
+        collection={collection}
+        selectedPhotos={selectedPhotos}
+        confirmForbidDialogOpen={confirmForbidDialogOpen}
+        setConfirmForbidDialogOpen={setConfirmForbidDialogOpen}
+      />
 
       <Dialog
         open={confirmDialogOpen}

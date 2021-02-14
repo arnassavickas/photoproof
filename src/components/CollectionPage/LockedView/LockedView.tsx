@@ -10,6 +10,7 @@ import MessageIcon from '@material-ui/icons/Message';
 
 import Lightbox from '../../Lightbox/Lightbox';
 import CommentDialog from '../../CommentDialog/CommentDialog';
+import PhotoGrid from '../PhotoGrid/PhotoGrid';
 
 const LockedView: React.FC<LockedViewProps> = ({
   collection,
@@ -26,37 +27,12 @@ const LockedView: React.FC<LockedViewProps> = ({
 }) => {
   return (
     <div>
-      <div className={styles.photoGrid}>
-        {filteredPhotos.map((photo, index) => {
-          return (
-            <div className={styles.photoThumbnailGrid} key={photo.id}>
-              <div className={styles.imgBorder}>
-                <picture>
-                  <source srcSet={photo.thumbnailWebp} type='image/webp' />
-                  <img
-                    src={photo.thumbnail}
-                    alt={collection.title}
-                    onClick={openLightbox(Number(index))}
-                  />
-                </picture>
-                {photo.comment.length > 0 && collection.allowComments ? (
-                  <IconButton
-                    className={styles.commentBtnFilled}
-                    onClick={() => openCommentModal(index)}
-                  >
-                    <MessageIcon />
-                  </IconButton>
-                ) : null}
-                {photo.selected ? (
-                  <IconButton className={styles.starBtnSelected}>
-                    <StarIcon />
-                  </IconButton>
-                ) : null}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      <PhotoGrid
+        collection={collection}
+        filteredPhotos={filteredPhotos}
+        openLightbox={openLightbox}
+        openCommentModal={openCommentModal}
+      />
       {lightboxOpen && filteredPhotos.length > 0 && (
         <Lightbox
           filteredPhotos={filteredPhotos}
