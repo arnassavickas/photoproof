@@ -3,7 +3,7 @@ import styles from './styles.module.scss';
 import 'react-image-lightbox/style.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Dashboard from './components/Dashboard/Dashboard';
-import NewCollection from './components/NewCollectionPage/NewCollection';
+import NewCollection from './components/NewCollection/NewCollection';
 import Settings from './components/Settings/Settings';
 import SignIn from './components/SignIn/SignIn';
 import CollectionPage from './components/CollectionPage/CollectionPage';

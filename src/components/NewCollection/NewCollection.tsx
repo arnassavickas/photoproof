@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './styles.module.scss';
+//import styles from './styles.module.scss';
 import { Link, useHistory } from 'react-router-dom';
 import { generateNewCollection } from '../../firebase';
 import { useForm, Controller } from 'react-hook-form';
@@ -77,7 +77,7 @@ const NewCollection: React.FC = () => {
 
   return (
     <div>
-      <Button className={styles.no} to='/' component={Link} variant='outlined'>
+      <Button to='/' component={Link} variant='outlined'>
         Cancel
       </Button>
       <Typography variant='h4'>new collection</Typography>

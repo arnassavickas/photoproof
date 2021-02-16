@@ -8,7 +8,10 @@ const SignIn = () => {
 
   const signInWithEmailAndPasswordHandler = async (data: any) => {
     try {
-      await auth.signInWithEmailAndPassword(data.email, data.password);
+      await auth.signInWithEmailAndPassword(
+        data.email,
+        data.password
+      );
     } catch (err) {
       setError('email', {
         message: ' ',
@@ -16,7 +19,7 @@ const SignIn = () => {
       setError('password', {
         message: 'Email or password is incorrect',
       });
-      console.error('error signin in with password and email', err);
+      console.error('error signing in with password and email', err);
     }
   };
 
@@ -24,40 +27,46 @@ const SignIn = () => {
     <div>
       <Typography variant='h4'>Sign In</Typography>
       <Box mt={3}>
-        <form onSubmit={handleSubmit(signInWithEmailAndPasswordHandler)}>
-          <div>
-            <TextField
-              variant='outlined'
-              name='email'
-              label='Email'
-              inputRef={register({ required: true })}
-              error={!!errors.email}
-              helperText={
-                errors.email ? errors.email.message || 'Email is required' : ' '
-              }
-            />
-          </div>
-          <div>
-            <TextField
-              type='password'
-              variant='outlined'
-              name='password'
-              label='Password'
-              inputRef={register({ required: true })}
-              error={!!errors.password}
-              helperText={
-                errors.password
-                  ? errors.password.message || 'Password is required'
-                  : ' '
-              }
-            />
-          </div>
-          <div>
-            <Button type='submit' variant='outlined'>
-              Sign in
-            </Button>
-          </div>
-        </form>
+        {
+          <form onSubmit={handleSubmit(signInWithEmailAndPasswordHandler)}>
+            <div>
+              <TextField
+                id='email'
+                variant='outlined'
+                name='email'
+                label='Email'
+                inputRef={register({ required: true })}
+                error={!!errors.email}
+                helperText={
+                  errors.email
+                    ? errors.email.message || 'Email is required'
+                    : ' '
+                }
+              />
+            </div>
+            <div>
+              <TextField
+                id='password'
+                type='password'
+                variant='outlined'
+                name='password'
+                label='Password'
+                inputRef={register({ required: true })}
+                error={!!errors.password}
+                helperText={
+                  errors.password
+                    ? errors.password.message || 'Password is required'
+                    : ' '
+                }
+              />
+            </div>
+            <div>
+              <Button id='signIn' type='submit' variant='outlined'>
+                Sign In
+              </Button>
+            </div>
+          </form>
+        }
       </Box>
     </div>
   );
