@@ -1,11 +1,10 @@
 import React from 'react';
 
-import { prettyDOM, render, waitFor } from '@testing-library/react';
+import { render} from '@testing-library/react';
 import user from '@testing-library/user-event';
 import PhotoGrid from './PhotoGrid';
 import { Collection, PhotoGridProps } from '../../../types';
 import { updatePhotoSelection as mockUpdatePhotoSelection } from '../../../firebase';
-import { LensTwoTone } from '@material-ui/icons';
 
 const openCommentModal = jest.fn();
 const setCollection = jest.fn();
@@ -92,7 +91,7 @@ describe('<PhotoGrid/> collection.status="selecting"', () => {
   });
 
   test('renders one photo', async () => {
-    const { getAllByAltText, debug } = render(<PhotoGrid {...props} />);
+    const { getAllByAltText} = render(<PhotoGrid {...props} />);
     const photos = getAllByAltText(props.collection.title);
     expect(photos).toHaveLength(2);
   });
@@ -114,7 +113,7 @@ describe('<PhotoGrid/> collection.status="selecting"', () => {
   });
 
   test('select button click updates collection and calls database one time', () => {
-    const { debug, getAllByRole, rerender } = render(<PhotoGrid {...props} />);
+    const { getAllByRole} = render(<PhotoGrid {...props} />);
 
     let selectBtn = getAllByRole('button', {
       name: /select/i,
@@ -192,7 +191,7 @@ console.log(editingProps);
 
 describe('<PhotoGrid/> collection.status="confirmed"', () => {
   test('renders only one comment button', () => {
-    const { getAllByRole, debug, container } = render(
+    const { getAllByRole} = render(
       <PhotoGrid {...editingProps} />
     );
 
