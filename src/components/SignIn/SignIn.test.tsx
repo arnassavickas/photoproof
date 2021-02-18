@@ -7,7 +7,7 @@ import SignIn from './SignIn';
 import { auth } from '../../firebase';
 import firebase from 'firebase';
 
-describe('SignIn', () => {
+describe('<SignIn/>', () => {
   beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
   });
@@ -19,7 +19,7 @@ describe('SignIn', () => {
   });
 
   test('renders content', () => {
-    const { getByLabelText, container, debug } = render(<SignIn />);
+    const { getByLabelText, container } = render(<SignIn />);
 
     const title = container.querySelector('h4');
     expect(title).toHaveTextContent('Sign In');
@@ -35,7 +35,7 @@ describe('SignIn', () => {
   });
 
   test('displays errors', async () => {
-    const { getAllByText, container, debug } = render(<SignIn />);
+    const { getAllByText, container } = render(<SignIn />);
     const signInButton = getAllByText('Sign In')
       ?.find((el) => el.closest('button') != null)
       ?.closest('button');
@@ -81,7 +81,9 @@ describe('SignIn', () => {
       expect(mockHandler.mock.calls).toHaveLength(1);
       expect(container).toHaveTextContent('Email or password is incorrect');
     });
+    mockHandler.mockRestore();
   });
+
   test('login works with correct implementation', async () => {
     const mockHandler = jest.fn((email, password) => {
       if (email === 'correct' && password === 'correct') {
@@ -114,5 +116,6 @@ describe('SignIn', () => {
       expect(mockHandler.mock.calls).toHaveLength(1);
       expect(container).not.toHaveTextContent('Email or password is incorrect');
     });
-  });
+    mockHandler.mockRestore();
+  }); 
 });

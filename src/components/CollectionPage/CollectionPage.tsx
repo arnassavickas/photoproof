@@ -80,7 +80,7 @@ const CollectionPage: React.FC = () => {
     }
   };
 
-  const openLightbox = (index: number) => (event: any) => {
+  const openLightbox = (index: number) => {
     setPhotoIndex(index);
     setLightboxOpen(true);
   };

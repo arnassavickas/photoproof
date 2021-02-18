@@ -34,7 +34,7 @@ export interface LockedViewProps {
   filteredPhotos: Photo[];
   lightboxOpen: boolean;
   setLightboxOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  openLightbox: (index: number) => (event: any) => void;
+  openLightbox: (index: number) => void;
   openCommentModal: (index?: number | undefined) => void;
   photoIndex: number;
   setPhotoIndex: React.Dispatch<React.SetStateAction<number>>;
@@ -115,7 +115,7 @@ export interface PhotoGridProps {
   collection: Collection;
   setCollection?: React.Dispatch<React.SetStateAction<Collection | null>>;
   filteredPhotos: Photo[];
-  openLightbox: (index: number) => (event: any) => void;
+  openLightbox: (index: number) => void;
   openCommentModal: (index?: number | undefined) => void;
 }
 
