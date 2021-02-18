@@ -1,10 +1,11 @@
 import React from 'react';
 
-import { render } from '@testing-library/react';
+import { prettyDOM, render, waitFor } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import PhotoGrid from './PhotoGrid';
-import { PhotoGridProps } from '../../../types';
+import { Collection, PhotoGridProps } from '../../../types';
 import { updatePhotoSelection as mockUpdatePhotoSelection } from '../../../firebase';
+import { LensTwoTone } from '@material-ui/icons';
 
 const openCommentModal = jest.fn();
 const setCollection = jest.fn();
@@ -45,7 +46,7 @@ const props: PhotoGridProps = {
         thumbnail: 'www.cloudurl.lt/thumbnail2',
         thumbnailWebp: 'www.cloudurl.lt/thumbnail/webp2',
         selected: true,
-        comment: '',
+        comment: 'test',
         dateTaken: new Date(),
       },
     ],
@@ -75,7 +76,7 @@ const props: PhotoGridProps = {
       thumbnail: 'www.cloudurl.lt/thumbnail2',
       thumbnailWebp: 'www.cloudurl.lt/thumbnail/webp2',
       selected: true,
-      comment: '',
+      comment: 'test',
       dateTaken: new Date(),
     },
   ],
@@ -85,7 +86,7 @@ const props: PhotoGridProps = {
 
 jest.mock('../../../firebase');
 
-describe('<SignIn/>', () => {
+describe('<PhotoGrid/> collection.status="selecting"', () => {
   beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
   });
@@ -113,9 +114,9 @@ describe('<SignIn/>', () => {
   });
 
   test('select button click updates collection and calls database one time', () => {
-    const { debug, getAllByRole } = render(<PhotoGrid {...props} />);
+    const { debug, getAllByRole, rerender } = render(<PhotoGrid {...props} />);
 
-    const selectBtn = getAllByRole('button', {
+    let selectBtn = getAllByRole('button', {
       name: /select/i,
     });
 
@@ -130,5 +131,74 @@ describe('<SignIn/>', () => {
     expect(mockUpdatePhotoSelection).toHaveBeenCalledTimes(2);
     expect(props.collection.photos[0].selected).toBe(false);
     expect(props.collection.photos[1].selected).toBe(true);
+  });
+
+  test('updating photo.selected to true, renders a different icon path', () => {
+    const { getAllByRole, rerender } = render(<PhotoGrid {...props} />);
+
+    let selectBtn = getAllByRole('button', {
+      name: /select/i,
+    });
+
+    expect(selectBtn[0].querySelector('path')?.getAttribute('d')).not.toEqual(
+      selectBtn[1].querySelector('path')?.getAttribute('d')
+    );
+    props.filteredPhotos[0].selected = true;
+
+    rerender(<PhotoGrid {...props} />);
+    selectBtn = getAllByRole('button', {
+      name: /select/i,
+    });
+
+    expect(selectBtn[0].querySelector('path')?.getAttribute('d')).toEqual(
+      selectBtn[1].querySelector('path')?.getAttribute('d')
+    );
+  });
+
+  test('updating photo.comment to some length, renders a different icon path', () => {
+    const { getAllByRole, rerender } = render(<PhotoGrid {...props} />);
+
+    let commentBtn = getAllByRole('button', {
+      name: /comment/i,
+    });
+
+    expect(commentBtn[0].querySelector('path')?.getAttribute('d')).not.toEqual(
+      commentBtn[1].querySelector('path')?.getAttribute('d')
+    );
+    props.filteredPhotos[0].comment = 'test';
+
+    rerender(<PhotoGrid {...props} />);
+    commentBtn = getAllByRole('button', {
+      name: /select/i,
+    });
+
+    expect(commentBtn[0].querySelector('path')?.getAttribute('d')).toEqual(
+      commentBtn[1].querySelector('path')?.getAttribute('d')
+    );
+    props.filteredPhotos[0].comment = '';
+  });
+});
+
+const editingCollection = {
+  ...props.collection,
+  status: 'confirmed' as Collection['status'],
+};
+const editingProps = { ...props, collection: editingCollection };
+console.log(editingProps.collection.photos[0].comment.length);
+console.log(editingProps.collection.photos[1].comment.length);
+console.log(editingProps.filteredPhotos[0].comment.length);
+console.log(editingProps.filteredPhotos[1].comment.length);
+console.log(editingProps);
+
+describe('<PhotoGrid/> collection.status="confirmed"', () => {
+  test('renders only one comment button', () => {
+    const { getAllByRole, debug, container } = render(
+      <PhotoGrid {...editingProps} />
+    );
+
+    const commentBtn = getAllByRole('button', {
+      name: /comment/i,
+    });
+    expect(commentBtn).toHaveLength(1);
   });
 });

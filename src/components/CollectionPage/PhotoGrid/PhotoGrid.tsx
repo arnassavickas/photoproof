@@ -85,6 +85,7 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
                 <div>
                   {photo.comment.length > 0 && collection.allowComments ? (
                     <IconButton
+                      aria-label='comment'
                       className={styles.commentBtnFilled}
                       onClick={() => openCommentModal(index)}
                     >
@@ -92,7 +93,10 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
                     </IconButton>
                   ) : null}
                   {photo.selected ? (
-                    <IconButton className={styles.starBtnSelected}>
+                    <IconButton
+                      aria-label='select'
+                      className={styles.starBtnSelected}
+                    >
                       <StarIcon />
                     </IconButton>
                   ) : null}
