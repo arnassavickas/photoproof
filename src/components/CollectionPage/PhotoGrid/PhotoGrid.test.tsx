@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { render} from '@testing-library/react';
+import { render } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import PhotoGrid from './PhotoGrid';
 import { Collection, PhotoGridProps } from '../../../types';
@@ -91,7 +91,7 @@ describe('<PhotoGrid/> collection.status="selecting"', () => {
   });
 
   test('renders one photo', async () => {
-    const { getAllByAltText} = render(<PhotoGrid {...props} />);
+    const { getAllByAltText } = render(<PhotoGrid {...props} />);
     const photos = getAllByAltText(props.collection.title);
     expect(photos).toHaveLength(2);
   });
@@ -113,7 +113,7 @@ describe('<PhotoGrid/> collection.status="selecting"', () => {
   });
 
   test('select button click updates collection and calls database one time', () => {
-    const { getAllByRole} = render(<PhotoGrid {...props} />);
+    const { getAllByRole } = render(<PhotoGrid {...props} />);
 
     let selectBtn = getAllByRole('button', {
       name: /select/i,
@@ -178,22 +178,15 @@ describe('<PhotoGrid/> collection.status="selecting"', () => {
   });
 });
 
-const editingCollection = {
-  ...props.collection,
-  status: 'confirmed' as Collection['status'],
-};
-const editingProps = { ...props, collection: editingCollection };
-console.log(editingProps.collection.photos[0].comment.length);
-console.log(editingProps.collection.photos[1].comment.length);
-console.log(editingProps.filteredPhotos[0].comment.length);
-console.log(editingProps.filteredPhotos[1].comment.length);
-console.log(editingProps);
-
 describe('<PhotoGrid/> collection.status="confirmed"', () => {
+  const editingCollection = {
+    ...props.collection,
+    status: 'confirmed' as Collection['status'],
+  };
+  const editingProps = { ...props, collection: editingCollection };
+  
   test('renders only one comment button', () => {
-    const { getAllByRole} = render(
-      <PhotoGrid {...editingProps} />
-    );
+    const { getAllByRole } = render(<PhotoGrid {...editingProps} />);
 
     const commentBtn = getAllByRole('button', {
       name: /comment/i,

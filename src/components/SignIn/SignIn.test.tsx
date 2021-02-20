@@ -19,7 +19,7 @@ describe('<SignIn/>', () => {
   });
 
   test('renders content', () => {
-    const { getByLabelText, container } = render(<SignIn />);
+    const { getByLabelText, container, getByRole, debug } = render(<SignIn />);
 
     const title = container.querySelector('h4');
     expect(title).toHaveTextContent('Sign In');
@@ -30,7 +30,9 @@ describe('<SignIn/>', () => {
     const password = getByLabelText(/password/i);
     expect(password).toBeDefined();
 
-    const signInButton = container.querySelector('#signIn');
+    const signInButton = getByRole('button', {
+      name: /signIn/i,
+    });
     expect(signInButton).toHaveTextContent(/sign in/i);
   });
 
@@ -117,5 +119,5 @@ describe('<SignIn/>', () => {
       expect(container).not.toHaveTextContent('Email or password is incorrect');
     });
     mockHandler.mockRestore();
-  }); 
+  });
 });

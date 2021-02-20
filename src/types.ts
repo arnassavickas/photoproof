@@ -29,6 +29,16 @@ export type Photo = {
   dateTaken: Date | null;
 };
 
+export interface NewCollectionInputs {
+  files: FileList;
+  title: string;
+  minSelectRequired: boolean;
+  minSelectGoal: number;
+  maxSelectRequired: boolean;
+  maxSelectGoal: number;
+  allowComments: boolean;
+};
+
 export interface LockedViewProps {
   collection: Collection;
   filteredPhotos: Photo[];

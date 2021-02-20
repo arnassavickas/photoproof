@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-//import styles from './styles.module.scss';
+import styles from './styles.module.scss';
 import { Link, useHistory } from 'react-router-dom';
 import { generateNewCollection } from '../../firebase';
 import { useForm, Controller } from 'react-hook-form';
@@ -15,16 +15,8 @@ import {
   CircularProgress,
 } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone';
-
-type Inputs = {
-  files: FileList;
-  title: string;
-  minSelectRequired: boolean;
-  minSelectGoal: number;
-  maxSelectRequired: boolean;
-  maxSelectGoal: number;
-  allowComments: boolean;
-};
+import { NewCollectionInputs } from '../../types';
+import { Fragment } from 'react';
 
 const NewCollection: React.FC = () => {
   const {
@@ -34,7 +26,7 @@ const NewCollection: React.FC = () => {
     errors,
     getValues,
     control,
-  } = useForm<Inputs>();
+  } = useForm<NewCollectionInputs>();
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUplaodProgress] = useState(0);
   const [thumbnailReady, setThumbnailReady] = useState(true);
@@ -43,8 +35,7 @@ const NewCollection: React.FC = () => {
   const minToggle = watch('minSelectRequired');
   const maxToggle = watch('maxSelectRequired');
 
-  const onSubmit = async (data: Inputs) => {
-    console.log(data);
+  const onSubmit = async (data: NewCollectionInputs) => {
     setUploading(true);
     const collectionId = await generateNewCollection(
       {
@@ -80,10 +71,16 @@ const NewCollection: React.FC = () => {
       <Button to='/' component={Link} variant='outlined'>
         Cancel
       </Button>
-      <Typography variant='h4'>new collection</Typography>
+      <Typography variant='h4'>New collection</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <Button color='primary' variant='contained' type='submit'>
+          <Button
+            aria-label='create'
+            id='create'
+            color='primary'
+            variant='contained'
+            type='submit'
+          >
             Create
           </Button>
           {uploading ? (
@@ -95,6 +92,7 @@ const NewCollection: React.FC = () => {
           )}
         </div>
         <TextField
+          id='title'
           name='title'
           inputRef={register({ required: true, maxLength: 50 })}
           variant='outlined'
@@ -111,14 +109,16 @@ const NewCollection: React.FC = () => {
             label='Allow comments'
           />
         </div>
-        <Typography variant='subtitle1'>selection goals:</Typography>
+        <Typography variant='body1'>selection goals:</Typography>
         <div>
           <FormControlLabel
             control={<Checkbox name='minSelectRequired' inputRef={register} />}
-            label='minimum'
+            label='minSelectRequired'
           />
           <div style={{ display: minToggle ? 'inline' : 'none' }}>
             <TextField
+              id='minSelectGoal'
+              label='minSelectGoal'
               name='minSelectGoal'
               type='number'
               variant='outlined'
@@ -149,10 +149,12 @@ const NewCollection: React.FC = () => {
         <div>
           <FormControlLabel
             control={<Checkbox name='maxSelectRequired' inputRef={register} />}
-            label='maximum'
+            label='maxSelectRequired'
           />
           <div style={{ display: maxToggle ? 'inline' : 'none' }}>
             <TextField
+              id='maxSelectGoal'
+              label='maxSelectGoal'
               name='maxSelectGoal'
               type='number'
               variant='outlined'
@@ -180,15 +182,29 @@ const NewCollection: React.FC = () => {
             />
           </div>
         </div>
+        <div className={styles.dropzoneError}>
+          <Typography variant='subtitle2'>
+            {errors.files ? (
+              'Images are required'
+            ) : (
+              <Fragment>&#8203;</Fragment>
+            )}
+          </Typography>
+        </div>
         <Controller
           name='files'
           control={control}
+          defaultValue={[]}
+          rules={{
+            validate: {
+              notEmpty: (array) => array.length > 0,
+            },
+          }}
           render={({ onChange }) => (
             <DropzoneArea
               acceptedFiles={['image/jpeg']}
               dropzoneText={'Drop images or click to upload here'}
               onChange={(files) => {
-                console.log(files);
                 return onChange([...files]);
               }}
               filesLimit={999}
@@ -205,7 +221,9 @@ const NewCollection: React.FC = () => {
               showPreviewsInDropzone={false}
               showPreviews={true}
               showFileNamesInPreview={true}
-              dropzoneClass={'dropzoneClass'}
+              dropzoneClass={`dropzoneClass ${
+                errors.files && styles.dropzoneErrorBorder
+              }`}
             />
           )}
         />

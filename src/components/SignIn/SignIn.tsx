@@ -61,7 +61,11 @@ const SignIn = () => {
               />
             </div>
             <div>
-              <Button id='signIn' type='submit' variant='outlined'>
+              <Button
+                aria-label='signIn'
+                type='submit'
+                variant='outlined'
+              >
                 Sign In
               </Button>
             </div>

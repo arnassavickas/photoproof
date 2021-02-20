@@ -16,6 +16,7 @@ const LightboxComponent: React.FC<LightboxProps> = ({
   setLightboxIndex,
   toolbarButtons,
 }) => {
+  //TODO refactor so lightboxOpen mount/unmount logic is inside the component
   return (
     <Lightbox
       mainSrc={
