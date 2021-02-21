@@ -44,7 +44,7 @@ const props: PhotoTableProps = {
         thumbnail: 'www.cloudurl.lt/thumbnail2',
         thumbnailWebp: 'www.cloudurl.lt/thumbnail/webp2',
         selected: true,
-        comment: 'test',
+        comment: 'test comment',
         dateTaken: new Date(),
       },
     ],
@@ -73,7 +73,7 @@ const props: PhotoTableProps = {
       thumbnail: 'www.cloudurl.lt/thumbnail2',
       thumbnailWebp: 'www.cloudurl.lt/thumbnail/webp2',
       selected: true,
-      comment: 'test',
+      comment: 'test comment',
       dateTaken: new Date(),
     },
   ],
@@ -94,12 +94,10 @@ describe('<PhotoTable/>', () => {
     const { container, getAllByTestId, debug } = render(
       <PhotoTable {...props} />
     );
-    const rows = container.querySelectorAll('tr');
-    //console.log(prettyDOM(rows[2]));
     const commentCells = getAllByTestId('comment');
     expect(commentCells).toHaveLength(2);
-    expect(commentCells[0]).not.toHaveTextContent('test');
-    expect(commentCells[1]).toHaveTextContent('test');
+    expect(commentCells[0]).not.toHaveTextContent('test comment');
+    expect(commentCells[1]).toHaveTextContent('test comment');
   });
 
   test('renders one selection icon', () => {
@@ -111,11 +109,11 @@ describe('<PhotoTable/>', () => {
   });
 });
 
-/* describe('<PhotoTable/> status="editing"', () => {
+describe('<PhotoTable/> status="editing"', () => {
   props.collection.status = 'editing';
   test('renders two checkboxes', () => {
     const { getAllByTestId } = render(<PhotoTable {...props} />);
     const checkboxes = getAllByTestId('checkbox');
     expect(checkboxes).toHaveLength(2);
   });
-}); */
+});

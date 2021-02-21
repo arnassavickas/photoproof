@@ -101,12 +101,11 @@ const NewCollection: React.FC = () => {
         <div>
           <FormControlLabel
             control={<Checkbox name='minSelectRequired' inputRef={register} />}
-            label='minSelectRequired'
+            label='min'
           />
           <div style={{ display: minToggle ? 'inline' : 'none' }}>
             <TextField
-              id='minSelectGoal'
-              label='minSelectGoal'
+              data-testid='minSelectGoal'
               name='minSelectGoal'
               type='number'
               variant='outlined'
@@ -137,12 +136,11 @@ const NewCollection: React.FC = () => {
         <div>
           <FormControlLabel
             control={<Checkbox name='maxSelectRequired' inputRef={register} />}
-            label='maxSelectRequired'
+            label='max'
           />
           <div style={{ display: maxToggle ? 'inline' : 'none' }}>
             <TextField
-              id='maxSelectGoal'
-              label='maxSelectGoal'
+              data-testid='maxSelectGoal'
               name='maxSelectGoal'
               type='number'
               variant='outlined'

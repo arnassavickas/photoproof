@@ -52,6 +52,7 @@ describe('<SignIn/>', () => {
   });
 
   test('login fails with wrong credentials', async () => {
+    //TODO find more elegant way to mock
     const mockHandler = jest.fn((email, password) => {
       if (email === 'correct' && password === 'correct') {
         return Promise.resolve(
@@ -61,7 +62,6 @@ describe('<SignIn/>', () => {
         throw new Error('incorrect credentials');
       }
     });
-
     auth.signInWithEmailAndPassword = mockHandler;
 
     const { getByLabelText, getAllByText, container } = render(<SignIn />);
