@@ -66,7 +66,6 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
             {collection.status === 'editing' ? (
               <TableCell padding='checkbox'>
                 <Checkbox
-                  data-testid='checkbox'
                   indeterminate={
                     selected.length > 0 &&
                     selected.length < filteredPhotos.length
@@ -95,6 +94,7 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
             >
               {collection.status === 'editing' ? (
                 <TableCell
+                  data-testid='checkbox'
                   padding='checkbox'
                   onClick={(event) => handleClick(event, photo.id)}
                 >
