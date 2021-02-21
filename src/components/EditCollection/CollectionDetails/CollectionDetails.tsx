@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './styles.module.scss';
 import { Link } from 'react-router-dom';
 import { Collection, CollectionDetailsProps } from '../../../types';
-import { collectionStatus, updateSettings } from '../../../firebase';
+import { changeCollectionStatus, updateSettings } from '../../../firebase';
 import {
   Checkbox,
   Typography,
@@ -60,7 +60,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
 
   const changeStatus = async (status: Collection['status']) => {
     try {
-      await collectionStatus(collectionId, status);
+      await changeCollectionStatus(collectionId, status);
       if (collection) {
         setCollection({ ...collection, status });
       }
@@ -177,6 +177,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
           <div>
             <TextField
               label='Title'
+              id='title'
               name='title'
               defaultValue={collection.title}
               variant='outlined'
@@ -260,6 +261,8 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
           />
           <div style={{ display: minToggle ? 'inline' : 'none' }}>
             <TextField
+              inputProps={{ 'data-testid': 'minSelectGoal' }}
+              //data-testid='minSelectGoal'
               name='minSelectGoal'
               type='number'
               variant='outlined'
@@ -313,6 +316,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
           />
           <div style={{ display: maxToggle ? 'inline' : 'none' }}>
             <TextField
+              data-testid='maxSelectGoal'
               name='maxSelectGoal'
               type='number'
               variant='outlined'

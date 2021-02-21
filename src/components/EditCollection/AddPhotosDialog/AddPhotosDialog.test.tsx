@@ -17,7 +17,7 @@ const props: AddPhotosDialogProps = {
   progress: 0,
 };
 
-describe('<NewCollection/>', () => {
+describe('<AddPhotosDialog/>', () => {
   beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
   });

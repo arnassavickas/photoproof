@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { BrowserRouter as Router } from 'react-router-dom';
-import {  render, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 import NewCollection from './NewCollection';
@@ -84,6 +84,8 @@ describe('<NewCollection/>', () => {
       );
     }
     user.click(create);
+
+    //TODO check if call is made
 
     await waitFor(() => {
       expect(container).not.toHaveTextContent('Title is required');

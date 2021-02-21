@@ -1,82 +1,17 @@
 import React from 'react';
 
-import { render, prettyDOM } from '@testing-library/react';
-import user from '@testing-library/user-event';
+import { render } from '@testing-library/react';
 import PhotoTable from './PhotoTable';
-import { Collection, PhotoTableProps } from '../../../types';
-import { updatePhotoSelection as mockUpdatePhotoSelection } from '../../../firebase';
+import { PhotoTableProps } from '../../../types';
+import { collection, filteredPhotos } from '../../../utils/testUtils';
 
 const setSelected = jest.fn();
 const setPhotoIndex = jest.fn();
 const setLightboxOpen = jest.fn();
 
 const props: PhotoTableProps = {
-  collection: {
-    id: 'collectionId',
-    dateCreated: new Date(),
-    title: 'collectio title',
-    minSelect: { required: true, goal: 1 },
-    maxSelect: { required: true, goal: 2 },
-    allowComments: true,
-    status: 'selecting',
-    finalComment: '',
-    photos: [
-      {
-        index: 1,
-        id: 'photoId1',
-        filename: 'photo1',
-        filenameNumber: 1,
-        cloudUrl: 'www.cloudurl.lt1',
-        cloudUrlWebp: 'www.cloudurl.lt/webp1',
-        thumbnail: 'www.cloudurl.lt/thumbnail1',
-        thumbnailWebp: 'www.cloudurl.lt/thumbnail/webp1',
-        selected: false,
-        comment: '',
-        dateTaken: new Date(),
-      },
-      {
-        index: 2,
-        id: 'photoId2',
-        filename: 'photo2',
-        filenameNumber: 2,
-        cloudUrl: 'www.cloudurl.lt2',
-        cloudUrlWebp: 'www.cloudurl.lt/webp2',
-        thumbnail: 'www.cloudurl.lt/thumbnail2',
-        thumbnailWebp: 'www.cloudurl.lt/thumbnail/webp2',
-        selected: true,
-        comment: 'test comment',
-        dateTaken: new Date(),
-      },
-    ],
-  },
-  filteredPhotos: [
-    {
-      index: 1,
-      id: 'photoId1',
-      filename: 'photo1',
-      filenameNumber: 1,
-      cloudUrl: 'www.cloudurl.lt1',
-      cloudUrlWebp: 'www.cloudurl.lt/webp1',
-      thumbnail: 'www.cloudurl.lt/thumbnail1',
-      thumbnailWebp: 'www.cloudurl.lt/thumbnail/webp1',
-      selected: false,
-      comment: '',
-      dateTaken: new Date(),
-    },
-    {
-      index: 2,
-      id: 'photoId2',
-      filename: 'photo2',
-      filenameNumber: 2,
-      cloudUrl: 'www.cloudurl.lt2',
-      cloudUrlWebp: 'www.cloudurl.lt/webp2',
-      thumbnail: 'www.cloudurl.lt/thumbnail2',
-      thumbnailWebp: 'www.cloudurl.lt/thumbnail/webp2',
-      selected: true,
-      comment: 'test comment',
-      dateTaken: new Date(),
-    },
-  ],
+  collection,
+  filteredPhotos,
   selected: [],
   setSelected,
   setPhotoIndex,
@@ -91,7 +26,7 @@ describe('<PhotoTable/>', () => {
   });
 
   test('renders one comment', () => {
-    const { container, getAllByTestId, debug } = render(
+    const { getAllByTestId } = render(
       <PhotoTable {...props} />
     );
     const commentCells = getAllByTestId('comment');
@@ -101,7 +36,7 @@ describe('<PhotoTable/>', () => {
   });
 
   test('renders one selection icon', () => {
-    const { container, getAllByTestId, debug } = render(
+    const { getAllByTestId } = render(
       <PhotoTable {...props} />
     );
     const selectedIcons = getAllByTestId('selected');

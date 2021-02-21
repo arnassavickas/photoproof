@@ -396,7 +396,7 @@ export const getSingleCollection = async (id: string) => {
   }
 };
 
-export const collectionStatus = async (
+export const changeCollectionStatus = async (
   collectionId: string,
   status: Collection['status']
 ) => {

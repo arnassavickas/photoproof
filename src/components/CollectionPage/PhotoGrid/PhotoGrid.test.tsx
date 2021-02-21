@@ -5,6 +5,7 @@ import user from '@testing-library/user-event';
 import PhotoGrid from './PhotoGrid';
 import { Collection, PhotoGridProps } from '../../../types';
 import { updatePhotoSelection as mockUpdatePhotoSelection } from '../../../firebase';
+import { collection, filteredPhotos } from '../../../utils/testUtils';
 
 const openCommentModal = jest.fn();
 const setCollection = jest.fn();
@@ -12,73 +13,9 @@ const openLightbox = jest.fn();
 
 const props: PhotoGridProps = {
   collectionId: 'collectionId',
-  collection: {
-    id: 'collectionId',
-    dateCreated: new Date(),
-    title: 'collectio title',
-    minSelect: { required: true, goal: 1 },
-    maxSelect: { required: true, goal: 2 },
-    allowComments: true,
-    status: 'selecting',
-    finalComment: '',
-    photos: [
-      {
-        index: 1,
-        id: 'photoId1',
-        filename: 'photo1.jpg',
-        filenameNumber: 1,
-        cloudUrl: 'www.cloudurl.lt1',
-        cloudUrlWebp: 'www.cloudurl.lt/webp1',
-        thumbnail: 'www.cloudurl.lt/thumbnail1',
-        thumbnailWebp: 'www.cloudurl.lt/thumbnail/webp1',
-        selected: false,
-        comment: '',
-        dateTaken: new Date(),
-      },
-      {
-        index: 2,
-        id: 'photoId2',
-        filename: 'photo2.jpg',
-        filenameNumber: 2,
-        cloudUrl: 'www.cloudurl.lt2',
-        cloudUrlWebp: 'www.cloudurl.lt/webp2',
-        thumbnail: 'www.cloudurl.lt/thumbnail2',
-        thumbnailWebp: 'www.cloudurl.lt/thumbnail/webp2',
-        selected: true,
-        comment: 'test',
-        dateTaken: new Date(),
-      },
-    ],
-  },
+  collection,
   setCollection,
-  filteredPhotos: [
-    {
-      index: 1,
-      id: 'photoId1',
-      filename: 'photo1.jpg',
-      filenameNumber: 1,
-      cloudUrl: 'www.cloudurl.lt1',
-      cloudUrlWebp: 'www.cloudurl.lt/webp1',
-      thumbnail: 'www.cloudurl.lt/thumbnail1',
-      thumbnailWebp: 'www.cloudurl.lt/thumbnail/webp1',
-      selected: false,
-      comment: '',
-      dateTaken: new Date(),
-    },
-    {
-      index: 2,
-      id: 'photoId2',
-      filename: 'photo2.jpg',
-      filenameNumber: 2,
-      cloudUrl: 'www.cloudurl.lt2',
-      cloudUrlWebp: 'www.cloudurl.lt/webp2',
-      thumbnail: 'www.cloudurl.lt/thumbnail2',
-      thumbnailWebp: 'www.cloudurl.lt/thumbnail/webp2',
-      selected: true,
-      comment: 'test',
-      dateTaken: new Date(),
-    },
-  ],
+  filteredPhotos,
   openLightbox,
   openCommentModal,
 };

@@ -160,8 +160,8 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
         </div>
       )}
       <FormControl className={styles.toolbarFilter}>
-        <InputLabel>Filter</InputLabel>
-        <Select value={filter} onChange={changeFilter}>
+        <InputLabel id='filter'>Filter</InputLabel>
+        <Select labelId='filter' value={filter} onChange={changeFilter}>
           <MenuItem value={'all'}>All</MenuItem>
           <MenuItem value={'selected'}>Selected</MenuItem>
           <MenuItem value={'unselected'}>Unselected</MenuItem>
