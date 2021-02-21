@@ -66,6 +66,7 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
             {collection.status === 'editing' ? (
               <TableCell padding='checkbox'>
                 <Checkbox
+                  data-testid='checkbox'
                   indeterminate={
                     selected.length > 0 &&
                     selected.length < filteredPhotos.length
@@ -116,9 +117,11 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
               </TableCell>
               <TableCell>{photo.filename}</TableCell>
               <TableCell padding='checkbox'>
-                {photo.selected ? <StarBorderIcon /> : null}
+                {photo.selected ? (
+                  <StarBorderIcon data-testid='selected' />
+                ) : null}
               </TableCell>
-              <TableCell>{photo.comment}</TableCell>
+              <TableCell data-testid='comment'>{photo.comment}</TableCell>
             </TableRow>
           ))}
         </TableBody>

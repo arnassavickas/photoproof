@@ -11,8 +11,6 @@ import {
   FormControlLabel,
   LinearProgress,
   Box,
-  Backdrop,
-  CircularProgress,
 } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone';
 import { NewCollectionInputs } from '../../types';
@@ -28,8 +26,7 @@ const NewCollection: React.FC = () => {
     control,
   } = useForm<NewCollectionInputs>();
   const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUplaodProgress] = useState(0);
-  const [thumbnailReady, setThumbnailReady] = useState(true);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const history = useHistory();
 
   const minToggle = watch('minSelectRequired');
@@ -51,20 +48,11 @@ const NewCollection: React.FC = () => {
         allowComments: data.allowComments,
       },
       data.files,
-      setUplaodProgress
+      setUploadProgress
     );
     setUploading(false);
-    setThumbnailReady(false);
     history.push(`/edit/${collectionId}`);
   };
-
-  if (!thumbnailReady) {
-    return (
-      <Backdrop open={true}>
-        <CircularProgress color='inherit' />.
-      </Backdrop>
-    );
-  }
 
   return (
     <div>
@@ -84,7 +72,7 @@ const NewCollection: React.FC = () => {
             Create
           </Button>
           {uploading ? (
-            <Box p={'3px'}>
+            <Box data-testid='uploading' p={'3px'}>
               <LinearProgress variant='determinate' value={uploadProgress} />
             </Box>
           ) : (
@@ -197,7 +185,9 @@ const NewCollection: React.FC = () => {
           defaultValue={[]}
           rules={{
             validate: {
-              notEmpty: (array) => array.length > 0,
+              notEmpty: (array) => {
+                return array.length > 0;
+              },
             },
           }}
           render={({ onChange }) => (

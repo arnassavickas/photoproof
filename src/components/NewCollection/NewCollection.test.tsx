@@ -98,6 +98,8 @@ describe('<NewCollection/>', () => {
     expect(container).not.toHaveTextContent(
       'Must be higher than minimum value'
     );
+    expect(container).not.toHaveTextContent('Images are required');
+
     const minSelectRequired = getByLabelText(/minSelectRequired/i);
     user.click(minSelectRequired);
     const maxSelectRequired = getByLabelText(/maxSelectRequired/i);
@@ -114,10 +116,43 @@ describe('<NewCollection/>', () => {
       expect(container).toHaveTextContent('Title is required');
       expect(container).toHaveTextContent('Must be higher than maximum value');
       expect(container).toHaveTextContent('Must be higher than minimum value');
+      expect(container).toHaveTextContent('Images are required');
     });
   });
   test('entering valid renders no errors', async () => {
-    const { getByLabelText, container, getByRole } = render(
+    const { getByLabelText, container, getByRole, debug } = render(
+      <Router>
+        <NewCollection />
+      </Router>
+    );
+
+    const create = getByRole('button', { name: 'create' });
+    user.click(create);
+    await waitFor(() => {
+      expect(container).toHaveTextContent('Title is required');
+      expect(container).toHaveTextContent('Images are required');
+    });
+
+    const collectionTitle = getByLabelText(/title/i);
+    user.type(collectionTitle, 'test title');
+
+    const fileInput = container.querySelector('input[type="file"]');
+    if (fileInput) {
+      user.upload(
+        fileInput,
+        new File(['hello'], 'hello.jpg', { type: 'image/jpeg' })
+      );
+    }
+    user.click(create);
+
+    await waitFor(() => {
+      expect(container).not.toHaveTextContent('Title is required');
+      expect(container).not.toHaveTextContent('Images are required');
+    });
+  });
+
+  test.skip('upload calls generateNewCollection one time', async () => {
+    const { getByLabelText, container, getByRole, findByTestId } = render(
       <Router>
         <NewCollection />
       </Router>
@@ -126,30 +161,24 @@ describe('<NewCollection/>', () => {
     const collectionTitle = getByLabelText(/title/i);
     user.type(collectionTitle, 'test title');
 
-    const minSelectRequired = getByLabelText(/minSelectRequired/i);
-    user.click(minSelectRequired);
-    const maxSelectRequired = getByLabelText(/maxSelectRequired/i);
-    user.click(maxSelectRequired);
-    const minSelectGoal = getByLabelText(/minSelectGoal/i);
-    user.type(minSelectGoal, '3');
-    const maxSelectGoal = getByLabelText(/maxSelectGoal/i);
-    user.type(maxSelectGoal, '4');
-
+    const fileInput = container.querySelector('input[type="file"]');
+    await waitFor(() => {
+      if (fileInput) {
+        user.upload(fileInput, [
+          new File([new ArrayBuffer(1)], 'file.jpg', { type: 'image/jpeg' }),
+          new File([new ArrayBuffer(1)], 'file.jpg', { type: 'image/jpeg' }),
+        ]);
+      }
+    });
     const create = getByRole('button', { name: 'create' });
     user.click(create);
 
-    await waitFor(() => {
-      expect(container).not.toHaveTextContent('Title is required');
-      expect(container).not.toHaveTextContent(
-        'Must be higher than maximum value'
-      );
-      expect(container).not.toHaveTextContent(
-        'Must be higher than minimum value'
-      );
-    });
-  });
+    //TODO react-hook-form throws validation error on files,
+    //because it sees empty file array.
+    //works if files input is not required
 
-  test('', () => {
-    //TODO something with files
+    // await waitFor(() => {
+    //   expect(generateNewCollection).toHaveBeenCalledTimes(1);
+    // });
   });
 });

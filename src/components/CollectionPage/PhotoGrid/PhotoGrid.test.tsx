@@ -184,7 +184,7 @@ describe('<PhotoGrid/> collection.status="confirmed"', () => {
     status: 'confirmed' as Collection['status'],
   };
   const editingProps = { ...props, collection: editingCollection };
-  
+
   test('renders only one comment button', () => {
     const { getAllByRole } = render(<PhotoGrid {...editingProps} />);
 
