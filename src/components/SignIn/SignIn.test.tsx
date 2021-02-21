@@ -5,7 +5,6 @@ import user from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 import SignIn from './SignIn';
 import { auth } from '../../firebase';
-import firebase from 'firebase';
 
 describe('<SignIn/>', () => {
   beforeEach(() => {

@@ -11,11 +11,13 @@ import {
   LinearProgress,
   Box,
   IconButton,
+  Typography,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 
 import { DropzoneArea } from 'material-ui-dropzone';
 import { useForm, Controller } from 'react-hook-form';
+import { Fragment } from 'react';
 
 const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
   collectionId,
@@ -26,11 +28,9 @@ const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
   progress,
 }) => {
   const {
-    handleSubmit: handleSubmitFiles,
-    //TODO add error if no files added to upload
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    errors: errorsFiles,
-    control: controlFiles,
+    handleSubmit,
+    errors,
+    control,
   } = useForm<any>({
     defaultValues: { files: [] },
   });
@@ -46,7 +46,7 @@ const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
 
   return (
     <Dialog open={addPhotosDialogOpen}>
-      <form onSubmit={handleSubmitFiles(onConfirmUpload)}>
+      <form onSubmit={handleSubmit(onConfirmUpload)}>
         <DialogTitle id='alert-dialog-title'>Add photos</DialogTitle>
         <IconButton
           onClick={() => setAddPhotosDialogOpen(false)}
@@ -62,9 +62,25 @@ const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
           ) : (
             <Box p={'5px'}></Box>
           )}
+          <div className={styles.dropzoneError}>
+            <Typography variant='body1'>
+              {errors.files ? (
+                'Images are required'
+              ) : (
+                <Fragment>&#8203;</Fragment>
+              )}
+            </Typography>
+          </div>
           <Controller
             name='files'
-            control={controlFiles}
+            control={control}
+            rules={{
+              validate: {
+                notEmpty: (array) => {
+                  return array.length > 0;
+                },
+              },
+            }}
             render={({ onChange }) => (
               <DropzoneArea
                 acceptedFiles={['image/jpeg']}
@@ -86,7 +102,9 @@ const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
                 showPreviewsInDropzone={false}
                 showPreviews={true}
                 showFileNamesInPreview={true}
-                dropzoneClass={styles.dropzone}
+                dropzoneClass={`${styles.dropzone} ${
+                  errors.files && styles.dropzoneErrorBorder
+                }`}
               />
             )}
           />

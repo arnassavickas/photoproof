@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { BrowserRouter as Router } from 'react-router-dom';
-import { getByTestId, render, waitFor } from '@testing-library/react';
+import {  render, waitFor } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 import NewCollection from './NewCollection';
@@ -14,7 +14,7 @@ describe('<NewCollection/>', () => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
-  test.skip('has no violations', async () => {
+  test('has no violations', async () => {
     const { container, debug } = render(
       <Router>
         <NewCollection />
@@ -40,9 +40,9 @@ describe('<NewCollection/>', () => {
     );
     expect(container).not.toHaveTextContent('Images are required');
 
-    const minSelectRequired = getByLabelText('min');
+    const minSelectRequired = getByLabelText('minimum');
     user.click(minSelectRequired);
-    const maxSelectRequired = getByLabelText('max');
+    const maxSelectRequired = getByLabelText('maximum');
     user.click(maxSelectRequired);
     const minSelectGoal = getByTestId(/minSelectGoal/i);
     user.type(minSelectGoal, '4');

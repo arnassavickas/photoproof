@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import styles from './styles.module.scss';
 import { Link, useHistory } from 'react-router-dom';
 import { generateNewCollection } from '../../firebase';
@@ -14,7 +14,6 @@ import {
 } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone';
 import { NewCollectionInputs } from '../../types';
-import { Fragment } from 'react';
 
 const NewCollection: React.FC = () => {
   const {
@@ -101,7 +100,7 @@ const NewCollection: React.FC = () => {
         <div>
           <FormControlLabel
             control={<Checkbox name='minSelectRequired' inputRef={register} />}
-            label='min'
+            label='minimum'
           />
           <div style={{ display: minToggle ? 'inline' : 'none' }}>
             <TextField
@@ -136,7 +135,7 @@ const NewCollection: React.FC = () => {
         <div>
           <FormControlLabel
             control={<Checkbox name='maxSelectRequired' inputRef={register} />}
-            label='max'
+            label='maximum'
           />
           <div style={{ display: maxToggle ? 'inline' : 'none' }}>
             <TextField
@@ -169,7 +168,7 @@ const NewCollection: React.FC = () => {
           </div>
         </div>
         <div className={styles.dropzoneError}>
-          <Typography variant='subtitle2'>
+          <Typography variant='body1'>
             {errors.files ? (
               'Images are required'
             ) : (
