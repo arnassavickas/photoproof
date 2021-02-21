@@ -27,11 +27,7 @@ const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
   setAddPhotosDialogOpen,
   progress,
 }) => {
-  const {
-    handleSubmit,
-    errors,
-    control,
-  } = useForm<any>({
+  const { handleSubmit, errors, control } = useForm<any>({
     defaultValues: { files: [] },
   });
 
@@ -63,7 +59,7 @@ const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
             <Box p={'5px'}></Box>
           )}
           <div className={styles.dropzoneError}>
-            <Typography variant='body1'>
+            <Typography data-testid='error' variant='body1'>
               {errors.files ? (
                 'Images are required'
               ) : (
@@ -118,7 +114,7 @@ const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
             Cancel
           </Button>
           <Button disabled={!!progress} color='primary' type='submit'>
-            Yes
+            Add
           </Button>
         </DialogActions>
       </form>
