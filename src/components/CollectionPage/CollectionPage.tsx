@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { Collection, Photo } from '../../types';
 import { getSingleCollection } from '../../firebase';
 import {
@@ -25,12 +25,17 @@ const CollectionPage: React.FC = () => {
   const [photoIndex, setPhotoIndex] = useState(0);
   const [commentTextarea, setCommentTextarea] = useState('');
   const [commentOpen, setCommentOpen] = useState(false);
-
+  const history = useHistory();
   useEffect(() => {
-    getSingleCollection(collectionId).then((collection) => {
-      setCollection(collection);
-      setFilteredPhotos(collection.photos);
-    });
+    debugger;
+    getSingleCollection(collectionId)
+      .then((collection) => {
+        setCollection(collection);
+        setFilteredPhotos(collection.photos);
+      })
+      .catch((err) => {
+        history.push('/error');
+      });
   }, [collectionId]);
 
   useEffect(() => {

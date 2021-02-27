@@ -7,7 +7,7 @@ import { parse } from 'exifr';
 
 import { makeId } from './utils/makeId';
 import { Collection, Photo } from './types';
-import {firebaseConfig} from './config'
+import { firebaseConfig } from './config';
 
 firebase.initializeApp(firebaseConfig);
 export const auth = firebase.auth();
@@ -353,6 +353,9 @@ export const getSingleCollection = async (id: string) => {
   console.log('getting single collection');
   try {
     const collection = await firestore.collection('collections').doc(id).get();
+    if (!collection.exists) {
+      throw new Error("collection doesn't exist");
+    }
     const photos = await firestore
       .collection('collections')
       .doc(id)
