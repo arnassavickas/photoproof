@@ -134,7 +134,7 @@ describe('<PhotoTableToolbar/> editing', () => {
     });
   });
 
-  test('entering valid data calls updateSettings one time', async () => {
+  test('entering valid data calls updateSettings one time with correct args', async () => {
     const {
       getByText,
       debug,
@@ -166,6 +166,7 @@ describe('<PhotoTableToolbar/> editing', () => {
     user.click(saveButton);
 
     await waitFor(() => {
+      expect(updateSettings).toHaveBeenCalledTimes(1);
       expect(updateSettings).toHaveBeenCalledWith(
         {
           title: 'new title',

@@ -15,7 +15,7 @@ describe('<NewCollection/>', () => {
   });
 
   test('has no violations', async () => {
-    const { container, debug } = render(
+    const { container } = render(
       <Router>
         <NewCollection />
       </Router>
@@ -25,7 +25,7 @@ describe('<NewCollection/>', () => {
   });
 
   test('entering invalid/missing data renders errors', async () => {
-    const { getByLabelText, container, debug, getByRole, getByTestId } = render(
+    const { getByLabelText, container, getByRole, getByTestId } = render(
       <Router>
         <NewCollection />
       </Router>
@@ -57,39 +57,6 @@ describe('<NewCollection/>', () => {
       expect(container).toHaveTextContent('Must be higher than maximum value');
       expect(container).toHaveTextContent('Must be higher than minimum value');
       expect(container).toHaveTextContent('Images are required');
-    });
-  });
-  test('entering valid renders no errors', async () => {
-    const { getByLabelText, container, getByRole, debug } = render(
-      <Router>
-        <NewCollection />
-      </Router>
-    );
-
-    const create = getByRole('button', { name: 'create' });
-    user.click(create);
-    await waitFor(() => {
-      expect(container).toHaveTextContent('Title is required');
-      expect(container).toHaveTextContent('Images are required');
-    });
-
-    const collectionTitle = getByLabelText(/title/i);
-    user.type(collectionTitle, 'test title');
-
-    const fileInput = container.querySelector('input[type="file"]');
-    if (fileInput) {
-      user.upload(
-        fileInput,
-        new File(['hello'], 'hello.jpg', { type: 'image/jpeg' })
-      );
-    }
-    user.click(create);
-
-    //TODO check if call is made
-
-    await waitFor(() => {
-      expect(container).not.toHaveTextContent('Title is required');
-      expect(container).not.toHaveTextContent('Images are required');
     });
   });
 
