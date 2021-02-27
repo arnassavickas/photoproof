@@ -32,7 +32,7 @@ export const filteredPhotos: Photo[] = [
 export const collection: Collection = {
   id: 'collectionId',
   dateCreated: new Date(),
-  title: 'collectio title',
+  title: 'collection title',
   minSelect: { required: true, goal: 1 },
   maxSelect: { required: true, goal: 2 },
   allowComments: true,
@@ -40,3 +40,28 @@ export const collection: Collection = {
   finalComment: '',
   photos: filteredPhotos,
 };
+
+export const collectionList: Collection[] = [
+  {
+    id: 'collectionId1',
+    dateCreated: new Date(),
+    title: 'collection title 1',
+    minSelect: { required: true, goal: 1 },
+    maxSelect: { required: true, goal: 2 },
+    allowComments: true,
+    status: 'selecting',
+    finalComment: '',
+    photos: filteredPhotos,
+  },
+  {
+    id: 'collectionId2',
+    dateCreated: new Date(),
+    title: 'collection title 2',
+    minSelect: { required: true, goal: 1 },
+    maxSelect: { required: true, goal: 2 },
+    allowComments: true,
+    status: 'selecting',
+    finalComment: '',
+    photos: filteredPhotos,
+  },
+];

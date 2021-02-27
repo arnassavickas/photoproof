@@ -27,7 +27,6 @@ const CollectionPage: React.FC = () => {
   const [commentOpen, setCommentOpen] = useState(false);
   const history = useHistory();
   useEffect(() => {
-    debugger;
     getSingleCollection(collectionId)
       .then((collection) => {
         setCollection(collection);
@@ -36,6 +35,7 @@ const CollectionPage: React.FC = () => {
       .catch((err) => {
         history.push('/error');
       });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collectionId]);
 
   useEffect(() => {
