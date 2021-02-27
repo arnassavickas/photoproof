@@ -26,6 +26,7 @@ const CollectionPage: React.FC = () => {
   const [commentTextarea, setCommentTextarea] = useState('');
   const [commentOpen, setCommentOpen] = useState(false);
   const history = useHistory();
+
   useEffect(() => {
     getSingleCollection(collectionId)
       .then((collection) => {
@@ -35,7 +36,7 @@ const CollectionPage: React.FC = () => {
       .catch((err) => {
         history.push('/error');
       });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collectionId]);
 
   useEffect(() => {
@@ -68,6 +69,14 @@ const CollectionPage: React.FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, collection]);
+
+  useEffect(() => {
+    if (lightboxOpen) {
+      document.body.style.overflow = 'hidden';
+    } else if (!lightboxOpen) {
+      document.body.style.overflow = 'unset';
+    }
+  }, [lightboxOpen]);
 
   const changeFilter = (e: React.ChangeEvent<{ value: unknown }>) => {
     setFilter(e.target.value as string);
