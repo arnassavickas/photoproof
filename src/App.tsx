@@ -8,6 +8,7 @@ import Settings from './components/Settings/Settings';
 import SignIn from './components/SignIn/SignIn';
 import CollectionPage from './components/CollectionPage/CollectionPage';
 import EditCollection from './components/EditCollection/EditCollection';
+import ErrorPage from './components/ErrorPage/ErrorPage';
 import { auth } from './firebase';
 import {
   Container,
@@ -57,7 +58,8 @@ function App() {
           <Route path='/settings' render={() => <Settings />} />
           <Route path='/new' render={() => <NewCollection />} />
           <Route path='/edit/:id' render={() => <EditCollection />} />
-          <Route path='/' render={() => <Dashboard />} />
+          <Route exact path='/' render={() => <Dashboard />} />
+          <Route render={() => <ErrorPage />} />
         </Switch>
       </Router>
     </Container>
