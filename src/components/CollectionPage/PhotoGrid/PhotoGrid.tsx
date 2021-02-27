@@ -18,6 +18,7 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
   openLightbox,
   openCommentModal,
 }) => {
+
   const selectPhoto = (photoId: string) => (event: any) => {
     try {
       const clickedPhoto = collection?.photos.find(
