@@ -117,6 +117,7 @@ const CollectionList: React.FC = () => {
                     <TableCell align='right'>
                       <Tooltip title='Delete'>
                         <IconButton
+                          aria-label='delete'
                           onClick={() => requestToDelete(collection.id)}
                         >
                           <DeleteIcon />
