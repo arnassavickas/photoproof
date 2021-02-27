@@ -13,6 +13,7 @@ import {
   Backdrop,
   CircularProgress,
   IconButton,
+  Tooltip,
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ConfirmationDialog from '../../ConfirmationDialog/ConfirmationDialog';
@@ -114,11 +115,13 @@ const CollectionList: React.FC = () => {
                       {collection.photos.length}
                     </TableCell>
                     <TableCell align='right'>
-                      <IconButton
-                        onClick={(event) => requestToDelete(collection.id)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
+                      <Tooltip title='Delete'>
+                        <IconButton
+                          onClick={() => requestToDelete(collection.id)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 );
