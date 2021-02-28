@@ -53,10 +53,22 @@ describe('<CommendDialog/>', () => {
     let textbox = getByRole('textbox');
 
     user.type(textbox, '1');
-    textbox = getByRole('textbox');
 
     expect(props.setCommentTextarea).toHaveBeenLastCalledWith(
       'comment text area1'
     );
+  });
+
+  test("disabled textarea doesn't call the callback", () => {
+    props.disabled = true;
+    const { getByRole } = render(<CommendDialog {...props} />);
+
+    let textbox = getByRole('textbox');
+
+    expect(props.setCommentTextarea).toHaveBeenCalledTimes(0);
+
+    user.type(textbox, '1');
+
+    expect(props.setCommentTextarea).toHaveBeenCalledTimes(0);
   });
 });
