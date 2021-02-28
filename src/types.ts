@@ -145,3 +145,12 @@ export interface LightboxProps {
   setLightboxIndex: React.Dispatch<React.SetStateAction<number>>;
   toolbarButtons: React.ReactNode[];
 }
+
+export interface ConfirmationDialogProps {
+  dialogOpen: boolean;
+  progress?: number;
+  onClickCancel: React.MouseEventHandler<HTMLButtonElement>;
+  onClickAgree: React.MouseEventHandler<HTMLButtonElement>;
+  dialogTitle: string;
+  dialogContentText: string;
+}

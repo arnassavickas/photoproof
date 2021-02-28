@@ -10,17 +10,9 @@ import {
   IconButton,
 } from '@material-ui/core';
 import styles from './styles.module.scss';
+import { ConfirmationDialogProps } from '../../types';
 
 import CloseIcon from '@material-ui/icons/Close';
-
-interface ConfirmationDialogProps {
-  dialogOpen: boolean;
-  progress?: number;
-  onClickCancel: React.MouseEventHandler<HTMLButtonElement>;
-  onClickAgree: React.MouseEventHandler<HTMLButtonElement>;
-  dialogTitle: string;
-  dialogContentText: string;
-}
 
 const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   dialogOpen,
