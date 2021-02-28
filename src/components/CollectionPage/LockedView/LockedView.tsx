@@ -40,7 +40,7 @@ const LockedView: React.FC<LockedViewProps> = ({
           lightboxIndex={photoIndex}
           setLightboxIndex={setPhotoIndex}
           toolbarButtons={[
-            <IconButton>
+            <IconButton aria-label='selectLighbox'>
               {filteredPhotos[photoIndex].selected ? (
                 <StarIcon className={styles.toolbarIcon} />
               ) : (
@@ -48,7 +48,10 @@ const LockedView: React.FC<LockedViewProps> = ({
               )}
             </IconButton>,
             collection.allowComments ? (
-              <IconButton onClick={() => openCommentModal()}>
+              <IconButton
+                aria-label='commentLightbox'
+                onClick={() => openCommentModal()}
+              >
                 {filteredPhotos[photoIndex].comment.length > 0 ? (
                   <MessageIcon className={styles.toolbarIcon} />
                 ) : (
