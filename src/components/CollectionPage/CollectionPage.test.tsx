@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import CollectionPage from './CollectionPage';
 import { collection } from '../../utils/testUtils';
@@ -35,7 +35,7 @@ describe('<CollectionPage/>', () => {
     const history = createMemoryHistory({
       initialEntries: ['/collectionId'],
     });
-    const { findByText } = render(
+    const { rerender } = render(
       <Router history={history}>
         <Route path='/:id'>
           <CollectionPage />
@@ -43,9 +43,34 @@ describe('<CollectionPage/>', () => {
       </Router>
     );
 
-    await findByText('collection title');
-    await findByText(/selected: 1/i);
-    await findByText(/you must select from 1 to 2 photos/i);
+    await screen.findByText('collection title');
+    await screen.findByText(/selected: 1/i);
+    await screen.findByText(/you must select from 1 to 2 photos/i);
+
+    collection.minSelect.required = false;
+
+    rerender(
+      <Router history={history}>
+        <Route path='/:id'>
+          <CollectionPage />
+        </Route>
+      </Router>
+    );
+
+    await screen.findByText(/you must select a maximum of 2 photos/i);
+
+    collection.minSelect.required = true;
+    collection.maxSelect.required = false;
+
+    rerender(
+      <Router history={history}>
+        <Route path='/:id'>
+          <CollectionPage />
+        </Route>
+      </Router>
+    );
+
+    await screen.findByText(/you must select at least 1 photos/i);
   });
 
   test('changing filter where no photos exist, shows text', async () => {
@@ -54,7 +79,7 @@ describe('<CollectionPage/>', () => {
     const history = createMemoryHistory({
       initialEntries: ['/collectionId'],
     });
-    const { findByText, getByText } = render(
+    render(
       <Router history={history}>
         <Route path='/:id'>
           <CollectionPage />
@@ -62,20 +87,21 @@ describe('<CollectionPage/>', () => {
       </Router>
     );
 
-    await findByText(/selected: 0/i);
+    await screen.findByText(/selected: 0/i);
 
-    const selectedBtn = getByText(/^selected$/i);
+    const selectedBtn = screen.getByText(/^selected$/i);
     user.click(selectedBtn);
 
-    await findByText(/no photos in this filter/i);
+    await screen.findByText(/no photos in this filter/i);
   });
+
   test('collection without photos shows text', async () => {
     collection.photos = [];
     mockedGetSingleCollection.mockResolvedValueOnce(collection);
     const history = createMemoryHistory({
       initialEntries: ['/collectionId'],
     });
-    const { findByText } = render(
+    render(
       <Router history={history}>
         <Route path='/:id'>
           <CollectionPage />
@@ -83,6 +109,6 @@ describe('<CollectionPage/>', () => {
       </Router>
     );
 
-    await findByText(/no photos in collection/i);
+    await screen.findByText(/no photos in collection/i);
   });
 });
