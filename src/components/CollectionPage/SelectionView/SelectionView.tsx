@@ -97,7 +97,10 @@ const SelectionView: React.FC<SelectionViewProps> = ({
           lightboxIndex={photoIndex}
           setLightboxIndex={setPhotoIndex}
           toolbarButtons={[
-            <IconButton onClick={selectPhotoLightbox}>
+            <IconButton
+              aria-label='selectLighbox'
+              onClick={selectPhotoLightbox}
+            >
               {filteredPhotos[photoIndex].selected ? (
                 <StarIcon className={styles.toolbarIcon} />
               ) : (
@@ -105,7 +108,10 @@ const SelectionView: React.FC<SelectionViewProps> = ({
               )}
             </IconButton>,
             collection.allowComments ? (
-              <IconButton onClick={() => openCommentModal()}>
+              <IconButton
+                aria-label='commentLightbox'
+                onClick={() => openCommentModal()}
+              >
                 {filteredPhotos[photoIndex].comment.length > 0 ? (
                   <MessageIcon className={styles.toolbarIcon} />
                 ) : (
