@@ -122,7 +122,7 @@ const SelectionView: React.FC<SelectionViewProps> = ({
         setCommentOpen={setCommentOpen}
         commentTextarea={commentTextarea}
         setCommentTextarea={setCommentTextarea}
-        disabled={true}
+        disabled={!collection.allowComments}
         actionButtons={[
           <Button
             key={'cancel'}
