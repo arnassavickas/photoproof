@@ -7,10 +7,6 @@ import {
   Button,
   ButtonGroup,
   CircularProgress,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   Typography,
 } from '@material-ui/core';
 import LockIcon from '@material-ui/icons/Lock';
@@ -79,10 +75,6 @@ const CollectionPage: React.FC = () => {
       document.body.style.overflow = 'unset';
     }
   }, [lightboxOpen]);
-
-  const changeFilter = (e: React.ChangeEvent<{ value: unknown }>) => {
-    setFilter(e.target.value as string);
-  };
 
   const openCommentModal = (index?: number) => {
     setCommentOpen(true);
