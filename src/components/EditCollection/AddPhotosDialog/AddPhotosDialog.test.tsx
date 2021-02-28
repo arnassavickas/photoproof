@@ -23,7 +23,7 @@ describe('<AddPhotosDialog/>', () => {
   });
 
   test('adding no photos renders error', async () => {
-    const { getByTestId, getByText, debug } = render(
+    const { getByTestId, getByText} = render(
       <AddPhotosDialog {...props} />
     );
 
@@ -36,7 +36,7 @@ describe('<AddPhotosDialog/>', () => {
   });
 
   test('adding photos calls firebase functions one time', async () => {
-    const { baseElement, debug, getByText, findByText } = render(
+    const { baseElement, getByText, findByText } = render(
       <AddPhotosDialog {...props} />
     );
     const filesToUplaod = [
