@@ -29,7 +29,6 @@ const SelectionConfirmationDialog: React.FC<SelectionConfirmationDialogProps> = 
   });
 
   const confirmSelections = async (data: { finalComment: string }) => {
-    console.log(data);
     await confirmCollection(collectionId, data.finalComment);
     setConfirmDialogOpen(false);
     setCollection({
