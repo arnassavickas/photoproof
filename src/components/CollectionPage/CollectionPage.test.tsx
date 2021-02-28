@@ -70,4 +70,20 @@ describe('<CollectionPage/>', () => {
 
     await findByText(/no photos in this filter/i);
   });
+  test('collection without photos shows text', async () => {
+    collection.photos = [];
+    getSingleCollection.mockResolvedValueOnce(collection);
+    const history = createMemoryHistory({
+      initialEntries: ['/collectionId'],
+    });
+    const { findByText, getByText } = render(
+      <Router history={history}>
+        <Route path='/:id'>
+          <CollectionPage />
+        </Route>
+      </Router>
+    );
+
+    await findByText(/no photos in collection/i);
+  });
 });
