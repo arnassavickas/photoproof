@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { render, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import CollectionPage from './CollectionPage';
 import { collection } from '../../utils/testUtils';
@@ -9,7 +9,6 @@ import { Route, Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
 jest.mock('../../firebase');
-const mockHistoryPush = jest.fn();
 
 describe('<CollectionPage/>', () => {
   beforeEach(() => {
@@ -76,7 +75,7 @@ describe('<CollectionPage/>', () => {
     const history = createMemoryHistory({
       initialEntries: ['/collectionId'],
     });
-    const { findByText, getByText } = render(
+    const { findByText } = render(
       <Router history={history}>
         <Route path='/:id'>
           <CollectionPage />
