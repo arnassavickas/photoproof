@@ -154,3 +154,12 @@ export interface ConfirmationDialogProps {
   dialogTitle: string;
   dialogContentText: string;
 }
+
+export interface CommentDialogProps {
+  commentOpen: boolean;
+  setCommentOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  commentTextarea: string;
+  setCommentTextarea?: React.Dispatch<React.SetStateAction<string>>;
+  actionButtons?: React.ReactNode[];
+  disabled?: boolean;
+}
