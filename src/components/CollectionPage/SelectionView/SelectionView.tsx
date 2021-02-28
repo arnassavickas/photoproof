@@ -155,7 +155,7 @@ const SelectionView: React.FC<SelectionViewProps> = ({
           }
         }}
       >
-        Confirm selections
+        confirm {selectedPhotos} selections
       </Button>
 
       <ConfirmationForbiddenDialog
