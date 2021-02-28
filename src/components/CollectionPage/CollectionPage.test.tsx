@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { render } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import CollectionPage from './CollectionPage';
@@ -9,6 +8,7 @@ import { Route, Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
 jest.mock('../../firebase');
+const mockedGetSingleCollection = getSingleCollection as any;
 
 describe('<CollectionPage/>', () => {
   beforeEach(() => {
@@ -16,7 +16,7 @@ describe('<CollectionPage/>', () => {
   });
 
   test('getSingleCollection is called with correct id', async () => {
-    getSingleCollection.mockResolvedValueOnce(collection);
+    mockedGetSingleCollection.mockResolvedValueOnce(collection);
     const history = createMemoryHistory({
       initialEntries: ['/collectionId'],
     });
@@ -31,7 +31,7 @@ describe('<CollectionPage/>', () => {
     expect(getSingleCollection).toHaveBeenCalledWith('collectionId');
   });
   test('correct details is rendered', async () => {
-    getSingleCollection.mockResolvedValueOnce(collection);
+    mockedGetSingleCollection.mockResolvedValueOnce(collection);
     const history = createMemoryHistory({
       initialEntries: ['/collectionId'],
     });
@@ -50,7 +50,7 @@ describe('<CollectionPage/>', () => {
 
   test('changing filter where no photos exist, shows text', async () => {
     collection.photos[1].selected = false;
-    getSingleCollection.mockResolvedValueOnce(collection);
+    mockedGetSingleCollection.mockResolvedValueOnce(collection);
     const history = createMemoryHistory({
       initialEntries: ['/collectionId'],
     });
@@ -71,7 +71,7 @@ describe('<CollectionPage/>', () => {
   });
   test('collection without photos shows text', async () => {
     collection.photos = [];
-    getSingleCollection.mockResolvedValueOnce(collection);
+    mockedGetSingleCollection.mockResolvedValueOnce(collection);
     const history = createMemoryHistory({
       initialEntries: ['/collectionId'],
     });
