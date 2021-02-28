@@ -4,6 +4,8 @@ import { Collection, Photo } from '../../types';
 import { getSingleCollection } from '../../firebase';
 import {
   Backdrop,
+  Button,
+  ButtonGroup,
   CircularProgress,
   FormControl,
   InputLabel,
@@ -130,14 +132,26 @@ const CollectionPage: React.FC = () => {
           You must select a maximum of {collection.maxSelect.goal} photos
         </Typography>
       ) : null}
-      <FormControl>
-        <InputLabel>Filter</InputLabel>
-        <Select value={filter} onChange={changeFilter}>
-          <MenuItem value={'all'}>All</MenuItem>
-          <MenuItem value={'selected'}>Selected</MenuItem>
-          <MenuItem value={'unselected'}>Unselected</MenuItem>
-        </Select>
-      </FormControl>
+      <ButtonGroup aria-label='outlined primary button group'>
+        <Button
+          variant={filter === 'all' ? 'contained' : undefined}
+          onClick={() => setFilter('all')}
+        >
+          All
+        </Button>
+        <Button
+          variant={filter === 'selected' ? 'contained' : undefined}
+          onClick={() => setFilter('selected')}
+        >
+          Selected
+        </Button>
+        <Button
+          variant={filter === 'unselected' ? 'contained' : undefined}
+          onClick={() => setFilter('unselected')}
+        >
+          Unselected
+        </Button>
+      </ButtonGroup>
       {collection.photos.length === 0 ? (
         <div>no photos in collection</div>
       ) : filteredPhotos.length === 0 ? (
