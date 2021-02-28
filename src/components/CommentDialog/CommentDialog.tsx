@@ -9,15 +9,7 @@ import {
   IconButton,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-
-interface CommentDialogProps {
-  commentOpen: boolean;
-  setCommentOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  commentTextarea: string;
-  setCommentTextarea?: React.Dispatch<React.SetStateAction<string>>;
-  actionButtons?: React.ReactNode[];
-  disabled?: boolean;
-}
+import { CommentDialogProps } from '../../types';
 
 const CommentDialog: React.FC<CommentDialogProps> = ({
   commentOpen,
