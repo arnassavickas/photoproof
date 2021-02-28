@@ -125,7 +125,6 @@ describe('<SelectionView/> comment open', () => {
    with correct args`, async () => {
     render(<SelectionView {...props} />);
 
-    const textbox = await screen.findByRole('textbox');
     const saveBtn = await screen.findByText('Save');
 
     user.click(saveBtn);
