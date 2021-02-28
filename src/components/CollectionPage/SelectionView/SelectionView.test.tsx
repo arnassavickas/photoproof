@@ -1,10 +1,9 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import SelectionView from './SelectionView';
 import { collection, filteredPhotos } from '../../../utils/testUtils';
 import { SelectionViewProps } from '../../../types';
-import { updatePhotoSelection, updatePhotoComment } from '../../../firebase';
 
 jest.mock('../../../firebase');
 
