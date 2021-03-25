@@ -65,6 +65,7 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
                   onClick={() => openLightbox(Number(index))}
                 />
               </picture>
+              <div className={styles.photoIndex}>{photo.index}</div>
               {collection.status === 'selecting' ? (
                 <div>
                   {collection.allowComments ? (
