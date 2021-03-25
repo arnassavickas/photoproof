@@ -32,6 +32,15 @@ export const theme = createMuiTheme({
       hint: 'rgba(0, 0, 0, 0.38)',
     },
   },
+  typography: {
+    fontFamily: [
+      'Nunito',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+    ].join(','),
+  },
   overrides: {
     MuiButton: {
       contained: {

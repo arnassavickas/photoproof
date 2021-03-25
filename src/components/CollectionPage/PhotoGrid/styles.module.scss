@@ -1,25 +1,28 @@
-.photoGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+$masonryGutter: 10px;
+
+.masonryGrid {
+  display: flex;
+  margin-left: -$masonryGutter;
+  width: auto;
+}
+.masonryGridColumn {
+  padding-left: $masonryGutter;
+  background-clip: padding-box;
+}
+
+.masonryGridColumn {
+  div {
+    margin-bottom: $masonryGutter;
+  }
 }
 
 .photoThumbnailGrid {
-  margin: 5px;
-  //aspect-ratio: 1/1;
-
   .imgBorder {
     position: relative;
-    aspect-ratio: 1/1;
-    border: 1px solid rgb(165, 165, 165);
-    display: flex;
-    align-items: center;
-    padding: 5px;
 
     img {
       width: 100%;
       vertical-align: bottom;
-      object-fit: contain;
-      aspect-ratio: 1/1;
     }
 
     .starBtn {

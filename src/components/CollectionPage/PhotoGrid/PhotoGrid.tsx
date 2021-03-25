@@ -10,6 +10,8 @@ import StarIcon from '@material-ui/icons/Star';
 import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 import MessageIcon from '@material-ui/icons/Message';
 
+import Masonry from 'react-masonry-css';
+
 const PhotoGrid: React.FC<PhotoGridProps> = ({
   collectionId,
   collection,
@@ -18,7 +20,6 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
   openLightbox,
   openCommentModal,
 }) => {
-
   const selectPhoto = (photoId: string) => (event: any) => {
     try {
       const clickedPhoto = collection?.photos.find(
@@ -39,8 +40,19 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
     }
   };
 
+  const breakpointColumns = {
+    default: 4,
+    1100: 3,
+    700: 2,
+    430: 1,
+  };
+
   return (
-    <div className={styles.photoGrid}>
+    <Masonry
+      breakpointCols={breakpointColumns}
+      className={styles.masonryGrid}
+      columnClassName={styles.masonryGridColumn}
+    >
       {filteredPhotos.map((photo, index) => {
         return (
           <div className={styles.photoThumbnailGrid} key={photo.id}>
@@ -107,7 +119,7 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
           </div>
         );
       })}
-    </div>
+    </Masonry>
   );
 };
 
