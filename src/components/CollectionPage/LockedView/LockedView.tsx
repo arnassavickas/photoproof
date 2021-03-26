@@ -3,8 +3,8 @@ import styles from './styles.module.scss';
 import { LockedViewProps } from '../../../types';
 import { IconButton } from '@material-ui/core';
 
-import StarBorderIcon from '@material-ui/icons/StarBorder';
-import StarIcon from '@material-ui/icons/Star';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 import MessageIcon from '@material-ui/icons/Message';
 
@@ -42,9 +42,9 @@ const LockedView: React.FC<LockedViewProps> = ({
           toolbarButtons={[
             <IconButton aria-label='selectLighbox'>
               {filteredPhotos[photoIndex].selected ? (
-                <StarIcon className={styles.toolbarIcon} />
+                <FavoriteIcon className={styles.toolbarIcon} />
               ) : (
-                <StarBorderIcon className={styles.toolbarIcon} />
+                <FavoriteBorderIcon className={styles.toolbarIcon} />
               )}
             </IconButton>,
             collection.allowComments ? (

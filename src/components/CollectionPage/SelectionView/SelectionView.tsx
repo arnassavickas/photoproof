@@ -4,8 +4,8 @@ import { SelectionViewProps } from '../../../types';
 import { updatePhotoSelection, updatePhotoComment } from '../../../firebase';
 import { IconButton, Button } from '@material-ui/core';
 
-import StarBorderIcon from '@material-ui/icons/StarBorder';
-import StarIcon from '@material-ui/icons/Star';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 import MessageIcon from '@material-ui/icons/Message';
 
@@ -102,9 +102,9 @@ const SelectionView: React.FC<SelectionViewProps> = ({
               onClick={selectPhotoLightbox}
             >
               {filteredPhotos[photoIndex].selected ? (
-                <StarIcon className={styles.toolbarIcon} />
+                <FavoriteIcon className={styles.toolbarIcon} />
               ) : (
-                <StarBorderIcon className={styles.toolbarIcon} />
+                <FavoriteBorderIcon className={styles.toolbarIcon} />
               )}
             </IconButton>,
             collection.allowComments ? (

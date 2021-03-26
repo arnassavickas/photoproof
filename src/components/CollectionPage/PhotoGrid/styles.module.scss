@@ -34,7 +34,7 @@ $masonryGutter: 10px;
       font-size: 1.1rem;
     }
 
-    .starBtn {
+    .heartBtn {
       position: absolute;
       right: 0;
       bottom: 0;
@@ -43,7 +43,7 @@ $masonryGutter: 10px;
       transition: opacity 0.3s;
 
       &Selected {
-        @extend .starBtn;
+        @extend .heartBtn;
         opacity: 0.7;
       }
     }
@@ -70,7 +70,7 @@ $masonryGutter: 10px;
   .imgBorder:hover {
     cursor: pointer;
 
-    .starBtn {
+    .heartBtn {
       opacity: 0.7;
     }
     .commentBtn {

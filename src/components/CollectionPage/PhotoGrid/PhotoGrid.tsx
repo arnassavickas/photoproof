@@ -5,8 +5,8 @@ import { IconButton } from '@material-ui/core';
 
 import { updatePhotoSelection } from '../../../firebase';
 
-import StarBorderIcon from '@material-ui/icons/StarBorder';
-import StarIcon from '@material-ui/icons/Star';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 import MessageIcon from '@material-ui/icons/Message';
 
@@ -88,11 +88,11 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
                   <IconButton
                     aria-label='select'
                     className={
-                      photo.selected ? styles.starBtnSelected : styles.starBtn
+                      photo.selected ? styles.heartBtnSelected : styles.heartBtn
                     }
                     onClick={selectPhoto(photo.id)}
                   >
-                    {photo.selected ? <StarIcon /> : <StarBorderIcon />}
+                    {photo.selected ? <FavoriteIcon /> : <FavoriteBorderIcon />}
                   </IconButton>
                 </div>
               ) : (
@@ -109,9 +109,9 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
                   {photo.selected ? (
                     <IconButton
                       aria-label='select'
-                      className={styles.starBtnSelected}
+                      className={styles.heartBtnSelected}
                     >
-                      <StarIcon />
+                      <FavoriteIcon />
                     </IconButton>
                   ) : null}
                 </div>
