@@ -33,9 +33,10 @@ const LockedView: React.FC<LockedViewProps> = ({
         openLightbox={openLightbox}
         openCommentModal={openCommentModal}
       />
-      {lightboxOpen && filteredPhotos.length > 0 && (
+      {filteredPhotos.length > 0 && (
         <Lightbox
           filteredPhotos={filteredPhotos}
+          lightboxOpen={lightboxOpen}
           setLightboxOpen={setLightboxOpen}
           lightboxIndex={photoIndex}
           setLightboxIndex={setPhotoIndex}

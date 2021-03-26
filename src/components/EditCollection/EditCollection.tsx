@@ -46,13 +46,7 @@ const EditCollection: React.FC = () => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [commentTextarea, setCommentTextarea] = useState('');
 
-  useEffect(() => {
-    if (lightboxOpen) {
-      document.body.style.overflow = 'hidden';
-    } else if (!lightboxOpen) {
-      document.body.style.overflow = 'unset';
-    }
-  }, [lightboxOpen]);
+
 
   useEffect(() => {
     getSingleCollection(collectionId).then((collection) => {
@@ -120,9 +114,10 @@ const EditCollection: React.FC = () => {
         setPhotoIndex={setPhotoIndex}
         setLightboxOpen={setLightboxOpen}
       />
-      {lightboxOpen && filteredPhotos.length > 0 && (
+      {filteredPhotos.length > 0 && (
         <Lightbox
           filteredPhotos={filteredPhotos}
+          lightboxOpen={lightboxOpen}
           setLightboxOpen={setLightboxOpen}
           lightboxIndex={photoIndex}
           setLightboxIndex={setPhotoIndex}

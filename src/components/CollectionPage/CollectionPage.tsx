@@ -68,14 +68,6 @@ const CollectionPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, collection]);
 
-  useEffect(() => {
-    if (lightboxOpen) {
-      document.body.style.overflow = 'hidden';
-    } else if (!lightboxOpen) {
-      document.body.style.overflow = 'unset';
-    }
-  }, [lightboxOpen]);
-
   const openCommentModal = (index?: number) => {
     setCommentOpen(true);
     if (filteredPhotos) {
