@@ -29,6 +29,22 @@ const LightboxComponent: React.FC<LightboxProps> = ({
     }
   }, [lightboxOpen]);
 
+  const root = document.querySelector('#root');
+
+  const blurRoot = () => {
+    setTimeout(() => {
+      if (root instanceof HTMLElement) {
+        root.style.filter = 'blur(10px)';
+      }
+    }, 100);
+  };
+
+  const unblurRoot = () => {
+    if (root instanceof HTMLElement) {
+      root.style.filter = '';
+    }
+  };
+
   if (lightboxOpen) {
     return (
       <Lightbox
@@ -55,7 +71,10 @@ const LightboxComponent: React.FC<LightboxProps> = ({
                   filteredPhotos.length
               ].cloudUrl
         }
-        onCloseRequest={() => setLightboxOpen(false)}
+        onCloseRequest={() => {
+          unblurRoot();
+          setLightboxOpen(false);
+        }}
         onMovePrevRequest={() =>
           setLightboxIndex(
             (lightboxIndex + filteredPhotos.length - 1) % filteredPhotos.length
@@ -71,6 +90,8 @@ const LightboxComponent: React.FC<LightboxProps> = ({
             {filteredPhotos[lightboxIndex].index}
           </Typography>
         }
+        onImageLoad={blurRoot}
+        animationDisabled={true}
       />
     );
   }
