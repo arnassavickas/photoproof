@@ -21,8 +21,8 @@ export const theme = createMuiTheme({
     },
     error: {
       light: 'rgba(179, 135, 135, 1)',
-      main: 'rgba(128, 34, 28, 1)',
-      dark: 'rgba(102, 23, 23, 1)',
+      main: 'rgba(128, 70, 50, 1)',
+      dark: 'rgba(102, 50, 50, 1)',
       contrastText: '#fff',
     },
     text: {
@@ -50,6 +50,12 @@ export const theme = createMuiTheme({
           backgroundColor: '#666',
           color: '#ccc',
         },
+      },
+      textPrimary: {
+        color: 'rgba(188, 194, 230)',
+      },
+      textSecondary: {
+        color: 'rgb(255, 87, 29);',
       },
     },
   },
