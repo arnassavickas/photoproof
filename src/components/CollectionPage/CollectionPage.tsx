@@ -102,44 +102,52 @@ const CollectionPage: React.FC = () => {
       <Typography variant='h4'>
         {collection.title} {collection.status !== 'selecting' && <LockIcon />}
       </Typography>
-      <Typography variant='h6'>Selected: {selectedPhotos}</Typography>
-      {collection.minSelect.required && collection.maxSelect.required ? (
-        <Typography>
-          You must select from {collection.minSelect.goal} to{' '}
-          {collection.maxSelect.goal} photos
-        </Typography>
-      ) : collection.minSelect.required && !collection.maxSelect.required ? (
-        <Typography>
-          You must select at least {collection.minSelect.goal} photos
-        </Typography>
-      ) : !collection.minSelect.required && collection.maxSelect.required ? (
-        <Typography>
-          You must select a maximum of {collection.maxSelect.goal} photos
-        </Typography>
-      ) : null}
-      <ButtonGroup
-        className={styles.filterBtns}
-        aria-label='outlined primary button group'
-      >
-        <Button
-          variant={filter === 'selected' ? 'contained' : undefined}
-          onClick={() => setFilter('selected')}
+      <div className={styles.horizontal}>
+        <div className={styles.selectedDetails}>
+          {collection.minSelect.required && collection.maxSelect.required ? (
+            <Typography>
+              You must select from {collection.minSelect.goal} to{' '}
+              {collection.maxSelect.goal} photos
+            </Typography>
+          ) : collection.minSelect.required &&
+            !collection.maxSelect.required ? (
+            <Typography>
+              You must select at least {collection.minSelect.goal} photos
+            </Typography>
+          ) : !collection.minSelect.required &&
+            collection.maxSelect.required ? (
+            <Typography>
+              You must select a maximum of {collection.maxSelect.goal} photos
+            </Typography>
+          ) : null}
+          <Typography variant='h6' noWrap>
+            Selected: {selectedPhotos}
+          </Typography>
+        </div>
+        <ButtonGroup
+          className={styles.filterBtns}
+          aria-label='outlined primary button group'
         >
-          Selected
-        </Button>
-        <Button
-          variant={filter === 'all' ? 'contained' : undefined}
-          onClick={() => setFilter('all')}
-        >
-          All
-        </Button>
-        <Button
-          variant={filter === 'unselected' ? 'contained' : undefined}
-          onClick={() => setFilter('unselected')}
-        >
-          Not Selected
-        </Button>
-      </ButtonGroup>
+          <Button
+            variant={filter === 'selected' ? 'contained' : undefined}
+            onClick={() => setFilter('selected')}
+          >
+            Selected
+          </Button>
+          <Button
+            variant={filter === 'all' ? 'contained' : undefined}
+            onClick={() => setFilter('all')}
+          >
+            All
+          </Button>
+          <Button
+            variant={filter === 'unselected' ? 'contained' : undefined}
+            onClick={() => setFilter('unselected')}
+          >
+            Not Selected
+          </Button>
+        </ButtonGroup>
+      </div>
       {collection.photos.length === 0 ? (
         <div>no photos in collection</div>
       ) : filteredPhotos.length === 0 ? (
