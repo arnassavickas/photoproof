@@ -132,6 +132,11 @@ export const changeSiteSettings = async (
   }
 };
 
+export const getSiteSettings = async () => {
+  const settings = await firestore.collection('settings').doc('settings').get();
+  return settings.data();
+};
+
 export const addMorePhotos = async (
   id: string,
   files: FileList,

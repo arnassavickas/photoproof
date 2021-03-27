@@ -9,7 +9,7 @@ import SignIn from './components/SignIn/SignIn';
 import CollectionPage from './components/CollectionPage/CollectionPage';
 import EditCollection from './components/EditCollection/EditCollection';
 import ErrorPage from './components/ErrorPage/ErrorPage';
-import { auth } from './firebase';
+import { auth, getSiteSettings } from './firebase';
 import {
   Container,
   Typography,
@@ -21,6 +21,8 @@ import {
 function App() {
   const [user, setUser] = useState<null | string>(null);
   const [loading, setLoading] = useState(true);
+  const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined);
+  const [logoWidth, setLogoWidth] = useState(100);
 
   useEffect(() => {
     auth.onAuthStateChanged(function (user) {
@@ -33,6 +35,15 @@ function App() {
     });
   }, []);
 
+  useEffect(() => {
+    getSiteSettings().then((settings) => {
+      if (settings && settings.logoUrl && settings.logoWidth) {
+        setLogoUrl(settings.logoUrl);
+        setLogoWidth(settings.logoWidth);
+      }
+    });
+  });
+
   if (loading) {
     return (
       <Backdrop open={true}>
@@ -43,7 +54,7 @@ function App() {
 
   return (
     <Container>
-      <Typography variant='h2'>photoproof</Typography>
+      <img src={logoUrl} style={{ width: logoWidth }} />
       {user && (
         <div className={styles.logoutBtn}>
           <Button onClick={() => auth.signOut()} variant='outlined'>
