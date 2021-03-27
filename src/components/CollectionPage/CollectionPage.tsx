@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import styles from './styles.module.scss';
 import { useParams, useHistory } from 'react-router-dom';
 import { Collection, Photo } from '../../types';
 import { getSingleCollection } from '../../firebase';
@@ -116,13 +117,10 @@ const CollectionPage: React.FC = () => {
           You must select a maximum of {collection.maxSelect.goal} photos
         </Typography>
       ) : null}
-      <ButtonGroup aria-label='outlined primary button group'>
-        <Button
-          variant={filter === 'all' ? 'contained' : undefined}
-          onClick={() => setFilter('all')}
-        >
-          All
-        </Button>
+      <ButtonGroup
+        className={styles.filterBtns}
+        aria-label='outlined primary button group'
+      >
         <Button
           variant={filter === 'selected' ? 'contained' : undefined}
           onClick={() => setFilter('selected')}
@@ -130,10 +128,16 @@ const CollectionPage: React.FC = () => {
           Selected
         </Button>
         <Button
+          variant={filter === 'all' ? 'contained' : undefined}
+          onClick={() => setFilter('all')}
+        >
+          All
+        </Button>
+        <Button
           variant={filter === 'unselected' ? 'contained' : undefined}
           onClick={() => setFilter('unselected')}
         >
-          Unselected
+          Not Selected
         </Button>
       </ButtonGroup>
       {collection.photos.length === 0 ? (
