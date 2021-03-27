@@ -21,10 +21,8 @@ const LightboxComponent: React.FC<LightboxProps> = ({
     if (window.innerHeight < document.body.clientHeight) {
       if (lightboxOpen) {
         document.body.style.overflow = 'hidden';
-        document.body.style['paddingRight'] = '10px';
       } else {
-        document.body.style.overflow = 'unset';
-        document.body.style['paddingRight'] = '0';
+        document.body.style.overflow = 'overlay';
       }
     }
   }, [lightboxOpen]);
