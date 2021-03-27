@@ -12,7 +12,6 @@ import ErrorPage from './components/ErrorPage/ErrorPage';
 import { auth, getSiteSettings } from './firebase';
 import {
   Container,
-  Typography,
   Backdrop,
   CircularProgress,
   Button,
@@ -42,7 +41,7 @@ function App() {
         setLogoWidth(settings.logoWidth);
       }
     });
-  });
+  }, []);
 
   if (loading) {
     return (
@@ -54,7 +53,7 @@ function App() {
 
   return (
     <Container>
-      <img src={logoUrl} style={{ width: logoWidth }} />
+      {logoUrl && <img src={logoUrl} style={{ width: logoWidth }} alt='logo' />}
       {user && (
         <div className={styles.logoutBtn}>
           <Button onClick={() => auth.signOut()} variant='outlined'>
@@ -66,7 +65,16 @@ function App() {
         <Switch>
           <Route path='/collection/:id' render={() => <CollectionPage />} />
           {!user ? <Route path='/' render={() => <SignIn />} /> : null}
-          <Route path='/settings' render={() => <Settings />} />
+          <Route
+            path='/settings'
+            render={() => (
+              <Settings
+                logoWidth={logoWidth}
+                setLogoUrl={setLogoUrl}
+                setLogoWidth={setLogoWidth}
+              />
+            )}
+          />
           <Route path='/new' render={() => <NewCollection />} />
           <Route path='/edit/:id' render={() => <EditCollection />} />
           <Route exact path='/' render={() => <Dashboard />} />

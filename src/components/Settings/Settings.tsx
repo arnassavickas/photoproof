@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, useRef, Fragment } from 'react';
 import styles from './styles.module.scss';
 import { Link, useHistory } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
@@ -13,7 +13,17 @@ import { changeSiteSettings } from '../../firebase';
 
 //TODO implement interactive watermark size/angle adjustment
 
-const Settings: React.FC = () => {
+export interface SettingsProps {
+  logoWidth: number;
+  setLogoWidth: React.Dispatch<React.SetStateAction<number>>;
+  setLogoUrl: React.Dispatch<React.SetStateAction<string | undefined>>;
+}
+
+const Settings: React.FC<SettingsProps> = ({
+  logoWidth,
+  setLogoUrl,
+  setLogoWidth,
+}) => {
   const { register, handleSubmit, control, errors } = useForm<{
     logoFile: FileList;
     logoWidth: number;
@@ -21,9 +31,8 @@ const Settings: React.FC = () => {
 
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [image, setImage] = useState<string | undefined>(undefined);
-  const [imageWidth, setImageWidth] = useState(100);
   const history = useHistory();
+  const defaultWidth = useRef(logoWidth);
 
   const onSubmit = async (data: { logoFile: FileList; logoWidth: number }) => {
     setUploading(true);
@@ -35,12 +44,12 @@ const Settings: React.FC = () => {
 
   const displayImg = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e && e.target && e.target.files) {
-      setImage(URL.createObjectURL(e.target.files[0]));
+      setLogoUrl(URL.createObjectURL(e.target.files[0]));
     }
   };
 
   const changeWidth = (value: number) => {
-    setImageWidth(value);
+    setLogoWidth(value);
   };
 
   return (
@@ -49,7 +58,6 @@ const Settings: React.FC = () => {
         Home
       </Button>
       <Typography variant='h4'>Settings</Typography>
-      <img style={{ width: imageWidth }} src={image} alt='logo' />
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className={styles.dropzoneError}>
           <Typography variant='body1'>
@@ -70,11 +78,11 @@ const Settings: React.FC = () => {
         <Controller
           name='logoWidth'
           control={control}
-          defaultValue={imageWidth}
+          defaultValue={defaultWidth.current}
           render={({ onChange }) => (
             <Slider
               ref={register}
-              defaultValue={100}
+              defaultValue={defaultWidth.current}
               aria-labelledby='discrete-slider-small-steps'
               step={1}
               min={10}

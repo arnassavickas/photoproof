@@ -97,34 +97,40 @@ export const changeSiteSettings = async (
   setUploadProgress: React.Dispatch<React.SetStateAction<number>>
 ) => {
   const logoStorageRef = storage.ref(`logo`);
-  let logoUrl: string;
-  try {
-    const list = await logoStorageRef.listAll();
-    if (list.items.length > 0) {
-      const filenames = [
-        'logo.png',
-        'logo_1400x1000.webp',
-        'logo_400x700.png',
-        'logo_400x700.webp',
-      ];
+  let logoUrl: string | undefined;
+  if (files.length > 0) {
+    try {
+      const list = await logoStorageRef.listAll();
+      if (list.items.length > 0) {
+        const filenames = [
+          'logo.png',
+          'logo_1400x1000.webp',
+          'logo_400x700.png',
+          'logo_400x700.webp',
+        ];
 
-      filenames.forEach(async (filename) => {
-        try {
-          await logoStorageRef.child(filename).delete();
-        } catch {}
-      });
+        filenames.forEach(async (filename) => {
+          try {
+            await logoStorageRef.child(filename).delete();
+          } catch {}
+        });
+      }
+      const uploadTask = await logoStorageRef.child('logo.png').put(files[0]);
+      logoUrl = await uploadTask.ref.getDownloadURL();
+    } catch (err) {
+      console.log(err);
+      throw new Error('failed uploading logo');
     }
-    const uploadTask = await logoStorageRef.child('logo.png').put(files[0]);
-    logoUrl = await uploadTask.ref.getDownloadURL();
-  } catch (err) {
-    console.log(err);
-    throw new Error('failed uploading logo');
   }
   setUploadProgress(50);
 
   const settings = firestore.collection('settings').doc('settings');
   try {
-    await settings.set({ logoUrl, logoWidth }, { merge: true });
+    if (files.length > 0) {
+      await settings.set({ logoUrl, logoWidth }, { merge: true });
+    } else {
+      await settings.set({ logoWidth }, { merge: true });
+    }
     setUploadProgress(100);
   } catch (err) {
     console.error(err);
