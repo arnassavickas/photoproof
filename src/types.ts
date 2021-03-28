@@ -164,3 +164,9 @@ export interface CommentDialogProps {
   actionButtons?: React.ReactNode[];
   disabled?: boolean;
 }
+
+export interface SettingsProps {
+  logoWidth: number;
+  setLogoWidth: React.Dispatch<React.SetStateAction<number>>;
+  setLogoUrl: React.Dispatch<React.SetStateAction<string | undefined>>;
+}
