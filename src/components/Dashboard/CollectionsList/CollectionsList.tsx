@@ -21,6 +21,7 @@ import TouchAppIcon from '@material-ui/icons/TouchApp';
 import CheckIcon from '@material-ui/icons/Check';
 
 import ConfirmationDialog from '../../ConfirmationDialog/ConfirmationDialog';
+import StatusIcon from '../../StatusIcon/StatusIcon';
 
 const CollectionList: React.FC = () => {
   const [collections, setCollections] = useState<Collection[] | null>(null);
@@ -69,31 +70,6 @@ const CollectionList: React.FC = () => {
     history.push(`edit/${collectionId}`);
   };
 
-  const statusIcon = (status: 'editing' | 'selecting' | 'confirmed') => {
-    switch (status) {
-      case 'editing':
-        return (
-          <Tooltip title='Editing'>
-            <BlockIcon />
-          </Tooltip>
-        );
-      case 'selecting':
-        return (
-          <Tooltip title='Selecting'>
-            <TouchAppIcon />
-          </Tooltip>
-        );
-      case 'confirmed':
-        return (
-          <Tooltip title='Confirmed'>
-            <CheckIcon />
-          </Tooltip>
-        );
-      default:
-        return 'N/A';
-    }
-  };
-
   if (collections === null) {
     return (
       <Backdrop open={true}>
@@ -137,7 +113,7 @@ const CollectionList: React.FC = () => {
                       {collection.title}
                     </TableCell>
                     <TableCell onClick={() => handleRowClick(collection.id)}>
-                      {statusIcon(collection.status)}
+                      <StatusIcon status={collection.status} />
                     </TableCell>
                     <TableCell onClick={() => handleRowClick(collection.id)}>
                       {selectedPhotos(collection.photos)}
