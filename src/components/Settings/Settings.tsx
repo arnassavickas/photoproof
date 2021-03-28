@@ -54,10 +54,22 @@ const Settings: React.FC<SettingsProps> = ({
   return (
     <div>
       <Typography variant='h4'>Settings</Typography>
-      <Button onClick={handleCancel} variant='outlined'>
-        Cancel
-      </Button>
       <form onSubmit={handleSubmit(onSubmit)}>
+        <div className='horizonalButtons'>
+          <Button onClick={handleCancel} color='secondary' variant='contained'>
+            Cancel
+          </Button>{' '}
+          <Button
+            aria-label='save'
+            id='save'
+            variant='contained'
+            color='primary'
+            type='submit'
+            disabled={uploading}
+          >
+            Save
+          </Button>
+        </div>
         <div className={styles.dropzoneError}>
           <Typography variant='body1'>
             {errors.logoFile ? (
@@ -98,6 +110,7 @@ const Settings: React.FC<SettingsProps> = ({
                   onChange(value as number);
                   changeWidth(value as number);
                 }}
+                color='secondary'
               />
             </Box>
           )}
@@ -110,15 +123,6 @@ const Settings: React.FC<SettingsProps> = ({
           ) : (
             <Box p={'5px'}></Box>
           )}
-          <Button
-            aria-label='save'
-            id='save'
-            variant='contained'
-            type='submit'
-            disabled={uploading}
-          >
-            Save
-          </Button>
         </div>
       </form>
     </div>

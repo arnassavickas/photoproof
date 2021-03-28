@@ -73,3 +73,17 @@ code {
 .ril__navButtons:focus {
   outline: none;
 }
+
+.horizontalButtons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
+
+  > :not(:last-child) {
+    margin-right: 0.5rem;
+  }
+
+  > * {
+    margin-bottom: 1rem !important;
+  }
+}

@@ -53,7 +53,14 @@ function App() {
 
   return (
     <Container>
-      {logoUrl && <img src={logoUrl} style={{ width: logoWidth }} alt='logo' />}
+      {logoUrl && (
+        <img
+          className={styles.logo}
+          src={logoUrl}
+          style={{ width: logoWidth }}
+          alt='logo'
+        />
+      )}
       {user && (
         <div className={styles.logoutBtn}>
           <Button onClick={() => auth.signOut()} variant='outlined'>

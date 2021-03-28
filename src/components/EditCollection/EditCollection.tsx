@@ -46,8 +46,6 @@ const EditCollection: React.FC = () => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [commentTextarea, setCommentTextarea] = useState('');
 
-
-
   useEffect(() => {
     getSingleCollection(collectionId).then((collection) => {
       setCollection(collection);
@@ -77,14 +75,10 @@ const EditCollection: React.FC = () => {
 
   return (
     <div>
-      <Button to='/' component={Link} variant='outlined'>
-        Home
-      </Button>
       <CollectionDetails
         collectionId={collectionId}
         collection={collection}
         setCollection={setCollection}
-        filteredPhotos={filteredPhotos}
         setConfirmationDialogOpen={setConfirmationDialogOpen}
         setConfirmationDialogTitle={setConfirmationDialogTitle}
         setConfirmationDialogContentText={setConfirmationDialogContentText}

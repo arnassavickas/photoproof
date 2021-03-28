@@ -9,14 +9,14 @@ export const theme = createMuiTheme({
     },
     primary: {
       light: 'rgba(149, 154, 184, 1)',
-      main: 'rgba(128, 134, 152, 1)',
-      dark: 'rgba(45, 53, 99, 1)',
+      main: 'rgba(41, 46, 136, 1)',
+      dark: 'rgba(73, 86, 158, 1)',
       contrastText: '#fff',
     },
     secondary: {
       light: 'rgba(138, 35, 70, 1)',
       main: 'rgba(103, 9, 42, 1)',
-      dark: '#c51162',
+      dark: 'rgba(152, 14, 63, 1)',
       contrastText: 'rgba(255, 255, 255, 1)',
     },
     error: {
@@ -45,17 +45,52 @@ export const theme = createMuiTheme({
     MuiButton: {
       contained: {
         backgroundColor: '#555',
-        color: '#ccc',
+        color: '#eee',
         '&:hover': {
           backgroundColor: '#666',
-          color: '#ccc',
+          color: '#eee',
         },
+      },
+      outlined: {
+        borderColor: '#eee',
       },
       textPrimary: {
         color: 'rgba(188, 194, 230)',
       },
       textSecondary: {
         color: 'rgb(255, 87, 29);',
+      },
+    },
+    MuiTableCell: {
+      head: {
+        fontSize: '1rem !important',
+        backgroundColor: 'rgba(255,255,255,0.1)',
+      },
+    },
+    MuiOutlinedInput: {
+      root: {
+        '&$disabled': {
+          color: '#eee',
+        },
+      },
+      notchedOutline: {
+        borderWidth: '1px',
+        borderColor: '#eee',
+      },
+      disabled: {
+        borderColor: '#555',
+        color: '#eee',
+      },
+    },
+    MuiCheckbox: {
+      root: {
+        color: '#aaa',
+        // '&$checked': {
+        //   color: 'green',
+        // },
+        '&$disabled': {
+          color: '#555',
+        },
       },
     },
   },

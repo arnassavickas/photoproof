@@ -55,21 +55,28 @@ const NewCollection: React.FC = () => {
 
   return (
     <div>
-      <Button to='/' component={Link} variant='outlined'>
-        Cancel
-      </Button>
       <Typography variant='h4'>New collection</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <Button
-            aria-label='create'
-            id='create'
-            color='primary'
-            variant='contained'
-            type='submit'
-          >
-            Create
-          </Button>
+          <div className='horizontalButtons'>
+            <Button
+              to='/'
+              component={Link}
+              color='secondary'
+              variant='contained'
+            >
+              Cancel
+            </Button>
+            <Button
+              aria-label='create'
+              id='create'
+              color='primary'
+              variant='contained'
+              type='submit'
+            >
+              Create
+            </Button>
+          </div>
           {uploading ? (
             <Box data-testid='uploading' p={'3px'}>
               <LinearProgress variant='determinate' value={uploadProgress} />

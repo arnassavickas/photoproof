@@ -64,7 +64,7 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
         <TableHead>
           <TableRow>
             {collection.status === 'editing' ? (
-              <TableCell padding='checkbox'>
+              <TableCell padding='checkbox' size='medium'>
                 <Checkbox
                   indeterminate={
                     selected.length > 0 &&
@@ -78,7 +78,9 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
                 />
               </TableCell>
             ) : null}
-            <TableCell width='5%'>no.</TableCell>
+            <TableCell width='5%' size='medium'>
+              no.
+            </TableCell>
             <TableCell width='10%'>thumbnail</TableCell>
             <TableCell width='30%'>filename</TableCell>
             <TableCell padding='checkbox'></TableCell>

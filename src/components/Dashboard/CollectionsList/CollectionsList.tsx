@@ -16,6 +16,10 @@ import {
   Tooltip,
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
+import BlockIcon from '@material-ui/icons/Block';
+import TouchAppIcon from '@material-ui/icons/TouchApp';
+import CheckIcon from '@material-ui/icons/Check';
+
 import ConfirmationDialog from '../../ConfirmationDialog/ConfirmationDialog';
 
 const CollectionList: React.FC = () => {
@@ -65,6 +69,31 @@ const CollectionList: React.FC = () => {
     history.push(`edit/${collectionId}`);
   };
 
+  const statusIcon = (status: 'editing' | 'selecting' | 'confirmed') => {
+    switch (status) {
+      case 'editing':
+        return (
+          <Tooltip title='Editing'>
+            <BlockIcon />
+          </Tooltip>
+        );
+      case 'selecting':
+        return (
+          <Tooltip title='Selecting'>
+            <TouchAppIcon />
+          </Tooltip>
+        );
+      case 'confirmed':
+        return (
+          <Tooltip title='Confirmed'>
+            <CheckIcon />
+          </Tooltip>
+        );
+      default:
+        return 'N/A';
+    }
+  };
+
   if (collections === null) {
     return (
       <Backdrop open={true}>
@@ -73,7 +102,7 @@ const CollectionList: React.FC = () => {
     );
   } else {
     return (
-      <div>
+      <div className={styles.tableContainer}>
         <TableContainer>
           <Table>
             <TableHead>
@@ -108,15 +137,17 @@ const CollectionList: React.FC = () => {
                       {collection.title}
                     </TableCell>
                     <TableCell onClick={() => handleRowClick(collection.id)}>
-                      {collection.status}
+                      {statusIcon(collection.status)}
                     </TableCell>
                     <TableCell onClick={() => handleRowClick(collection.id)}>
-                      {selectedPhotos(collection.photos)}/
+                      {selectedPhotos(collection.photos)}
+                      {' / '}
                       {collection.photos.length}
                     </TableCell>
                     <TableCell align='right'>
                       <Tooltip title='Delete'>
                         <IconButton
+                          color='inherit'
                           aria-label='delete'
                           onClick={() => requestToDelete(collection.id)}
                         >

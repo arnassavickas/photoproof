@@ -17,3 +17,12 @@
   flex-direction: column;
   align-items: center;
 }
+
+.titleBar {
+  display: flex;
+  align-items: center;
+
+  svg {
+    margin-right: 0.7rem;
+  }
+}

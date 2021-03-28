@@ -12,14 +12,16 @@ import {
   FormControlLabel,
   Paper,
 } from '@material-ui/core';
+import StatusIcon from '../../StatusIcon/StatusIcon';
 
 import { useForm, Controller } from 'react-hook-form';
+
+//TODO finish spacing styling
 
 const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   collectionId,
   collection,
   setCollection,
-  filteredPhotos,
   setConfirmationDialogOpen,
   setConfirmationDialogTitle,
   setConfirmationDialogContentText,
@@ -157,22 +159,29 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   return (
     <div>
       <form onSubmit={handleSubmitSettings(onSubmitSettings)}>
-        {collection.status !== 'editing' ? (
-          <Button
-            variant='outlined'
-            onClick={
-              collection.status === 'confirmed'
-                ? confirmEdit
-                : () => changeStatus('editing')
-            }
-          >
-            Edit
+        <div className='horizontalButtons'>
+          <Button to='/' component={Link} variant='outlined'>
+            Home
           </Button>
-        ) : (
-          <Button color='primary' variant='contained' type='submit'>
-            Save
-          </Button>
-        )}
+          {collection.status !== 'editing' ? (
+            <Button
+              color='secondary'
+              variant='contained'
+              onClick={
+                collection.status === 'confirmed'
+                  ? confirmEdit
+                  : () => changeStatus('editing')
+              }
+            >
+              Edit
+            </Button>
+          ) : (
+            <Button color='primary' variant='contained' type='submit'>
+              Save
+            </Button>
+          )}
+        </div>
+
         {collection.status === 'editing' ? (
           <div>
             <TextField
@@ -186,10 +195,14 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
               inputRef={registerSettings({ required: true, maxLength: 50 })}
               error={!!errorsSettings.title}
               helperText={errorsSettings.title ? 'Title is required' : ' '}
+              fullWidth={true}
             />
           </div>
         ) : (
-          <Typography variant='h4'>{collection.title}</Typography>
+          <div className={styles.titleBar}>
+            <StatusIcon status={collection.status} />
+            <Typography variant='h4'>{collection.title}</Typography>
+          </div>
         )}
 
         <Typography>
@@ -202,13 +215,13 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
           <Button
             to={`/collection/${collectionId}`}
             component={Link}
-            variant='outlined'
+            variant='contained'
             size='small'
           >
-            View
+            Open
           </Button>
         </Typography>
-        <Typography>Status: {collection.status} </Typography>
+        {/* <Typography>Status: {collection.status} </Typography> */}
         {collection.status === 'confirmed' ? (
           <Typography>Final comment: {collection.finalComment}</Typography>
         ) : null}
@@ -229,6 +242,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
                     checked={value}
                     inputRef={ref}
                     disabled={collection.status !== 'editing'}
+                    color='default'
                   />
                 )}
               />
@@ -253,6 +267,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
                     checked={value}
                     inputRef={ref}
                     disabled={collection.status !== 'editing'}
+                    color='default'
                   />
                 )}
               />
@@ -262,7 +277,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
           <div style={{ display: minToggle ? 'inline' : 'none' }}>
             <TextField
               inputProps={{ 'data-testid': 'minSelectGoal' }}
-              //data-testid='minSelectGoal'
+              data-testid='minSelectGoal'
               name='minSelectGoal'
               type='number'
               variant='outlined'
@@ -308,6 +323,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
                     checked={value}
                     inputRef={ref}
                     disabled={collection.status !== 'editing'}
+                    color='default'
                   />
                 )}
               />

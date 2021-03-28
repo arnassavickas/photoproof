@@ -143,7 +143,7 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
       ) : (
         <div className={styles.toolbarSelected}>
           {collection.status === 'editing' ? (
-            <div>
+            <div className='horizontalButtons'>
               <Button
                 onClick={() => {
                   setAddPhotosDialogOpen(true);
