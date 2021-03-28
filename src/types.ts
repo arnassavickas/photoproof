@@ -37,7 +37,7 @@ export interface NewCollectionInputs {
   maxSelectRequired: boolean;
   maxSelectGoal: number;
   allowComments: boolean;
-};
+}
 
 export interface LockedViewProps {
   collection: Collection;
@@ -64,7 +64,6 @@ export interface CollectionDetailsProps {
   collectionId: string;
   collection: Collection;
   setCollection: React.Dispatch<React.SetStateAction<Collection | null>>;
-  filteredPhotos: Photo[];
   setConfirmationDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setConfirmationDialogTitle: React.Dispatch<React.SetStateAction<string>>;
   setConfirmationDialogContentText: React.Dispatch<
@@ -169,4 +168,8 @@ export interface SettingsProps {
   logoWidth: number;
   setLogoWidth: React.Dispatch<React.SetStateAction<number>>;
   setLogoUrl: React.Dispatch<React.SetStateAction<string | undefined>>;
+}
+
+export interface StatusIconProps {
+  status: Collection['status'];
 }
