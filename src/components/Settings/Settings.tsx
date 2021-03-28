@@ -10,14 +10,9 @@ import {
   LinearProgress,
 } from '@material-ui/core';
 import { changeSiteSettings } from '../../firebase';
+import { SettingsProps } from '../../types';
 
 //TODO implement interactive watermark size/angle adjustment
-
-export interface SettingsProps {
-  logoWidth: number;
-  setLogoWidth: React.Dispatch<React.SetStateAction<number>>;
-  setLogoUrl: React.Dispatch<React.SetStateAction<string | undefined>>;
-}
 
 const Settings: React.FC<SettingsProps> = ({
   logoWidth,
@@ -36,7 +31,6 @@ const Settings: React.FC<SettingsProps> = ({
 
   const onSubmit = async (data: { logoFile: FileList; logoWidth: number }) => {
     setUploading(true);
-    console.log(data);
     await changeSiteSettings(data.logoFile, data.logoWidth, setUploadProgress);
     setUploading(false);
     history.push('/');
@@ -52,12 +46,17 @@ const Settings: React.FC<SettingsProps> = ({
     setLogoWidth(value);
   };
 
+  const handleCancel = () => {
+    history.push('/');
+    setLogoWidth(defaultWidth.current);
+  };
+
   return (
     <div>
-      <Button to='/' component={Link} variant='outlined'>
-        Home
-      </Button>
       <Typography variant='h4'>Settings</Typography>
+      <Button onClick={handleCancel} variant='outlined'>
+        Cancel
+      </Button>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className={styles.dropzoneError}>
           <Typography variant='body1'>
@@ -68,31 +67,39 @@ const Settings: React.FC<SettingsProps> = ({
             )}
           </Typography>
         </div>
-        <input
-          name='logoFile'
-          ref={register}
-          type='file'
-          className={styles.customFileInput}
-          onChange={displayImg}
-        />
+        <Typography variant='h6'>Select new logo:</Typography>
+        <Button className={styles.fileInputBtn} variant='outlined'>
+          <input
+            name='logoFile'
+            ref={register}
+            type='file'
+            className={styles.customFileInput}
+            onChange={displayImg}
+          />
+          Upload
+        </Button>
+        <Typography variant='h6'>Select logo width:</Typography>
         <Controller
           name='logoWidth'
           control={control}
           defaultValue={defaultWidth.current}
           render={({ onChange }) => (
-            <Slider
-              ref={register}
-              defaultValue={defaultWidth.current}
-              aria-labelledby='discrete-slider-small-steps'
-              step={1}
-              min={10}
-              max={500}
-              valueLabelDisplay='auto'
-              onChange={(_event, value) => {
-                onChange(value as number);
-                changeWidth(value as number);
-              }}
-            />
+            <Box>
+              <Slider
+                className={styles.slider}
+                ref={register}
+                defaultValue={defaultWidth.current}
+                aria-labelledby='discrete-slider-small-steps'
+                step={1}
+                min={0}
+                max={500}
+                valueLabelDisplay='auto'
+                onChange={(_event, value) => {
+                  onChange(value as number);
+                  changeWidth(value as number);
+                }}
+              />
+            </Box>
           )}
         />
         <div>
@@ -106,7 +113,6 @@ const Settings: React.FC<SettingsProps> = ({
           <Button
             aria-label='save'
             id='save'
-            color='primary'
             variant='contained'
             type='submit'
             disabled={uploading}
