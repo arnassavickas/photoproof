@@ -80,7 +80,7 @@ export interface PhotoTableToolbarProps {
   collection: Collection;
   setCollection: React.Dispatch<React.SetStateAction<Collection | null>>;
   filteredPhotos: Photo[];
-  setFilteredPhotos: React.Dispatch<React.SetStateAction<Photo[] | null>>;
+  setFilteredPhotos: React.Dispatch<React.SetStateAction<Photo[]>>;
   setConfirmationDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setConfirmationDialogTitle: React.Dispatch<React.SetStateAction<string>>;
   setConfirmationDialogContentText: React.Dispatch<
@@ -174,10 +174,26 @@ export interface StatusIconProps {
   status: Collection['status'];
 }
 
-export interface FilterButtonsProps {
+
+//FilterButtons
+interface RequiredFilterButtonsProps {
   collection: Collection;
   setFilteredPhotos: React.Dispatch<React.SetStateAction<Photo[]>>;
-  setLightboxOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  photoIndex: number;
-  setPhotoIndex: React.Dispatch<React.SetStateAction<number>>;
 }
+
+type TruncateFilterButtonsProps =
+  | {
+      extend?: false;
+      setLightboxOpen?: never;
+      photoIndex?: never;
+      setPhotoIndex?: never;
+    }
+  | {
+      extend: true;
+      setLightboxOpen: React.Dispatch<React.SetStateAction<boolean>>;
+      photoIndex: number;
+      setPhotoIndex: React.Dispatch<React.SetStateAction<number>>;
+    };
+
+export type FilterButtonsProps = RequiredFilterButtonsProps &
+  TruncateFilterButtonsProps;
