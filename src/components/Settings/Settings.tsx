@@ -1,6 +1,6 @@
 import React, { useState, useRef, Fragment } from 'react';
 import styles from './styles.module.scss';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import {
   Button,

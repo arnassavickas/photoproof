@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Collection, Photo } from '../../types';
 import { getSingleCollection } from '../../firebase';
-import {
-  IconButton,
-  Backdrop,
-  CircularProgress,
-  Button,
-} from '@material-ui/core';
+import { IconButton, Backdrop, CircularProgress } from '@material-ui/core';
 
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import MessageIcon from '@material-ui/icons/Message';

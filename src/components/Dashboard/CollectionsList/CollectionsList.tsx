@@ -16,9 +16,6 @@ import {
   Tooltip,
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
-import BlockIcon from '@material-ui/icons/Block';
-import TouchAppIcon from '@material-ui/icons/TouchApp';
-import CheckIcon from '@material-ui/icons/Check';
 
 import ConfirmationDialog from '../../ConfirmationDialog/ConfirmationDialog';
 import StatusIcon from '../../StatusIcon/StatusIcon';

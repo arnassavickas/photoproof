@@ -77,7 +77,7 @@ code {
 .horizontalButtons {
   display: flex;
   flex-wrap: wrap;
-  align-items: start;
+  align-items: flex-start;
 
   > :not(:last-child) {
     margin-right: 0.5rem;
@@ -86,4 +86,8 @@ code {
   > * {
     margin-bottom: 1rem !important;
   }
+}
+
+.noPointerEvents {
+  pointer-events: none;
 }

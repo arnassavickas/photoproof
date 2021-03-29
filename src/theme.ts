@@ -77,10 +77,10 @@ export const theme = createMuiTheme({
         borderWidth: '1px',
         borderColor: '#eee',
       },
-      disabled: {
-        borderColor: '#555',
-        color: '#eee',
-      },
+      // disabled: {
+      //   borderColor: '#555',
+      //   color: '#eee',
+      // },
     },
     MuiCheckbox: {
       root: {

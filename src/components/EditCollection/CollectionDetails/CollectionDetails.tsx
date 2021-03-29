@@ -11,6 +11,7 @@ import {
   TextField,
   FormControlLabel,
   Paper,
+  Box,
 } from '@material-ui/core';
 import StatusIcon from '../../StatusIcon/StatusIcon';
 
@@ -209,7 +210,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
           Client URL:{' '}
           <Tooltip title={copied ? 'copied!' : 'copy'}>
             <Button onClick={copyUrl}>
-              {`${window.location.origin.toString()}/collection/${collectionId}`}{' '}
+              {`${window.location.origin.toString()}/collection/${collectionId}`}
             </Button>
           </Tooltip>
           <Button
@@ -222,152 +223,159 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
           </Button>
         </Typography>
         {/* <Typography>Status: {collection.status} </Typography> */}
+
+        <Box
+          className={
+            collection.status === 'editing' ? undefined : 'noPointerEvents'
+          }
+          mt={2}
+        >
+          <Typography variant='h6'>Settings:</Typography>
+          <div>
+            <FormControlLabel
+              control={
+                <Controller
+                  control={controlSettings}
+                  name='allowComments'
+                  render={(
+                    { onChange, onBlur, value, name, ref },
+                    { invalid, isTouched, isDirty }
+                  ) => (
+                    <Checkbox
+                      onBlur={onBlur}
+                      onChange={(e) => onChange(e.target.checked)}
+                      checked={value}
+                      inputRef={ref}
+                      disabled={collection.status !== 'editing'}
+                      color='default'
+                    />
+                  )}
+                />
+              }
+              label='Allow comments'
+            />
+          </div>
+          <Typography variant='subtitle1'>selection goals:</Typography>
+          <div>
+            <FormControlLabel
+              control={
+                <Controller
+                  control={controlSettings}
+                  name='minSelectRequired'
+                  render={(
+                    { onChange, onBlur, value, name, ref },
+                    { invalid, isTouched, isDirty }
+                  ) => (
+                    <Checkbox
+                      onBlur={onBlur}
+                      onChange={(e) => onChange(e.target.checked)}
+                      checked={value}
+                      inputRef={ref}
+                      disabled={collection.status !== 'editing'}
+                      color='default'
+                    />
+                  )}
+                />
+              }
+              label='Minimum'
+            />
+            <div style={{ display: minToggle ? 'inline' : 'none' }}>
+              <TextField
+                inputProps={{ 'data-testid': 'minSelectGoal' }}
+                data-testid='minSelectGoal'
+                name='minSelectGoal'
+                type='number'
+                variant='outlined'
+                size='small'
+                InputProps={{
+                  inputProps: {
+                    max: 999,
+                    min: 1,
+                  },
+                }}
+                inputRef={registerSettings({
+                  min: '1',
+                  max: '999',
+                  valueAsNumber: true,
+                  validate: {
+                    lowerThanMax: (value) =>
+                      !getValuesSettings('maxSelectRequired') ||
+                      getValuesSettings('maxSelectGoal') >= value,
+                  },
+                })}
+                error={!!errorsSettings.minSelectGoal}
+                helperText={
+                  errorsSettings.minSelectGoal &&
+                  'Must be higher than maximum value'
+                }
+                disabled={collection.status !== 'editing'}
+              />
+            </div>
+          </div>
+          <div>
+            <FormControlLabel
+              control={
+                <Controller
+                  control={controlSettings}
+                  name='maxSelectRequired'
+                  render={(
+                    { onChange, onBlur, value, name, ref },
+                    { invalid, isTouched, isDirty }
+                  ) => (
+                    <Checkbox
+                      onBlur={onBlur}
+                      onChange={(e) => onChange(e.target.checked)}
+                      checked={value}
+                      inputRef={ref}
+                      disabled={collection.status !== 'editing'}
+                      color='default'
+                    />
+                  )}
+                />
+              }
+              label='Maximum'
+            />
+            <div style={{ display: maxToggle ? 'inline' : 'none' }}>
+              <TextField
+                data-testid='maxSelectGoal'
+                name='maxSelectGoal'
+                type='number'
+                variant='outlined'
+                size='small'
+                InputProps={{
+                  inputProps: {
+                    max: 999,
+                    min: 1,
+                  },
+                }}
+                inputRef={registerSettings({
+                  min: '1',
+                  max: '999',
+                  valueAsNumber: true,
+                  validate: {
+                    higherThanMin: (value) =>
+                      !getValuesSettings('minSelectRequired') ||
+                      getValuesSettings('minSelectGoal') <= value,
+                  },
+                })}
+                error={!!errorsSettings.maxSelectGoal}
+                helperText={
+                  errorsSettings.maxSelectGoal &&
+                  'Must be higher than minimum value'
+                }
+                disabled={collection.status !== 'editing'}
+              />
+            </div>
+          </div>
+        </Box>
+      </form>
+      <Paper elevation={3} className={styles.centeredContainer}>
+        <Typography variant='h6'>
+          Selected: {selectedPhotos} / {collection.photos.length}
+        </Typography>
         {collection.status === 'confirmed' ? (
           <Typography>Final comment: {collection.finalComment}</Typography>
         ) : null}
-        <Typography variant='h6'>Settings:</Typography>
-        <div>
-          <FormControlLabel
-            control={
-              <Controller
-                control={controlSettings}
-                name='allowComments'
-                render={(
-                  { onChange, onBlur, value, name, ref },
-                  { invalid, isTouched, isDirty }
-                ) => (
-                  <Checkbox
-                    onBlur={onBlur}
-                    onChange={(e) => onChange(e.target.checked)}
-                    checked={value}
-                    inputRef={ref}
-                    disabled={collection.status !== 'editing'}
-                    color='default'
-                  />
-                )}
-              />
-            }
-            label='Allow comments'
-          />
-        </div>
-        <Typography variant='subtitle1'>selection goals:</Typography>
-        <div>
-          <FormControlLabel
-            control={
-              <Controller
-                control={controlSettings}
-                name='minSelectRequired'
-                render={(
-                  { onChange, onBlur, value, name, ref },
-                  { invalid, isTouched, isDirty }
-                ) => (
-                  <Checkbox
-                    onBlur={onBlur}
-                    onChange={(e) => onChange(e.target.checked)}
-                    checked={value}
-                    inputRef={ref}
-                    disabled={collection.status !== 'editing'}
-                    color='default'
-                  />
-                )}
-              />
-            }
-            label='minimum'
-          />
-          <div style={{ display: minToggle ? 'inline' : 'none' }}>
-            <TextField
-              inputProps={{ 'data-testid': 'minSelectGoal' }}
-              data-testid='minSelectGoal'
-              name='minSelectGoal'
-              type='number'
-              variant='outlined'
-              size='small'
-              InputProps={{
-                inputProps: {
-                  max: 999,
-                  min: 1,
-                },
-              }}
-              inputRef={registerSettings({
-                min: '1',
-                max: '999',
-                valueAsNumber: true,
-                validate: {
-                  lowerThanMax: (value) =>
-                    !getValuesSettings('maxSelectRequired') ||
-                    getValuesSettings('maxSelectGoal') >= value,
-                },
-              })}
-              error={!!errorsSettings.minSelectGoal}
-              helperText={
-                errorsSettings.minSelectGoal &&
-                'Must be higher than maximum value'
-              }
-              disabled={collection.status !== 'editing'}
-            />
-          </div>
-        </div>
-        <div>
-          <FormControlLabel
-            control={
-              <Controller
-                control={controlSettings}
-                name='maxSelectRequired'
-                render={(
-                  { onChange, onBlur, value, name, ref },
-                  { invalid, isTouched, isDirty }
-                ) => (
-                  <Checkbox
-                    onBlur={onBlur}
-                    onChange={(e) => onChange(e.target.checked)}
-                    checked={value}
-                    inputRef={ref}
-                    disabled={collection.status !== 'editing'}
-                    color='default'
-                  />
-                )}
-              />
-            }
-            label='maximum'
-          />
-          <div style={{ display: maxToggle ? 'inline' : 'none' }}>
-            <TextField
-              data-testid='maxSelectGoal'
-              name='maxSelectGoal'
-              type='number'
-              variant='outlined'
-              size='small'
-              InputProps={{
-                inputProps: {
-                  max: 999,
-                  min: 1,
-                },
-              }}
-              inputRef={registerSettings({
-                min: '1',
-                max: '999',
-                valueAsNumber: true,
-                validate: {
-                  higherThanMin: (value) =>
-                    !getValuesSettings('minSelectRequired') ||
-                    getValuesSettings('minSelectGoal') <= value,
-                },
-              })}
-              error={!!errorsSettings.maxSelectGoal}
-              helperText={
-                errorsSettings.maxSelectGoal &&
-                'Must be higher than minimum value'
-              }
-              disabled={collection.status !== 'editing'}
-            />
-          </div>
-        </div>
-      </form>
-      <Paper elevation={3} className={styles.centeredContainer}>
-        <Typography variant='h6'>Selected:</Typography>
-        <Typography variant='subtitle1'>
-          {selectedPhotos}/{collection.photos.length}
-        </Typography>
         <Tooltip title={copied ? 'copied!' : 'copy'}>
           <Button
             onClick={

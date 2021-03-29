@@ -154,7 +154,7 @@ describe('<PhotoTableToolbar/> editing', () => {
     const allowComments = getByLabelText('Allow comments');
     user.click(allowComments);
 
-    const minSelectRequired = getByLabelText('minimum');
+    const minSelectRequired = getByLabelText(/minimum/i);
     user.click(minSelectRequired);
     const maxSelectGoal = getByTestId('maxSelectGoal').querySelector(
       'input'
