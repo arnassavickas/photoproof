@@ -173,3 +173,11 @@ export interface SettingsProps {
 export interface StatusIconProps {
   status: Collection['status'];
 }
+
+export interface FilterButtonsProps {
+  collection: Collection;
+  setFilteredPhotos: React.Dispatch<React.SetStateAction<Photo[]>>;
+  setLightboxOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  photoIndex: number;
+  setPhotoIndex: React.Dispatch<React.SetStateAction<number>>;
+}

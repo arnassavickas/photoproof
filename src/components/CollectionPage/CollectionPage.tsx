@@ -3,23 +3,17 @@ import styles from './styles.module.scss';
 import { useParams, useHistory } from 'react-router-dom';
 import { Collection, Photo } from '../../types';
 import { getSingleCollection } from '../../firebase';
-import {
-  Backdrop,
-  Button,
-  ButtonGroup,
-  CircularProgress,
-  Typography,
-} from '@material-ui/core';
+import { Backdrop, CircularProgress, Typography } from '@material-ui/core';
 import LockIcon from '@material-ui/icons/Lock';
 
 import LockedView from './LockedView/LockedView';
 import SelectionView from './SelectionView/SelectionView';
+import FilterButtons from '../FilterButtons/FilterButtons';
 
 const CollectionPage: React.FC = () => {
   const { id: collectionId } = useParams<{ id: string }>();
   const [collection, setCollection] = useState<Collection | null>(null);
   const [filteredPhotos, setFilteredPhotos] = useState<Photo[]>([]);
-  const [filter, setFilter] = useState('all');
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [photoIndex, setPhotoIndex] = useState(0);
   const [commentTextarea, setCommentTextarea] = useState('');
@@ -37,37 +31,6 @@ const CollectionPage: React.FC = () => {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collectionId]);
-
-  useEffect(() => {
-    if (collection) {
-      switch (filter) {
-        case 'all':
-          return setFilteredPhotos(collection.photos);
-        case 'selected':
-          const selectedPhotos = collection.photos.filter(
-            (photo) => photo.selected
-          );
-          if (selectedPhotos.length === 0) {
-            setLightboxOpen(false);
-          } else if (selectedPhotos.length <= photoIndex) {
-            setPhotoIndex(selectedPhotos.length - 1);
-          }
-          return setFilteredPhotos(selectedPhotos);
-        case 'unselected':
-          const unselectedPhotos = collection.photos.filter(
-            (photo) => !photo.selected
-          );
-          if (unselectedPhotos.length === 0) {
-            setLightboxOpen(false);
-          } else if (unselectedPhotos.length <= photoIndex) {
-            setPhotoIndex(unselectedPhotos.length - 1);
-          }
-
-          return setFilteredPhotos(unselectedPhotos);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filter, collection]);
 
   const openCommentModal = (index?: number) => {
     setCommentOpen(true);
@@ -124,29 +87,13 @@ const CollectionPage: React.FC = () => {
             Selected: {selectedPhotos}
           </Typography>
         </div>
-        <ButtonGroup
-          className={styles.filterBtns}
-          aria-label='outlined primary button group'
-        >
-          <Button
-            variant={filter === 'selected' ? 'contained' : undefined}
-            onClick={() => setFilter('selected')}
-          >
-            Selected
-          </Button>
-          <Button
-            variant={filter === 'all' ? 'contained' : undefined}
-            onClick={() => setFilter('all')}
-          >
-            All
-          </Button>
-          <Button
-            variant={filter === 'unselected' ? 'contained' : undefined}
-            onClick={() => setFilter('unselected')}
-          >
-            Not Selected
-          </Button>
-        </ButtonGroup>
+        <FilterButtons
+          collection={collection}
+          setFilteredPhotos={setFilteredPhotos}
+          setLightboxOpen={setLightboxOpen}
+          photoIndex={photoIndex}
+          setPhotoIndex={setPhotoIndex}
+        />
       </div>
       {collection.photos.length === 0 ? (
         <div>no photos in collection</div>
