@@ -21,7 +21,7 @@ const EditCollection: React.FC = () => {
   const { id: collectionId } = useParams<{ id: string }>();
 
   const [collection, setCollection] = useState<Collection | null>(null);
-  const [filteredPhotos, setFilteredPhotos] = useState<Photo[] | null>(null);
+  const [filteredPhotos, setFilteredPhotos] = useState<Photo[]>([]);
   const [photoIndex, setPhotoIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);

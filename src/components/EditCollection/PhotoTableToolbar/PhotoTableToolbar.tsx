@@ -1,12 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styles from './styles.module.scss';
 import { PhotoTableToolbarProps } from '../../../types';
 import { deletePhotos, resetPhotos } from '../../../firebase';
 import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   Toolbar,
   IconButton,
   Typography,
@@ -16,11 +12,12 @@ import {
 
 import DeleteIcon from '@material-ui/icons/Delete';
 
+import FilterButtons from '../../FilterButtons/FilterButtons';
+
 const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
   collectionId,
   collection,
   setCollection,
-  filteredPhotos,
   setFilteredPhotos,
   setConfirmationDialogOpen,
   setConfirmationDialogTitle,
@@ -31,31 +28,6 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
   setSelected,
   setAddPhotosDialogOpen,
 }) => {
-  const [filter, setFilter] = useState('all');
-
-  const changeFilter = (e: React.ChangeEvent<{ value: unknown }>) => {
-    setFilter(e.target.value as string);
-  };
-
-  useEffect(() => {
-    if (collection) {
-      switch (filter) {
-        case 'all':
-          return setFilteredPhotos(collection.photos);
-        case 'selected':
-          const selectedPhotos = collection.photos.filter(
-            (photo) => photo.selected
-          );
-          return setFilteredPhotos(selectedPhotos);
-        case 'unselected':
-          const unselectedPhotos = collection.photos.filter(
-            (photo) => !photo.selected
-          );
-          return setFilteredPhotos(unselectedPhotos);
-      }
-    }
-  }, [filter, collection, setFilteredPhotos]);
-
   const agreeDelete = async () => {
     await deletePhotos(collectionId, selected, setProgress);
     if (collection) {
@@ -159,14 +131,10 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
           ) : null}
         </div>
       )}
-      <FormControl className={styles.toolbarFilter}>
-        <InputLabel id='filter'>Filter</InputLabel>
-        <Select labelId='filter' value={filter} onChange={changeFilter}>
-          <MenuItem value={'all'}>All</MenuItem>
-          <MenuItem value={'selected'}>Selected</MenuItem>
-          <MenuItem value={'unselected'}>Unselected</MenuItem>
-        </Select>
-      </FormControl>
+      <FilterButtons
+        collection={collection}
+        setFilteredPhotos={setFilteredPhotos}
+      />
     </Toolbar>
   );
 };
