@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
 import { FilterButtonsProps } from '../../types';
-import {
-  Button,
-  ButtonGroup,
-} from '@material-ui/core';
+import { Button, ButtonGroup } from '@material-ui/core';
 
 const FilterButtons: React.FC<FilterButtonsProps> = ({
   collection,
@@ -25,7 +22,7 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({
           const selectedPhotos = collection.photos.filter(
             (photo) => photo.selected
           );
-          if (extend && setLightboxOpen && photoIndex && setPhotoIndex) {
+          if (setLightboxOpen && photoIndex && setPhotoIndex) {
             if (selectedPhotos.length === 0) {
               setLightboxOpen(false);
             } else if (selectedPhotos.length <= photoIndex) {
@@ -38,7 +35,7 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({
             (photo) => !photo.selected
           );
 
-          if (extend && setLightboxOpen && photoIndex && setPhotoIndex) {
+          if (setLightboxOpen && photoIndex && setPhotoIndex) {
             if (unselectedPhotos.length === 0) {
               setLightboxOpen(false);
             } else if (unselectedPhotos.length <= photoIndex) {
