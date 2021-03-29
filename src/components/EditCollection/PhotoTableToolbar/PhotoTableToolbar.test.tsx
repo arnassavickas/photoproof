@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { render, within } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { PhotoTableToolbarProps } from '../../../types';
 import user from '@testing-library/user-event';
 import PhotoTableToolbar from './PhotoTableToolbar';
@@ -30,15 +30,10 @@ describe('<PhotoTableToolbar/>', () => {
   });
 
   test('changing filter calls setFilteredPhotos', async () => {
-    const { getByLabelText, getByRole } = render(
-      <PhotoTableToolbar {...props} />
-    );
+    const { getByRole } = render(<PhotoTableToolbar {...props} />);
 
-    const filter = getByLabelText('Filter');
-    user.click(filter);
-    const listbox = within(getByRole('listbox'));
-    const selected = listbox.getByText('Selected');
-    user.click(selected);
+    const selectedBtn = getByRole('button', { name: /^selected/i });
+    user.click(selectedBtn);
 
     expect(props.setFilteredPhotos).toHaveBeenCalled();
   });
