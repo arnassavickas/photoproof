@@ -46,7 +46,7 @@ function App() {
   if (loading) {
     return (
       <Backdrop open={true}>
-        <CircularProgress color='inherit' />.
+        <CircularProgress color='inherit' />
       </Backdrop>
     );
   }
