@@ -1,3 +1,4 @@
 {
-  "todo-tree.tree.showBadges": true
+  "todo-tree.tree.showBadges": true,
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }

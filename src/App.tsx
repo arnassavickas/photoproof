@@ -16,23 +16,29 @@ import {
   CircularProgress,
   Button,
 } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
 
 function App() {
   const [user, setUser] = useState<null | string>(null);
   const [loading, setLoading] = useState(true);
   const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined);
   const [logoWidth, setLogoWidth] = useState(100);
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     auth.onAuthStateChanged(function (user) {
       if (user) {
         setUser(user.uid);
+        enqueueSnackbar('Logged in successfully!', {
+          variant: 'default',
+          persist: true,
+        });
       } else {
         setUser(null);
       }
       setLoading(false);
     });
-  }, []);
+  }, [enqueueSnackbar]);
 
   useEffect(() => {
     getSiteSettings().then((settings) => {
