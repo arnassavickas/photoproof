@@ -90,7 +90,7 @@ const CollectionPage: React.FC = () => {
         <FilterButtons
           collection={collection}
           setFilteredPhotos={setFilteredPhotos}
-          extend={true}
+          modifyLightbox={true}
           setLightboxOpen={setLightboxOpen}
           photoIndex={photoIndex}
           setPhotoIndex={setPhotoIndex}

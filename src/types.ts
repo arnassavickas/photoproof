@@ -183,13 +183,13 @@ interface RequiredFilterButtonsProps {
 
 type TruncateFilterButtonsProps =
   | {
-      extend?: false;
+      modifyLightbox?: false;
       setLightboxOpen?: never;
       photoIndex?: never;
       setPhotoIndex?: never;
     }
   | {
-      extend: true;
+      modifyLightbox: true;
       setLightboxOpen: React.Dispatch<React.SetStateAction<boolean>>;
       photoIndex: number;
       setPhotoIndex: React.Dispatch<React.SetStateAction<number>>;

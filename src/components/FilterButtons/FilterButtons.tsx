@@ -6,7 +6,6 @@ import { Button, ButtonGroup } from '@material-ui/core';
 const FilterButtons: React.FC<FilterButtonsProps> = ({
   collection,
   setFilteredPhotos,
-  extend,
   setLightboxOpen,
   photoIndex,
   setPhotoIndex,
