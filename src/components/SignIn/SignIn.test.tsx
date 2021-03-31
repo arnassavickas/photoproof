@@ -19,7 +19,7 @@ describe('<SignIn/>', () => {
   });
 
   test('renders content', () => {
-    const { getByLabelText, container, getByRole, debug } = render(<SignIn />);
+    const { getByLabelText, container, getByRole } = render(<SignIn />);
 
     const title = container.querySelector('h4');
     expect(title).toHaveTextContent('Sign In');
