@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { BrowserRouter as Router } from 'react-router-dom';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, screen } from '../../utils/customTestRenderer';
 import user from '@testing-library/user-event';
 import Settings from './Settings';
 import { changeSiteSettings } from '../../firebase';
@@ -21,13 +21,13 @@ describe('<Settings/>', () => {
   });
 
   test('clicking save calls changeSiteSettings with correct args', async () => {
-    const { container, getByText } = render(
+    const { container} = render(
       <Router>
         <Settings {...props} />
       </Router>
     );
 
-    const saveBtn = getByText(/save/i);
+    const saveBtn = screen.getByText(/save/i);
 
     const filesToUplaod = [
       new File([new ArrayBuffer(1)], 'file1.png', { type: 'image/png' }),

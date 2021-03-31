@@ -29,13 +29,17 @@ const SelectionConfirmationDialog: React.FC<SelectionConfirmationDialogProps> = 
   });
 
   const confirmSelections = async (data: { finalComment: string }) => {
-    await confirmCollection(collectionId, data.finalComment);
-    setConfirmDialogOpen(false);
-    setCollection({
-      ...collection,
-      status: 'confirmed',
-      finalComment: data.finalComment,
-    });
+    try {
+      await confirmCollection(collectionId, data.finalComment);
+      setConfirmDialogOpen(false);
+      setCollection({
+        ...collection,
+        status: 'confirmed',
+        finalComment: data.finalComment,
+      });
+    } catch (err) {
+      //TODO ERROR
+    }
   };
 
   return (

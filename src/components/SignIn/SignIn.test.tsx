@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, screen } from '../../utils/customTestRenderer';
 import user from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 import SignIn from './SignIn';
@@ -19,26 +19,27 @@ describe('<SignIn/>', () => {
   });
 
   test('renders content', () => {
-    const { getByLabelText, container, getByRole } = render(<SignIn />);
+    const {container} = render(<SignIn />);
 
     const title = container.querySelector('h4');
     expect(title).toHaveTextContent('Sign In');
 
-    const email = getByLabelText(/email/i);
+    const email = screen.getByLabelText(/email/i);
     expect(email).toBeDefined();
 
-    const password = getByLabelText(/password/i);
+    const password = screen.getByLabelText(/password/i);
     expect(password).toBeDefined();
 
-    const signInButton = getByRole('button', {
+    const signInButton = screen.getByRole('button', {
       name: /signIn/i,
     });
     expect(signInButton).toHaveTextContent(/sign in/i);
   });
 
   test('displays errors', async () => {
-    const { getAllByText, container } = render(<SignIn />);
-    const signInButton = getAllByText('Sign In')
+    const {container } = render(<SignIn />);
+    const signInButton = screen
+      .getAllByText('Sign In')
       ?.find((el) => el.closest('button') != null)
       ?.closest('button');
     expect(container).not.toHaveTextContent('Email is required');
@@ -64,14 +65,15 @@ describe('<SignIn/>', () => {
     });
     auth.signInWithEmailAndPassword = mockHandler;
 
-    const { getByLabelText, getAllByText, container } = render(<SignIn />);
-    const email = getByLabelText(/email/i);
+    const { container } = render(<SignIn />);
+    const email = screen.getByLabelText(/email/i);
     user.type(email, 'incorrect');
 
-    const password = getByLabelText(/password/i);
+    const password = screen.getByLabelText(/password/i);
     user.type(password, 'incorrect');
 
-    const signInButton = getAllByText('Sign In')
+    const signInButton = screen
+      .getAllByText('Sign In')
       ?.find((el) => el.closest('button') != null)
       ?.closest('button');
 
@@ -99,14 +101,15 @@ describe('<SignIn/>', () => {
 
     auth.signInWithEmailAndPassword = mockHandler;
 
-    const { getByLabelText, getAllByText, container } = render(<SignIn />);
-    const email = getByLabelText(/email/i);
+    const {container } = render(<SignIn />);
+    const email = screen.getByLabelText(/email/i);
     user.type(email, 'correct');
 
-    const password = getByLabelText(/password/i);
+    const password = screen.getByLabelText(/password/i);
     user.type(password, 'correct');
 
-    const signInButton = getAllByText('Sign In')
+    const signInButton = screen
+      .getAllByText('Sign In')
       ?.find((el) => el.closest('button') != null)
       ?.closest('button');
 

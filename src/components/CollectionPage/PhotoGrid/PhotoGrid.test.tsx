@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { render } from '@testing-library/react';
+import { render, screen } from '../../../utils/customTestRenderer';
 import user from '@testing-library/user-event';
 import PhotoGrid from './PhotoGrid';
 import { Collection, PhotoGridProps } from '../../../types';
@@ -28,21 +28,21 @@ describe('<PhotoGrid/> collection.status="selecting"', () => {
   });
 
   test('renders one photo', async () => {
-    const { getAllByAltText } = render(<PhotoGrid {...props} />);
-    const photos = getAllByAltText(props.collection.title);
+    render(<PhotoGrid {...props} />);
+    const photos = screen.getAllByAltText(props.collection.title);
     expect(photos).toHaveLength(2);
   });
 
   test('photo click calls one time', () => {
-    const { getAllByAltText } = render(<PhotoGrid {...props} />);
-    const photos = getAllByAltText(props.collection.title);
+    render(<PhotoGrid {...props} />);
+    const photos = screen.getAllByAltText(props.collection.title);
     user.click(photos[0]);
     expect(openLightbox.mock.calls).toHaveLength(1);
   });
 
   test('comment button click calls one time', () => {
-    const { getAllByRole } = render(<PhotoGrid {...props} />);
-    const commentBtn = getAllByRole('button', {
+    render(<PhotoGrid {...props} />);
+    const commentBtn = screen.getAllByRole('button', {
       name: /comment/i,
     });
     user.click(commentBtn[0]);
@@ -50,9 +50,9 @@ describe('<PhotoGrid/> collection.status="selecting"', () => {
   });
 
   test('select button click updates collection and calls database one time', () => {
-    const { getAllByRole } = render(<PhotoGrid {...props} />);
+    render(<PhotoGrid {...props} />);
 
-    let selectBtn = getAllByRole('button', {
+    let selectBtn = screen.getAllByRole('button', {
       name: /select/i,
     });
 
@@ -70,9 +70,9 @@ describe('<PhotoGrid/> collection.status="selecting"', () => {
   });
 
   test('updating photo.selected to true, renders a different icon path', () => {
-    const { getAllByRole, rerender } = render(<PhotoGrid {...props} />);
+    const { rerender } = render(<PhotoGrid {...props} />);
 
-    let selectBtn = getAllByRole('button', {
+    let selectBtn = screen.getAllByRole('button', {
       name: /select/i,
     });
 
@@ -82,7 +82,7 @@ describe('<PhotoGrid/> collection.status="selecting"', () => {
     props.filteredPhotos[0].selected = true;
 
     rerender(<PhotoGrid {...props} />);
-    selectBtn = getAllByRole('button', {
+    selectBtn = screen.getAllByRole('button', {
       name: /select/i,
     });
 
@@ -92,9 +92,9 @@ describe('<PhotoGrid/> collection.status="selecting"', () => {
   });
 
   test('updating photo.comment to some length, renders a different icon path', () => {
-    const { getAllByRole, rerender } = render(<PhotoGrid {...props} />);
+    const { rerender } = render(<PhotoGrid {...props} />);
 
-    let commentBtn = getAllByRole('button', {
+    let commentBtn = screen.getAllByRole('button', {
       name: /comment/i,
     });
 
@@ -104,7 +104,7 @@ describe('<PhotoGrid/> collection.status="selecting"', () => {
     props.filteredPhotos[0].comment = 'test';
 
     rerender(<PhotoGrid {...props} />);
-    commentBtn = getAllByRole('button', {
+    commentBtn = screen.getAllByRole('button', {
       name: /select/i,
     });
 
@@ -123,9 +123,9 @@ describe('<PhotoGrid/> collection.status="confirmed"', () => {
   const editingProps = { ...props, collection: editingCollection };
 
   test('renders only one comment button', () => {
-    const { getAllByRole } = render(<PhotoGrid {...editingProps} />);
+    render(<PhotoGrid {...editingProps} />);
 
-    const commentBtn = getAllByRole('button', {
+    const commentBtn = screen.getAllByRole('button', {
       name: /comment/i,
     });
     expect(commentBtn).toHaveLength(1);

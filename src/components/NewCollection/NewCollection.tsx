@@ -32,25 +32,29 @@ const NewCollection: React.FC = () => {
   const maxToggle = watch('maxSelectRequired');
 
   const onSubmit = async (data: NewCollectionInputs) => {
-    setUploading(true);
-    const collectionId = await generateNewCollection(
-      {
-        title: data.title,
-        minSelect: {
-          required: data.minSelectRequired,
-          goal: data.minSelectGoal,
+    try {
+      setUploading(true);
+      const collectionId = await generateNewCollection(
+        {
+          title: data.title,
+          minSelect: {
+            required: data.minSelectRequired,
+            goal: data.minSelectGoal,
+          },
+          maxSelect: {
+            required: data.maxSelectRequired,
+            goal: data.maxSelectGoal,
+          },
+          allowComments: data.allowComments,
         },
-        maxSelect: {
-          required: data.maxSelectRequired,
-          goal: data.maxSelectGoal,
-        },
-        allowComments: data.allowComments,
-      },
-      data.files,
-      setUploadProgress
-    );
-    setUploading(false);
-    history.push(`/edit/${collectionId}`);
+        data.files,
+        setUploadProgress
+      );
+      setUploading(false);
+      history.push(`/edit/${collectionId}`);
+    } catch (err) {
+      //TODO ERROR
+    }
   };
 
   return (

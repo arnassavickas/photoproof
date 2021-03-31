@@ -30,10 +30,18 @@ const Settings: React.FC<SettingsProps> = ({
   const defaultWidth = useRef(logoWidth);
 
   const onSubmit = async (data: { logoFile: FileList; logoWidth: number }) => {
-    setUploading(true);
-    await changeSiteSettings(data.logoFile, data.logoWidth, setUploadProgress);
-    setUploading(false);
-    history.push('/');
+    try {
+      setUploading(true);
+      await changeSiteSettings(
+        data.logoFile,
+        data.logoWidth,
+        setUploadProgress
+      );
+      setUploading(false);
+      history.push('/');
+    } catch (err) {
+      //TODO ERROR
+    }
   };
 
   const displayImg = (e: React.ChangeEvent<HTMLInputElement>) => {

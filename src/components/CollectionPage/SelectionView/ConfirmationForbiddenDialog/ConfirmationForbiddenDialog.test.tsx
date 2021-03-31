@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen } from '../../../../utils/customTestRenderer';
 import user from '@testing-library/user-event';
 import ConfirmationForbiddenDialog from './ConfirmationForbiddenDialog';
 import { collection } from '../../../../utils/testUtils';

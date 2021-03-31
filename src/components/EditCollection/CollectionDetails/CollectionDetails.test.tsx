@@ -1,16 +1,10 @@
 import React from 'react';
 
-import {
-  getByLabelText,
-  getByText,
-  render,
-  waitFor,
-  within,
-} from '@testing-library/react';
+import { render, waitFor, screen } from '../../../utils/customTestRenderer';
 import { CollectionDetailsProps } from '../../../types';
 import user from '@testing-library/user-event';
 import CollectionDetails from './CollectionDetails';
-import { collection, filteredPhotos } from '../../../utils/testUtils';
+import { collection } from '../../../utils/testUtils';
 import { changeCollectionStatus, updateSettings } from '../../../firebase';
 import { BrowserRouter as Router } from 'react-router-dom';
 
@@ -20,7 +14,6 @@ const props: CollectionDetailsProps = {
   collectionId: 'collectionId',
   collection,
   setCollection: jest.fn(),
-  filteredPhotos,
   setConfirmationDialogOpen: jest.fn(),
   setConfirmationDialogTitle: jest.fn(),
   setConfirmationDialogContentText: jest.fn(),
@@ -34,13 +27,13 @@ describe('<PhotoTableToolbar/> selecting', () => {
   });
 
   test('clicking "edit" button calls changeCollectionStatus one time', async () => {
-    const { getByText, debug, getByRole } = render(
+    render(
       <Router>
         <CollectionDetails {...props} />
       </Router>
     );
 
-    const editButton = getByText('Edit');
+    const editButton = screen.getByText('Edit');
     user.click(editButton);
     await waitFor(() => {
       expect(changeCollectionStatus).toHaveBeenCalledTimes(1);
@@ -48,12 +41,12 @@ describe('<PhotoTableToolbar/> selecting', () => {
   });
 
   test('clicking "copy selections" calls copySelections one time', async () => {
-    const { getByText, debug, getByRole } = render(
+    render(
       <Router>
         <CollectionDetails {...props} />
       </Router>
     );
-    const copyButton = getByText(/copy selections/i);
+    const copyButton = screen.getByText(/copy selections/i);
     user.click(copyButton);
 
     await waitFor(() => {
@@ -71,13 +64,13 @@ describe('<PhotoTableToolbar/> confirmed', () => {
   });
 
   test('clicking "edit" button calls setConfirmationDialogAgree one time', async () => {
-    const { getByText, debug, getByRole } = render(
+    render(
       <Router>
         <CollectionDetails {...props} />
       </Router>
     );
 
-    const editButton = getByText('Edit');
+    const editButton = screen.getByText('Edit');
     user.click(editButton);
 
     await waitFor(() => {
@@ -93,13 +86,13 @@ describe('<PhotoTableToolbar/> confirmed', () => {
     });
     jest.spyOn(navigator.clipboard, 'writeText');
 
-    const { getByText, debug, getByRole } = render(
+    render(
       <Router>
         <CollectionDetails {...props} />
       </Router>
     );
 
-    const copyButton = getByText(/copy selections/i);
+    const copyButton = screen.getByText(/copy selections/i);
     user.click(copyButton);
 
     await waitFor(() => {
@@ -117,16 +110,16 @@ describe('<PhotoTableToolbar/> editing', () => {
   });
 
   test('saving empty title renders error', async () => {
-    const { getByText, debug, getByLabelText, baseElement } = render(
+    const {baseElement } = render(
       <Router>
         <CollectionDetails {...props} />
       </Router>
     );
 
-    const title = getByLabelText('Title');
+    const title = screen.getByLabelText('Title');
     user.clear(title);
 
-    const saveButton = getByText('Save');
+    const saveButton = screen.getByText('Save');
     user.click(saveButton);
 
     await waitFor(() => {
@@ -135,34 +128,28 @@ describe('<PhotoTableToolbar/> editing', () => {
   });
 
   test('entering valid data calls updateSettings one time with correct args', async () => {
-    const {
-      getByText,
-      debug,
-      getByLabelText,
-      baseElement,
-      getByTestId,
-    } = render(
+    render(
       <Router>
         <CollectionDetails {...props} />
       </Router>
     );
 
-    const title = getByLabelText('Title');
+    const title = screen.getByLabelText('Title');
     user.clear(title);
     user.type(title, 'new title');
 
-    const allowComments = getByLabelText('Allow comments');
+    const allowComments = screen.getByLabelText('Allow comments');
     user.click(allowComments);
 
-    const minSelectRequired = getByLabelText(/minimum/i);
+    const minSelectRequired = screen.getByLabelText(/minimum/i);
     user.click(minSelectRequired);
-    const maxSelectGoal = getByTestId('maxSelectGoal').querySelector(
-      'input'
-    ) as HTMLInputElement;
+    const maxSelectGoal = screen
+      .getByTestId('maxSelectGoal')
+      .querySelector('input') as HTMLInputElement;
     user.clear(maxSelectGoal);
     user.type(maxSelectGoal, '4');
 
-    const saveButton = getByText('Save');
+    const saveButton = screen.getByText('Save');
     user.click(saveButton);
 
     await waitFor(() => {
@@ -186,13 +173,13 @@ describe('<PhotoTableToolbar/> editing', () => {
   });
 
   test('clicking "copy selections" calls navigator.clipboard.writeText one time', async () => {
-    const { getByText, debug, getByRole } = render(
+    render(
       <Router>
         <CollectionDetails {...props} />
       </Router>
     );
 
-    const copyButton = getByText(/copy selections/i);
+    const copyButton = screen.getByText(/copy selections/i);
     user.click(copyButton);
 
     await waitFor(() => {

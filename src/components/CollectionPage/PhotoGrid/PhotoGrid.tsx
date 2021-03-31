@@ -12,6 +12,8 @@ import MessageIcon from '@material-ui/icons/Message';
 
 import Masonry from 'react-masonry-css';
 
+import { useSnackbar } from 'notistack';
+
 const PhotoGrid: React.FC<PhotoGridProps> = ({
   collectionId,
   collection,
@@ -20,6 +22,8 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
   openLightbox,
   openCommentModal,
 }) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const selectPhoto = (photoId: string) => (event: any) => {
     try {
       const clickedPhoto = collection?.photos.find(
@@ -36,7 +40,9 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
         });
       }
     } catch (err) {
-      //
+      enqueueSnackbar('ERROR: Photo selection failed', {
+        variant: 'error',
+      });
     }
   };
 

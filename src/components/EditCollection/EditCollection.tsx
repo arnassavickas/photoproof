@@ -45,6 +45,8 @@ const EditCollection: React.FC = () => {
     getSingleCollection(collectionId).then((collection) => {
       setCollection(collection);
       setFilteredPhotos(collection.photos);
+    }).catch(err => {
+      //TODO ERROR
     });
   }, [collectionId]);
 

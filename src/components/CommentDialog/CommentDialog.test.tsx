@@ -1,6 +1,6 @@
 import React from 'react';
 import user from '@testing-library/user-event';
-import { render } from '@testing-library/react';
+import { render, screen } from '../../utils/customTestRenderer';
 import { CommentDialogProps } from '../../types';
 import CommendDialog from './CommentDialog';
 
@@ -25,17 +25,17 @@ const props: CommentDialogProps = {
 
 describe('<CommendDialog/>', () => {
   test('renders text area with provided text', () => {
-    const { getByRole } = render(<CommendDialog {...props} />);
+    render(<CommendDialog {...props} />);
 
-    const textbox = getByRole('textbox');
+    const textbox = screen.getByRole('textbox');
     expect(textbox).toHaveTextContent('comment text area');
   });
 
   test('button clicks call their callbacks one time', () => {
-    const { getByText } = render(<CommendDialog {...props} />);
+    render(<CommendDialog {...props} />);
 
-    const btn1 = getByText('button1');
-    const btn2 = getByText('button2');
+    const btn1 = screen.getByText('button1');
+    const btn2 = screen.getByText('button2');
 
     expect(mockBtn1).toHaveBeenCalledTimes(0);
     expect(mockBtn2).toHaveBeenCalledTimes(0);
@@ -48,9 +48,9 @@ describe('<CommendDialog/>', () => {
   });
 
   test('typing text calls textarea handler with the text', () => {
-    const { getByRole } = render(<CommendDialog {...props} />);
+    render(<CommendDialog {...props} />);
 
-    let textbox = getByRole('textbox');
+    let textbox = screen.getByRole('textbox');
 
     user.type(textbox, '1');
 
@@ -61,9 +61,9 @@ describe('<CommendDialog/>', () => {
 
   test("disabled textarea doesn't call the callback", () => {
     props.disabled = true;
-    const { getByRole } = render(<CommendDialog {...props} />);
+    render(<CommendDialog {...props} />);
 
-    let textbox = getByRole('textbox');
+    let textbox = screen.getByRole('textbox');
 
     expect(props.setCommentTextarea).toHaveBeenCalledTimes(0);
 

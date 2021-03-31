@@ -41,12 +41,16 @@ function App() {
   }, [enqueueSnackbar]);
 
   useEffect(() => {
-    getSiteSettings().then((settings) => {
-      if (settings && settings.logoUrl && settings.logoWidth) {
-        setLogoUrl(settings.logoUrl);
-        setLogoWidth(settings.logoWidth);
-      }
-    });
+    getSiteSettings()
+      .then((settings) => {
+        if (settings && settings.logoUrl && settings.logoWidth) {
+          setLogoUrl(settings.logoUrl);
+          setLogoWidth(settings.logoWidth);
+        }
+      })
+      .catch((err) => {
+        //TODO ERROR
+      });
   }, []);
 
   if (loading) {

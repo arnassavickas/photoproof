@@ -54,7 +54,7 @@ const SelectionView: React.FC<SelectionViewProps> = ({
           });
         }
       } catch (err) {
-        console.error(err);
+        //TODO ERROR
       }
     }
   };

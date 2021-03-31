@@ -29,7 +29,11 @@ const CollectionList: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
-    getCollections().then((data) => setCollections(data));
+    getCollections()
+      .then((data) => setCollections(data))
+      .catch((err) => {
+        //TODO ERROR
+      });
   }, []);
 
   const selectedPhotos = (photos: Photo[]) => {
@@ -50,16 +54,20 @@ const CollectionList: React.FC = () => {
   };
 
   const handleAgree = async () => {
-    await deleteCollection(requestDeleteId, setDeleteProgress);
-    setDialogOpen(false);
-    setDeleteProgress(0);
-    if (collections) {
-      const filterRemovedCollection = collections.filter(
-        (collection) => collection.id !== requestDeleteId
-      );
-      if (filterRemovedCollection) {
-        setCollections(filterRemovedCollection);
+    try {
+      await deleteCollection(requestDeleteId, setDeleteProgress);
+      setDialogOpen(false);
+      setDeleteProgress(0);
+      if (collections) {
+        const filterRemovedCollection = collections.filter(
+          (collection) => collection.id !== requestDeleteId
+        );
+        if (filterRemovedCollection) {
+          setCollections(filterRemovedCollection);
+        }
       }
+    } catch (err) {
+      //TODO ERROR
     }
   };
 

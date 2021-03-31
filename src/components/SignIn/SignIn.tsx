@@ -20,6 +20,7 @@ const SignIn = () => {
         message: 'Email or password is incorrect',
       });
       console.error('error signing in with password and email', err);
+      //TODO ERROR
     }
   };
 

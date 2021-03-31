@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { render } from '@testing-library/react';
+import { render, screen } from '../../../utils/customTestRenderer';
 import { PhotoTableToolbarProps } from '../../../types';
 import user from '@testing-library/user-event';
 import PhotoTableToolbar from './PhotoTableToolbar';
@@ -30,9 +30,9 @@ describe('<PhotoTableToolbar/>', () => {
   });
 
   test('changing filter calls setFilteredPhotos', async () => {
-    const { getByRole } = render(<PhotoTableToolbar {...props} />);
+    render(<PhotoTableToolbar {...props} />);
 
-    const selectedBtn = getByRole('button', { name: /^selected/i });
+    const selectedBtn = screen.getByRole('button', { name: /^selected/i });
     user.click(selectedBtn);
 
     expect(props.setFilteredPhotos).toHaveBeenCalled();
@@ -46,30 +46,30 @@ describe('<PhotoTableToolbar/> editing', () => {
   });
 
   test('clicking "add photos" calls setAddPhotosDialogOpen', async () => {
-    const { getByText } = render(<PhotoTableToolbar {...props} />);
+    render(<PhotoTableToolbar {...props} />);
 
-    const addPhotos = getByText(/add photos/i);
+    const addPhotos = screen.getByText(/add photos/i);
     user.click(addPhotos);
 
     expect(props.setAddPhotosDialogOpen).toHaveBeenCalledTimes(1);
   });
 
   test('clicking "reset selections and comments" calls setConfirmationDialogAgree one time', async () => {
-    const { getByText } = render(<PhotoTableToolbar {...props} />);
+    render(<PhotoTableToolbar {...props} />);
 
-    const resetButton = getByText(/reset selections and comments/i);
+    const resetButton = screen.getByText(/reset selections and comments/i);
     user.click(resetButton);
     expect(props.setConfirmationDialogAgree).toHaveBeenCalledTimes(1);
   });
 
   test('clicking checkbox and delete calls setConfirmationDialogAgree one time', () => {
     props.selected = ['photoId1', 'photoId2'];
-    const { getByText, getByLabelText } = render(
+    render(
       <PhotoTableToolbar {...props} />
     );
 
-    getByText('2 to be deleted');
-    const deleteButton = getByLabelText('delete');
+    screen.getByText('2 to be deleted');
+    const deleteButton = screen.getByLabelText('delete');
     user.click(deleteButton);
 
     expect(props.setConfirmationDialogAgree).toHaveBeenCalledTimes(1);

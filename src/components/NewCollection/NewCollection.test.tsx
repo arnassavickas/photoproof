@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { BrowserRouter as Router } from 'react-router-dom';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, screen } from '../../utils/customTestRenderer';
 import user from '@testing-library/user-event';
 import { axe } from 'jest-axe';
 import NewCollection from './NewCollection';
@@ -25,7 +25,7 @@ describe('<NewCollection/>', () => {
   });
 
   test('entering invalid/missing data renders errors', async () => {
-    const { getByLabelText, container, getByRole, getByTestId } = render(
+    const { container} = render(
       <Router>
         <NewCollection />
       </Router>
@@ -40,16 +40,16 @@ describe('<NewCollection/>', () => {
     );
     expect(container).not.toHaveTextContent('Images are required');
 
-    const minSelectRequired = getByLabelText('minimum');
+    const minSelectRequired = screen.getByLabelText('minimum');
     user.click(minSelectRequired);
-    const maxSelectRequired = getByLabelText('maximum');
+    const maxSelectRequired = screen.getByLabelText('maximum');
     user.click(maxSelectRequired);
-    const minSelectGoal = getByTestId(/minSelectGoal/i);
+    const minSelectGoal = screen.getByTestId(/minSelectGoal/i);
     user.type(minSelectGoal, '4');
-    const maxSelectGoal = getByTestId(/maxSelectGoal/i);
+    const maxSelectGoal = screen.getByTestId(/maxSelectGoal/i);
     user.type(maxSelectGoal, '3');
 
-    const create = getByRole('button', { name: 'create' });
+    const create = screen.getByRole('button', { name: 'create' });
     user.click(create);
 
     await waitFor(() => {
@@ -61,7 +61,7 @@ describe('<NewCollection/>', () => {
   });
 
   test('upload calls generateNewCollection one time', async () => {
-    const { getByLabelText, container, getByText, findByText } = render(
+    const { container} = render(
       <Router>
         <NewCollection />
       </Router>
@@ -71,17 +71,17 @@ describe('<NewCollection/>', () => {
       new File([new ArrayBuffer(1)], 'file2.jpeg', { type: 'image/jpeg' }),
     ];
 
-    const collectionTitle = getByLabelText(/title/i);
+    const collectionTitle = screen.getByLabelText(/title/i);
     user.type(collectionTitle, 'test title');
 
     const fileInput = container.querySelector('input[type="file"]');
 
     user.upload(fileInput as HTMLElement, filesToUplaod);
 
-    await findByText('file1.jpeg');
-    await findByText('file2.jpeg');
+    await screen.findByText('file1.jpeg');
+    await screen.findByText('file2.jpeg');
 
-    const createButton = getByText('Create');
+    const createButton = screen.getByText('Create');
     user.click(createButton);
 
     await waitFor(() => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen } from '../../../utils/customTestRenderer';
 import user from '@testing-library/user-event';
 import LockedView from './LockedView';
 import { collection, filteredPhotos } from '../../../utils/testUtils';

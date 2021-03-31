@@ -32,11 +32,15 @@ const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
   });
 
   const onConfirmUpload = async (data: { files: FileList }) => {
-    await addMorePhotos(collectionId, data.files, setProgress);
-    setAddPhotosDialogOpen(false);
-    setProgress(0);
-    const collection = await getSingleCollection(collectionId);
-    setCollection(collection);
+    try {
+      await addMorePhotos(collectionId, data.files, setProgress);
+      setAddPhotosDialogOpen(false);
+      setProgress(0);
+      const collection = await getSingleCollection(collectionId);
+      setCollection(collection);
+    } catch (err) {
+      //TODO ERROR
+    }
   };
 
   return (

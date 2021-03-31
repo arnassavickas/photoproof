@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, screen } from '../../../utils/customTestRenderer';
 import { AddPhotosDialogProps } from '../../../types';
 import user from '@testing-library/user-event';
 import AddPhotosDialog from './AddPhotosDialog';
@@ -23,20 +23,22 @@ describe('<AddPhotosDialog/>', () => {
   });
 
   test('adding no photos renders error', async () => {
-    const { getByTestId, getByText} = render(
+    render(
       <AddPhotosDialog {...props} />
     );
 
-    const addButton = getByText('Add');
+    const addButton = screen.getByText('Add');
     user.click(addButton);
 
     await waitFor(() => {
-      expect(getByTestId('error')).toHaveTextContent('Images are required');
+      expect(screen.getByTestId('error')).toHaveTextContent(
+        'Images are required'
+      );
     });
   });
 
   test('adding photos calls firebase functions one time', async () => {
-    const { baseElement, getByText, findByText } = render(
+    const { baseElement } = render(
       <AddPhotosDialog {...props} />
     );
     const filesToUplaod = [
@@ -48,10 +50,10 @@ describe('<AddPhotosDialog/>', () => {
 
     user.upload(fileInput as HTMLInputElement, filesToUplaod);
 
-    await findByText('file1.jpeg');
-    await findByText('file2.jpeg');
+    await screen.findByText('file1.jpeg');
+    await screen.findByText('file2.jpeg');
 
-    const addButton = getByText('Add');
+    const addButton = screen.getByText('Add');
     user.click(addButton);
 
     await waitFor(() => {

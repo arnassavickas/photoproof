@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { render } from '@testing-library/react';
+import { render, screen } from '../../../utils/customTestRenderer';
 import PhotoTable from './PhotoTable';
 import { PhotoTableProps } from '../../../types';
 import { collection, filteredPhotos } from '../../../utils/testUtils';
@@ -26,20 +26,20 @@ describe('<PhotoTable/>', () => {
   });
 
   test('renders one comment', () => {
-    const { getAllByTestId } = render(
+    render(
       <PhotoTable {...props} />
     );
-    const commentCells = getAllByTestId('comment');
+    const commentCells = screen.getAllByTestId('comment');
     expect(commentCells).toHaveLength(2);
     expect(commentCells[0]).not.toHaveTextContent('test comment');
     expect(commentCells[1]).toHaveTextContent('test comment');
   });
 
   test('renders one selection icon', () => {
-    const { getAllByTestId } = render(
+    render(
       <PhotoTable {...props} />
     );
-    const selectedIcons = getAllByTestId('selected');
+    const selectedIcons = screen.getAllByTestId('selected');
     expect(selectedIcons).toHaveLength(1);
   });
 });
@@ -47,8 +47,8 @@ describe('<PhotoTable/>', () => {
 describe('<PhotoTable/> status="editing"', () => {
   props.collection.status = 'editing';
   test('renders two checkboxes', () => {
-    const { getAllByTestId } = render(<PhotoTable {...props} />);
-    const checkboxes = getAllByTestId('checkbox');
+    render(<PhotoTable {...props} />);
+    const checkboxes = screen.getAllByTestId('checkbox');
     expect(checkboxes).toHaveLength(2);
   });
 });

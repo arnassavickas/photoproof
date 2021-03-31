@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { render } from '@testing-library/react';
+import { render, screen } from '../../utils/customTestRenderer';
 import { FilterButtonsProps } from '../../types';
 import user from '@testing-library/user-event';
 import FilterButtons from './FilterButtons';
@@ -22,10 +22,10 @@ const propsModifyLightbox: FilterButtonsProps = {
 
 describe('<FilterButtons/>', () => {
   test('selected button', async () => {
-    const { getByRole } = render(<FilterButtons {...props} />);
+    render(<FilterButtons {...props} />);
 
-    const selectedBtn = getByRole('button', { name: /^selected/i });
-    const allBtn = getByRole('button', { name: /^all/i });
+    const selectedBtn = screen.getByRole('button', { name: /^selected/i });
+    const allBtn = screen.getByRole('button', { name: /^all/i });
 
     user.click(selectedBtn);
 
@@ -39,10 +39,12 @@ describe('<FilterButtons/>', () => {
   });
 
   test('not selected button', () => {
-    const { getByRole } = render(<FilterButtons {...props} />);
+    render(<FilterButtons {...props} />);
 
-    const notSelectedBtn = getByRole('button', { name: /^not selected/i });
-    const allBtn = getByRole('button', { name: /^all/i });
+    const notSelectedBtn = screen.getByRole('button', {
+      name: /^not selected/i,
+    });
+    const allBtn = screen.getByRole('button', { name: /^all/i });
 
     user.click(notSelectedBtn);
 
@@ -58,9 +60,9 @@ describe('<FilterButtons/>', () => {
 
 describe('<FilterButtons modifyLightbox/>', () => {
   test('photoIndex is higher or equal to filtered photos length', () => {
-    const { getByRole } = render(<FilterButtons {...propsModifyLightbox} />);
+    render(<FilterButtons {...propsModifyLightbox} />);
 
-    const selectedBtn = getByRole('button', { name: /^selected/i });
+    const selectedBtn = screen.getByRole('button', { name: /^selected/i });
 
     user.click(selectedBtn);
 
@@ -68,9 +70,9 @@ describe('<FilterButtons modifyLightbox/>', () => {
   });
   test('filtered photos become zero', () => {
     propsModifyLightbox.collection.photos[1].selected = false;
-    const { getByRole } = render(<FilterButtons {...propsModifyLightbox} />);
+    render(<FilterButtons {...propsModifyLightbox} />);
 
-    const selectedBtn = getByRole('button', { name: /^selected/i });
+    const selectedBtn = screen.getByRole('button', { name: /^selected/i });
 
     user.click(selectedBtn);
 

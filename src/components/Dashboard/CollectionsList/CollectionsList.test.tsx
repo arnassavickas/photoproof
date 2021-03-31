@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { render } from '@testing-library/react';
+import { render, screen } from '../../../utils/customTestRenderer';
 import user from '@testing-library/user-event';
 import CollectionList from './CollectionsList';
 import { collectionList } from '../../../utils/testUtils';
@@ -16,33 +16,34 @@ jest.mock('react-router-dom', () => ({
 
 describe('<CollectionList/>', () => {
   beforeEach(() => {
+    //@ts-ignore
     getCollections.mockResolvedValueOnce(collectionList);
     jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   test('renders two rows of collections', async () => {
-    const { findAllByText } = render(<CollectionList />);
+    render(<CollectionList />);
 
-    const titles = await findAllByText(/collection title/);
+    const titles = await screen.findAllByText(/collection title/);
 
     expect(titles).toHaveLength(2);
   });
   test('clicking a row calls history.push with correct collectionId', async () => {
-    const { findByText } = render(<CollectionList />);
+    render(<CollectionList />);
 
-    const title = await findByText(/collection title 1/);
+    const title = await screen.findByText(/collection title 1/);
     user.click(title);
 
     expect(mockHistoryPush).toBeCalledWith('edit/collectionId1');
   });
   test('clicking delete button calls deleteCollection with correct collectionId', async () => {
-    const { findAllByRole, getByText } = render(<CollectionList />);
+    render(<CollectionList />);
 
-    const deleteBtn = await findAllByRole('button', {
+    const deleteBtn = await screen.findAllByRole('button', {
       name: /delete/i,
     });
     user.click(deleteBtn[0]);
-    const yesBtn = getByText('Yes');
+    const yesBtn = screen.getByText('Yes');
     user.click(yesBtn);
 
     expect(deleteCollection).toHaveBeenCalledWith(

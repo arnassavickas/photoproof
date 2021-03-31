@@ -29,27 +29,31 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
   setAddPhotosDialogOpen,
 }) => {
   const agreeDelete = async () => {
-    await deletePhotos(collectionId, selected, setProgress);
-    if (collection) {
-      const removeDeleted = collection.photos
-        .filter((photo) => {
-          for (let id of selected) {
-            if (photo.id === id) {
-              return false;
+    try {
+      await deletePhotos(collectionId, selected, setProgress);
+      if (collection) {
+        const removeDeleted = collection.photos
+          .filter((photo) => {
+            for (let id of selected) {
+              if (photo.id === id) {
+                return false;
+              }
             }
-          }
-          return true;
-        })
-        .map((photo, index) => {
-          return { ...photo, index: index + 1 };
+            return true;
+          })
+          .map((photo, index) => {
+            return { ...photo, index: index + 1 };
+          });
+        setCollection({
+          ...collection,
+          photos: removeDeleted,
         });
-      setCollection({
-        ...collection,
-        photos: removeDeleted,
-      });
+      }
+      setSelected([]);
+      resetDialog();
+    } catch (err) {
+      //TODO ERROR
     }
-    setSelected([]);
-    resetDialog();
   };
 
   const agreeResetPhotos = async () => {
@@ -66,7 +70,7 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
         });
         resetDialog();
       } catch (err) {
-        //
+        //TODO ERROR
       }
     }
   };

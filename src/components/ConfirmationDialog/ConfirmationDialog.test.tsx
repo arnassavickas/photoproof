@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { render } from '@testing-library/react';
+import { render, screen } from '../../utils/customTestRenderer';
 import user from '@testing-library/user-event';
 import ConfirmationDialog from './ConfirmationDialog';
 import { ConfirmationDialogProps } from '../../types';
@@ -16,15 +16,15 @@ const props: ConfirmationDialogProps = {
 
 describe('<ConfirmationDialog/>', () => {
   test('renders title and text', () => {
-    const { getByText } = render(<ConfirmationDialog {...props} />);
-    getByText(/test title/);
-    getByText(/test content text/);
+    render(<ConfirmationDialog {...props} />);
+    screen.getByText(/test title/);
+    screen.getByText(/test content text/);
   });
 
   test('button clicks call their callbacks one time', () => {
-    const { getByText } = render(<ConfirmationDialog {...props} />);
-    const yesBtn = getByText('Yes');
-    const cancelBtn = getByText('Cancel');
+    render(<ConfirmationDialog {...props} />);
+    const yesBtn = screen.getByText('Yes');
+    const cancelBtn = screen.getByText('Cancel');
 
     expect(props.onClickAgree).toHaveBeenCalledTimes(0);
     expect(props.onClickAgree).toHaveBeenCalledTimes(0);
@@ -38,9 +38,9 @@ describe('<ConfirmationDialog/>', () => {
 
   test('positive progress disables buttons', () => {
     props.progress = 1;
-    const { getByText } = render(<ConfirmationDialog {...props} />);
-    const yesBtn = getByText('Yes');
-    const cancelBtn = getByText('Cancel');
+    render(<ConfirmationDialog {...props} />);
+    const yesBtn = screen.getByText('Yes');
+    const cancelBtn = screen.getByText('Cancel');
 
     expect(props.onClickAgree).toHaveBeenCalledTimes(0);
     expect(props.onClickAgree).toHaveBeenCalledTimes(0);

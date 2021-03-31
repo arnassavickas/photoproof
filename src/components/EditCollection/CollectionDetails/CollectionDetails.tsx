@@ -65,10 +65,10 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
       if (collection) {
         setCollection({ ...collection, status });
       }
+      resetDialog();
     } catch (err) {
-      //
+      //TODO ERROR
     }
-    resetDialog();
   };
 
   const onSubmitSettings = async (data: any) => {
@@ -105,7 +105,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
         });
       }
     } catch (err) {
-      //
+      //TODO ERROR
     }
   };
 
