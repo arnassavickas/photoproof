@@ -36,19 +36,15 @@ export const generateNewCollection = async (
   } while (snapshot.exists);
   setUploadProgress(5);
   const { title, minSelect, maxSelect, allowComments } = data;
-  try {
-    await collectionRef.set({
-      title,
-      dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
-      minSelect,
-      maxSelect,
-      allowComments,
-      status: 'selecting',
-      finalComment: '',
-    });
-  } catch (err) {
-    throw new Error(`error creating collection document: ${err}`);
-  }
+  await collectionRef.set({
+    title,
+    dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
+    minSelect,
+    maxSelect,
+    allowComments,
+    status: 'selecting',
+    finalComment: '',
+  });
   setUploadProgress(10);
 
   const photosRef = collectionRef.collection('photos');
@@ -60,11 +56,8 @@ export const generateNewCollection = async (
     const photo = photos[i];
     batch.set(photosRef.doc(photos[i].id), photo);
   }
-  try {
-    await batch.commit();
-  } catch (err) {
-    throw new Error(`error creating photos documents: ${err}`);
-  }
+  await batch.commit();
+
   setUploadProgress(100);
   return id;
 };
@@ -78,17 +71,13 @@ export const updateSettings = async (
 ) => {
   const { title, minSelect, maxSelect, allowComments } = data;
   const collectionRef = firestore.collection('collections').doc(collectionId);
-  try {
-    await collectionRef.update({
-      title,
-      minSelect,
-      maxSelect,
-      allowComments,
-      status: 'selecting',
-    });
-  } catch (err) {
-    throw new Error(`error updating collection settings`);
-  }
+  await collectionRef.update({
+    title,
+    minSelect,
+    maxSelect,
+    allowComments,
+    status: 'selecting',
+  });
 };
 
 export const changeSiteSettings = async (
@@ -99,43 +88,33 @@ export const changeSiteSettings = async (
   const logoStorageRef = storage.ref(`logo`);
   let logoUrl: string | undefined;
   if (files.length > 0) {
-    try {
-      const list = await logoStorageRef.listAll();
-      if (list.items.length > 0) {
-        const filenames = [
-          'logo.png',
-          'logo_1400x1000.webp',
-          'logo_400x700.png',
-          'logo_400x700.webp',
-        ];
+    const list = await logoStorageRef.listAll();
+    if (list.items.length > 0) {
+      const filenames = [
+        'logo.png',
+        'logo_1400x1000.webp',
+        'logo_400x700.png',
+        'logo_400x700.webp',
+      ];
 
-        filenames.forEach(async (filename) => {
-          try {
-            await logoStorageRef.child(filename).delete();
-          } catch {}
-        });
-      }
-      const uploadTask = await logoStorageRef.child('logo.png').put(files[0]);
-      logoUrl = await uploadTask.ref.getDownloadURL();
-    } catch (err) {
-      console.log(err);
-      throw new Error('failed uploading logo');
+      filenames.forEach(async (filename) => {
+        try {
+          await logoStorageRef.child(filename).delete();
+        } catch {}
+      });
     }
+    const uploadTask = await logoStorageRef.child('logo.png').put(files[0]);
+    logoUrl = await uploadTask.ref.getDownloadURL();
   }
   setUploadProgress(50);
 
   const settings = firestore.collection('settings').doc('settings');
-  try {
-    if (files.length > 0) {
-      await settings.set({ logoUrl, logoWidth }, { merge: true });
-    } else {
-      await settings.set({ logoWidth }, { merge: true });
-    }
-    setUploadProgress(100);
-  } catch (err) {
-    console.error(err);
-    throw new Error('failed update logo in database ');
+  if (files.length > 0) {
+    await settings.set({ logoUrl, logoWidth }, { merge: true });
+  } else {
+    await settings.set({ logoWidth }, { merge: true });
   }
+  setUploadProgress(100);
 };
 
 export const getSiteSettings = async () => {
@@ -161,11 +140,8 @@ export const addMorePhotos = async (
     const photo = photos[i];
     batch.set(photosRef.doc(photos[i].id), photo);
   }
-  try {
-    await batch.commit();
-  } catch (err) {
-    throw new Error(`error creating photos documents: ${err}`);
-  }
+  await batch.commit();
+
   setUploadProgress(100);
 
   return;
@@ -209,6 +185,7 @@ const uploadPhotos = async (
       comment: '',
       dateTaken: data ? data.ModifyDate : null,
     });
+
     progress += progressStep;
     setUploadProgress(progress);
   }
@@ -225,11 +202,8 @@ export const updatePhotoSelection = async (
     .doc(collectionId)
     .collection('photos')
     .doc(photoId);
-  try {
-    await photoRef.update({ selected });
-  } catch (err) {
-    throw new Error('failed updating selection');
-  }
+
+  await photoRef.update({ selected });
 };
 export const updatePhotoComment = async (
   collectionId: string,
@@ -241,11 +215,8 @@ export const updatePhotoComment = async (
     .doc(collectionId)
     .collection('photos')
     .doc(photoId);
-  try {
-    await photoRef.update({ comment });
-  } catch (err) {
-    throw new Error('failed updating comment');
-  }
+
+  await photoRef.update({ comment });
 };
 
 export const confirmCollection = async (
@@ -253,14 +224,11 @@ export const confirmCollection = async (
   finalComment?: string
 ) => {
   const collectionRef = firestore.collection('collections').doc(collectionId);
-  try {
-    await collectionRef.update({
-      status: 'confirmed',
-      finalComment: finalComment || '',
-    });
-  } catch (err) {
-    throw new Error('failed confirming collection');
-  }
+
+  await collectionRef.update({
+    status: 'confirmed',
+    finalComment: finalComment || '',
+  });
 };
 
 export const deletePhotos = async (
@@ -277,22 +245,18 @@ export const deletePhotos = async (
   const progressStep = 100 / photoIds.length;
   let progress = 0;
 
-  try {
-    for (let id of photoIds) {
-      const storageRef = storage.ref(collectionId);
-      const docRef = photosRef.doc(id);
-      await storageRef.child(`${id}.jpg`).delete();
-      await storageRef.child(`${id}_1400x1000.webp`).delete();
-      await storageRef.child(`${id}_400x700.jpg`).delete();
-      await storageRef.child(`${id}_400x700.webp`).delete();
-      await docRef.delete();
-      progress += progressStep;
-      setDeleteProgress(progress);
-    }
-  } catch (err) {
-    console.error('error deleting photos', err);
-    return;
+  for (let id of photoIds) {
+    const storageRef = storage.ref(collectionId);
+    const docRef = photosRef.doc(id);
+    await storageRef.child(`${id}.jpg`).delete();
+    await storageRef.child(`${id}_1400x1000.webp`).delete();
+    await storageRef.child(`${id}_400x700.jpg`).delete();
+    await storageRef.child(`${id}_400x700.webp`).delete();
+    await docRef.delete();
+    progress += progressStep;
+    setDeleteProgress(progress);
   }
+
   return;
 };
 
@@ -306,11 +270,8 @@ export const resetPhotos = async (collectionId: string, photos: Photo[]) => {
   for (const photo of photos) {
     batch.update(photosRef.doc(photo.id), { selected: false, comment: '' });
   }
-  try {
-    await batch.commit();
-  } catch (err) {
-    throw new Error(`error reseting photos: ${err}`);
-  }
+
+  await batch.commit();
 };
 
 export const deleteCollection = async (
@@ -323,32 +284,25 @@ export const deleteCollection = async (
     .doc(collectionId)
     .collection('photos');
 
-  const collectionRef = await firestore
-    .collection('collections')
-    .doc(collectionId);
+  const collectionRef = firestore.collection('collections').doc(collectionId);
 
   const photos = await photosRef.get();
 
   const progressStep = 100 / photos.size;
   let progress = 0;
-
-  try {
-    for (let photo of photos.docs) {
-      const storageRef = storage.ref(collectionId);
-      const docRef = photosRef.doc(photo.data().id);
-      await storageRef.child(`${photo.data().id}.jpg`).delete();
-      await storageRef.child(`${photo.data().id}_1400x1000.webp`).delete();
-      await storageRef.child(`${photo.data().id}_400x700.jpg`).delete();
-      await storageRef.child(`${photo.data().id}_400x700.webp`).delete();
-      await docRef.delete();
-      progress += progressStep;
-      setDeleteProgress(progress);
-    }
-    await collectionRef.delete();
-  } catch (err) {
-    console.error('error deleting collection', err);
-    return;
+  for (let photo of photos.docs) {
+    const storageRef = storage.ref(collectionId);
+    const docRef = photosRef.doc(photo.data().id);
+    await storageRef.child(`${photo.data().id}.jpg`).delete();
+    await storageRef.child(`${photo.data().id}_1400x1000.webp`).delete();
+    await storageRef.child(`${photo.data().id}_400x700.jpg`).delete();
+    await storageRef.child(`${photo.data().id}_400x700.webp`).delete();
+    await docRef.delete();
+    progress += progressStep;
+    setDeleteProgress(progress);
   }
+  await collectionRef.delete();
+
   return;
 };
 
@@ -403,52 +357,49 @@ export const getCollections = async () => {
 
 export const getSingleCollection = async (id: string) => {
   console.log('getting single collection');
-  try {
-    const collection = await firestore.collection('collections').doc(id).get();
-    if (!collection.exists) {
-      throw new Error("collection doesn't exist");
-    }
-    const photos = await firestore
-      .collection('collections')
-      .doc(id)
-      .collection('photos')
-      .orderBy('dateTaken')
-      .get();
-    const photosArray: Photo[] = [];
-    let index = 1;
-    photos.forEach((photo) => {
-      const photoObj = {
-        index,
-        id: photo.data().id,
-        cloudUrl: photo.data().cloudUrl,
-        cloudUrlWebp: photo.data().cloudUrlWebp,
-        thumbnail: photo.data().thumbnail,
-        thumbnailWebp: photo.data().thumbnailWebp,
-        filename: photo.data().filename,
-        filenameNumber: photo.data().filenameNumber,
-        selected: photo.data().selected,
-        comment: photo.data().comment,
-        dateTaken: photo.data().dateTaken,
-      };
-      photosArray.push(photoObj);
-      index++;
-    });
 
-    const collectionObj = {
-      id: collection.id,
-      title: collection.data()?.title,
-      dateCreated: collection.data()?.dateCreated,
-      minSelect: collection.data()?.minSelect,
-      maxSelect: collection.data()?.maxSelect,
-      allowComments: collection.data()?.allowComments,
-      status: collection.data()?.status,
-      finalComment: collection.data()?.finalComment,
-      photos: photosArray,
-    };
-    return collectionObj;
-  } catch (err) {
-    throw new Error('failed getting single collection');
+  const collection = await firestore.collection('collections').doc(id).get();
+  if (!collection.exists) {
+    throw new Error("collection doesn't exist");
   }
+  const photos = await firestore
+    .collection('collections')
+    .doc(id)
+    .collection('photos')
+    .orderBy('dateTaken')
+    .get();
+  const photosArray: Photo[] = [];
+  let index = 1;
+  photos.forEach((photo) => {
+    const photoObj = {
+      index,
+      id: photo.data().id,
+      cloudUrl: photo.data().cloudUrl,
+      cloudUrlWebp: photo.data().cloudUrlWebp,
+      thumbnail: photo.data().thumbnail,
+      thumbnailWebp: photo.data().thumbnailWebp,
+      filename: photo.data().filename,
+      filenameNumber: photo.data().filenameNumber,
+      selected: photo.data().selected,
+      comment: photo.data().comment,
+      dateTaken: photo.data().dateTaken,
+    };
+    photosArray.push(photoObj);
+    index++;
+  });
+
+  const collectionObj = {
+    id: collection.id,
+    title: collection.data()?.title,
+    dateCreated: collection.data()?.dateCreated,
+    minSelect: collection.data()?.minSelect,
+    maxSelect: collection.data()?.maxSelect,
+    allowComments: collection.data()?.allowComments,
+    status: collection.data()?.status,
+    finalComment: collection.data()?.finalComment,
+    photos: photosArray,
+  };
+  return collectionObj;
 };
 
 export const changeCollectionStatus = async (
@@ -457,9 +408,5 @@ export const changeCollectionStatus = async (
 ) => {
   const collectionRef = firestore.collection('collections').doc(collectionId);
 
-  try {
-    await collectionRef.update({ status });
-  } catch (err) {
-    throw new Error('failed changing collection status');
-  }
+  await collectionRef.update({ status });
 };
