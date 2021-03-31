@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
-import { FilterButtonsProps } from '../../types';
+import { FilterButtonsProps, Photo } from '../../types';
 import { Button, ButtonGroup } from '@material-ui/core';
 
 const FilterButtons: React.FC<FilterButtonsProps> = ({
@@ -12,6 +12,16 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({
 }) => {
   const [filter, setFilter] = useState('all');
 
+  const modifyLightbox = (photos: Photo[]) => {
+    if (setLightboxOpen && photoIndex && setPhotoIndex) {
+      if (photos.length === 0) {
+        setLightboxOpen(false);
+      } else if (photos.length <= photoIndex) {
+        setPhotoIndex(photos.length - 1);
+      }
+    }
+  };
+
   useEffect(() => {
     if (collection) {
       switch (filter) {
@@ -21,27 +31,13 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({
           const selectedPhotos = collection.photos.filter(
             (photo) => photo.selected
           );
-          if (setLightboxOpen && photoIndex && setPhotoIndex) {
-            if (selectedPhotos.length === 0) {
-              setLightboxOpen(false);
-            } else if (selectedPhotos.length <= photoIndex) {
-              setPhotoIndex(selectedPhotos.length - 1);
-            }
-          }
+          modifyLightbox(selectedPhotos);
           return setFilteredPhotos(selectedPhotos);
         case 'unselected':
           const unselectedPhotos = collection.photos.filter(
             (photo) => !photo.selected
           );
-
-          if (setLightboxOpen && photoIndex && setPhotoIndex) {
-            if (unselectedPhotos.length === 0) {
-              setLightboxOpen(false);
-            } else if (unselectedPhotos.length <= photoIndex) {
-              setPhotoIndex(unselectedPhotos.length - 1);
-            }
-          }
-
+          modifyLightbox(unselectedPhotos);
           return setFilteredPhotos(unselectedPhotos);
       }
     }
