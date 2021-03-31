@@ -6,9 +6,6 @@ import { isWebpSupported } from 'react-image-webp/dist/utils';
 import Lightbox from 'react-image-lightbox';
 import { Typography } from '@material-ui/core';
 
-//TODO toolbar obstructs photo
-//TODO arrow buttons obstruct photo
-
 const LightboxComponent: React.FC<LightboxProps> = ({
   filteredPhotos,
   lightboxOpen,

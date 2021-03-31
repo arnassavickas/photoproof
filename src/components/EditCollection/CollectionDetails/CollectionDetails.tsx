@@ -17,8 +17,6 @@ import StatusIcon from '../../StatusIcon/StatusIcon';
 
 import { useForm, Controller } from 'react-hook-form';
 
-//TODO finish spacing styling
-
 const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   collectionId,
   collection,
