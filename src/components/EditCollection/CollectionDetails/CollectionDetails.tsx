@@ -16,6 +16,7 @@ import {
 import StatusIcon from '../../StatusIcon/StatusIcon';
 
 import { useForm, Controller } from 'react-hook-form';
+import { useSnackbar } from 'notistack';
 
 const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   collectionId,
@@ -28,6 +29,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   setProgress,
 }) => {
   const [copied, setCopied] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   const {
     register: registerSettings,
@@ -67,7 +69,9 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
       }
       resetDialog();
     } catch (err) {
-      //TODO ERROR
+      enqueueSnackbar('ERROR: Changing collection status failed', {
+        variant: 'error',
+      });
     }
   };
 
@@ -105,7 +109,9 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
         });
       }
     } catch (err) {
-      //TODO ERROR
+      enqueueSnackbar('ERROR: Saving collection settings failed', {
+        variant: 'error',
+      });
     }
   };
 

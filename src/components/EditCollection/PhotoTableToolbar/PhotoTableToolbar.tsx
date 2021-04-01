@@ -9,6 +9,7 @@ import {
   Tooltip,
   Button,
 } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 
@@ -28,6 +29,8 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
   setSelected,
   setAddPhotosDialogOpen,
 }) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const agreeDelete = async () => {
     try {
       await deletePhotos(collectionId, selected, setProgress);
@@ -52,7 +55,9 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
       setSelected([]);
       resetDialog();
     } catch (err) {
-      //TODO ERROR
+      enqueueSnackbar('ERROR: Deleting photos failed', {
+        variant: 'error',
+      });
     }
   };
 
@@ -70,7 +75,9 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
         });
         resetDialog();
       } catch (err) {
-        //TODO ERROR
+        enqueueSnackbar('ERROR: Resetting photos failed', {
+          variant: 'error',
+        });
       }
     }
   };

@@ -19,7 +19,7 @@ describe('<SignIn/>', () => {
   });
 
   test('renders content', () => {
-    const {container} = render(<SignIn />);
+    const { container } = render(<SignIn />);
 
     const title = container.querySelector('h4');
     expect(title).toHaveTextContent('Sign In');
@@ -37,7 +37,7 @@ describe('<SignIn/>', () => {
   });
 
   test('displays errors', async () => {
-    const {container } = render(<SignIn />);
+    const { container } = render(<SignIn />);
     const signInButton = screen
       .getAllByText('Sign In')
       ?.find((el) => el.closest('button') != null)
@@ -60,7 +60,9 @@ describe('<SignIn/>', () => {
           (null as unknown) as firebase.auth.UserCredential
         );
       } else {
-        throw new Error('incorrect credentials');
+        const error = new Error('incorrect credentials');
+        error.code = 'auth/wrong-password';
+        throw error;
       }
     });
     auth.signInWithEmailAndPassword = mockHandler;
@@ -101,7 +103,7 @@ describe('<SignIn/>', () => {
 
     auth.signInWithEmailAndPassword = mockHandler;
 
-    const {container } = render(<SignIn />);
+    const { container } = render(<SignIn />);
     const email = screen.getByLabelText(/email/i);
     user.type(email, 'correct');
 

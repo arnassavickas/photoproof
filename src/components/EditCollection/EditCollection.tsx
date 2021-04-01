@@ -17,6 +17,8 @@ import AddPhotosDialog from './AddPhotosDialog/AddPhotosDialog';
 import Lightbox from '../Lightbox/Lightbox';
 import CommentDialog from '../CommentDialog/CommentDialog';
 
+import { useSnackbar } from 'notistack';
+
 const EditCollection: React.FC = () => {
   const { id: collectionId } = useParams<{ id: string }>();
 
@@ -25,7 +27,6 @@ const EditCollection: React.FC = () => {
   const [photoIndex, setPhotoIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
-
   const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [confirmationDialogTitle, setConfirmationDialogTitle] = useState('');
   const [
@@ -36,19 +37,22 @@ const EditCollection: React.FC = () => {
     (value: any) => void
   >(() => {});
   const [progress, setProgress] = useState(0);
-
   const [addPhotosDialogOpen, setAddPhotosDialogOpen] = useState(false);
   const [commentOpen, setCommentOpen] = useState(false);
   const [commentTextarea, setCommentTextarea] = useState('');
+
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     getSingleCollection(collectionId).then((collection) => {
       setCollection(collection);
       setFilteredPhotos(collection.photos);
     }).catch(err => {
-      //TODO ERROR
+      enqueueSnackbar('ERROR: Getting collection failed', {
+        variant: 'error',
+      });
     });
-  }, [collectionId]);
+  }, [collectionId, enqueueSnackbar]);
 
   const openCommentModal = (index?: number) => {
     setCommentOpen(true);

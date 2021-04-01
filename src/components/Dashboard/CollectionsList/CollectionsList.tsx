@@ -20,6 +20,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import ConfirmationDialog from '../../ConfirmationDialog/ConfirmationDialog';
 import StatusIcon from '../../StatusIcon/StatusIcon';
 
+import { useSnackbar } from 'notistack';
+
 const CollectionList: React.FC = () => {
   const [collections, setCollections] = useState<Collection[] | null>(null);
   const [deleteProgress, setDeleteProgress] = useState(0);
@@ -27,14 +29,21 @@ const CollectionList: React.FC = () => {
   const [requestDeleteId, setRequestDeleteId] = useState('');
   const [requestDeleteName, setRequestDeleteName] = useState('');
   const history = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     getCollections()
       .then((data) => setCollections(data))
       .catch((err) => {
-        //TODO ERROR
+        enqueueSnackbar(
+          'ERROR: Getting collections failed. Please refresh the page',
+          {
+            variant: 'error',
+            persist: true,
+          }
+        );
       });
-  }, []);
+  }, [enqueueSnackbar]);
 
   const selectedPhotos = (photos: Photo[]) => {
     return photos.filter((photo) => photo.selected).length;
@@ -53,7 +62,7 @@ const CollectionList: React.FC = () => {
     }
   };
 
-  const handleAgree = async () => {
+  const handleDelete = async () => {
     try {
       await deleteCollection(requestDeleteId, setDeleteProgress);
       setDialogOpen(false);
@@ -67,7 +76,9 @@ const CollectionList: React.FC = () => {
         }
       }
     } catch (err) {
-      //TODO ERROR
+      enqueueSnackbar('ERROR: Photo deletion failed', {
+        variant: 'error',
+      });
     }
   };
 
@@ -146,7 +157,7 @@ const CollectionList: React.FC = () => {
           dialogOpen={dialogOpen}
           progress={deleteProgress}
           onClickCancel={() => setDialogOpen(false)}
-          onClickAgree={handleAgree}
+          onClickAgree={handleDelete}
           dialogTitle={`Do you really want to delete collection '${requestDeleteName}'?`}
           dialogContentText={'Delete action cannot be reverted!'}
         />

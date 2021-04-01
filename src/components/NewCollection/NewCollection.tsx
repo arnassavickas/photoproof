@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone';
 import { NewCollectionInputs } from '../../types';
+import { useSnackbar } from 'notistack';
 
 const NewCollection: React.FC = () => {
   const {
@@ -26,7 +27,10 @@ const NewCollection: React.FC = () => {
   } = useForm<NewCollectionInputs>();
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+
   const history = useHistory();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const minToggle = watch('minSelectRequired');
   const maxToggle = watch('maxSelectRequired');
@@ -53,7 +57,9 @@ const NewCollection: React.FC = () => {
       setUploading(false);
       history.push(`/edit/${collectionId}`);
     } catch (err) {
-      //TODO ERROR
+      enqueueSnackbar('ERROR: Creating new collection failed', {
+        variant: 'error',
+      });
     }
   };
 

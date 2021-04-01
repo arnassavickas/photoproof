@@ -29,10 +29,6 @@ function App() {
     auth.onAuthStateChanged(function (user) {
       if (user) {
         setUser(user.uid);
-        enqueueSnackbar('Logged in successfully!', {
-          variant: 'default',
-          persist: true,
-        });
       } else {
         setUser(null);
       }
@@ -49,9 +45,12 @@ function App() {
         }
       })
       .catch((err) => {
-        //TODO ERROR
+        enqueueSnackbar('ERROR: Getting site settings failed', {
+          variant: 'error',
+          persist: true,
+        });
       });
-  }, []);
+  }, [enqueueSnackbar]);
 
   if (loading) {
     return (

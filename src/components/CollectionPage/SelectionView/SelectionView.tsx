@@ -15,6 +15,8 @@ import PhotoGrid from '../PhotoGrid/PhotoGrid';
 import ConfirmationForbiddenDialog from './ConfirmationForbiddenDialog/ConfirmationForbiddenDialog';
 import SelectionConfirmationDialog from './SelectionConfirmationDialog/SelectionConfirmationDialog';
 
+import { useSnackbar } from 'notistack';
+
 const SelectionView: React.FC<SelectionViewProps> = ({
   collection,
   setCollection,
@@ -34,13 +36,14 @@ const SelectionView: React.FC<SelectionViewProps> = ({
 }) => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [confirmForbidDialogOpen, setConfirmForbidDialogOpen] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
-  const selectPhotoLightbox = () => {
+  const selectPhotoLightbox = async () => {
     if (filteredPhotos && collection) {
       try {
         const clickedPhoto = filteredPhotos[photoIndex];
         if (clickedPhoto && collection) {
-          updatePhotoSelection(
+          await updatePhotoSelection(
             collectionId,
             clickedPhoto.id,
             !clickedPhoto.selected
@@ -54,18 +57,20 @@ const SelectionView: React.FC<SelectionViewProps> = ({
           });
         }
       } catch (err) {
-        //TODO ERROR
+        enqueueSnackbar('ERROR: Photo selection failed', {
+          variant: 'error',
+        });
       }
     }
   };
 
-  const savePhotoComment = () => {
+  const savePhotoComment = async () => {
     setCommentOpen(false);
     if (filteredPhotos && collection) {
       try {
         const clickedPhoto = filteredPhotos[photoIndex];
         if (clickedPhoto && collection) {
-          updatePhotoComment(collectionId, clickedPhoto.id, commentTextarea);
+          await updatePhotoComment(collectionId, clickedPhoto.id, commentTextarea);
           clickedPhoto.comment = commentTextarea;
           setCollection({
             ...collection,

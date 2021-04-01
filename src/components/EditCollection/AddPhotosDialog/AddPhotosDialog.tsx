@@ -19,6 +19,8 @@ import { DropzoneArea } from 'material-ui-dropzone';
 import { useForm, Controller } from 'react-hook-form';
 import { Fragment } from 'react';
 
+import { useSnackbar } from 'notistack';
+
 const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
   collectionId,
   setCollection,
@@ -30,6 +32,7 @@ const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
   const { handleSubmit, errors, control } = useForm<any>({
     defaultValues: { files: [] },
   });
+  const { enqueueSnackbar } = useSnackbar();
 
   const onConfirmUpload = async (data: { files: FileList }) => {
     try {
@@ -39,7 +42,9 @@ const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
       const collection = await getSingleCollection(collectionId);
       setCollection(collection);
     } catch (err) {
-      //TODO ERROR
+      enqueueSnackbar('ERROR: Photo upload failed', {
+        variant: 'error',
+      });
     }
   };
 

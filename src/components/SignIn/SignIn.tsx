@@ -2,25 +2,29 @@ import { Box, Button, TextField, Typography } from '@material-ui/core';
 import React from 'react';
 import { auth } from '../../firebase';
 import { useForm } from 'react-hook-form';
+import { useSnackbar } from 'notistack';
 
 const SignIn = () => {
   const { register, handleSubmit, errors, setError } = useForm();
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const signInWithEmailAndPasswordHandler = async (data: any) => {
     try {
-      await auth.signInWithEmailAndPassword(
-        data.email,
-        data.password
-      );
+      await auth.signInWithEmailAndPassword(data.email, data.password);
     } catch (err) {
-      setError('email', {
-        message: ' ',
-      });
-      setError('password', {
-        message: 'Email or password is incorrect',
-      });
-      console.error('error signing in with password and email', err);
-      //TODO ERROR
+      if (err.code === 'auth/wrong-password') {
+        setError('email', {
+          message: ' ',
+        });
+        setError('password', {
+          message: 'Email or password is incorrect',
+        });
+      } else {
+        enqueueSnackbar('ERROR: Login failed', {
+          variant: 'error',
+        });
+      }
     }
   };
 
@@ -62,11 +66,7 @@ const SignIn = () => {
               />
             </div>
             <div>
-              <Button
-                aria-label='signIn'
-                type='submit'
-                variant='outlined'
-              >
+              <Button aria-label='signIn' type='submit' variant='outlined'>
                 Sign In
               </Button>
             </div>

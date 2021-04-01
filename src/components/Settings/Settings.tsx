@@ -12,6 +12,8 @@ import {
 import { changeSiteSettings } from '../../firebase';
 import { SettingsProps } from '../../types';
 
+import { useSnackbar } from 'notistack';
+
 //TODO implement interactive watermark size/angle adjustment
 
 const Settings: React.FC<SettingsProps> = ({
@@ -26,8 +28,12 @@ const Settings: React.FC<SettingsProps> = ({
 
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+
   const history = useHistory();
+
   const defaultWidth = useRef(logoWidth);
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const onSubmit = async (data: { logoFile: FileList; logoWidth: number }) => {
     try {
@@ -40,7 +46,9 @@ const Settings: React.FC<SettingsProps> = ({
       setUploading(false);
       history.push('/');
     } catch (err) {
-      //TODO ERROR
+      enqueueSnackbar('ERROR: Saving settings failed', {
+        variant: 'error',
+      });
     }
   };
 

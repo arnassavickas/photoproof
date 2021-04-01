@@ -14,6 +14,8 @@ import {
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 
+import { useSnackbar } from 'notistack';
+
 import { useForm } from 'react-hook-form';
 
 const SelectionConfirmationDialog: React.FC<SelectionConfirmationDialogProps> = ({
@@ -27,6 +29,7 @@ const SelectionConfirmationDialog: React.FC<SelectionConfirmationDialogProps> = 
   const { register, handleSubmit } = useForm<any>({
     defaultValues: { files: [] },
   });
+  const { enqueueSnackbar } = useSnackbar();
 
   const confirmSelections = async (data: { finalComment: string }) => {
     try {
@@ -37,8 +40,11 @@ const SelectionConfirmationDialog: React.FC<SelectionConfirmationDialogProps> = 
         status: 'confirmed',
         finalComment: data.finalComment,
       });
+      //TODO redirect user
     } catch (err) {
-      //TODO ERROR
+      enqueueSnackbar('ERROR: Confirming collection failed', {
+        variant: 'default',
+      });
     }
   };
 

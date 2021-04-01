@@ -24,13 +24,17 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
 }) => {
   const { enqueueSnackbar } = useSnackbar();
 
-  const selectPhoto = (photoId: string) => (event: any) => {
+  const selectPhoto = (photoId: string) => async (event: any) => {
     try {
       const clickedPhoto = collection?.photos.find(
         (photo) => photo.id === photoId
       );
       if (clickedPhoto && collection && setCollection && collectionId) {
-        updatePhotoSelection(collectionId, photoId, !clickedPhoto.selected);
+        await updatePhotoSelection(
+          collectionId,
+          photoId,
+          !clickedPhoto.selected
+        );
         clickedPhoto.selected = !clickedPhoto?.selected;
         setCollection({
           ...collection,
