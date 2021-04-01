@@ -32,9 +32,9 @@ function App() {
       } else {
         setUser(null);
       }
-      setLoading(false);
     });
-  }, [enqueueSnackbar]);
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     getSiteSettings()
