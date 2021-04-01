@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { render, screen } from '../../../utils/customTestRenderer';
+import { render, screen, waitFor } from '../../../utils/customTestRenderer';
 import user from '@testing-library/user-event';
 import PhotoGrid from './PhotoGrid';
 import { Collection, PhotoGridProps } from '../../../types';
@@ -49,7 +49,7 @@ describe('<PhotoGrid/> collection.status="selecting"', () => {
     expect(openCommentModal.mock.calls).toHaveLength(1);
   });
 
-  test('select button click updates collection and calls database one time', () => {
+  test('select button click updates collection and calls database one time', async () => {
     render(<PhotoGrid {...props} />);
 
     let selectBtn = screen.getAllByRole('button', {
@@ -59,14 +59,19 @@ describe('<PhotoGrid/> collection.status="selecting"', () => {
     user.click(selectBtn[0]);
 
     expect(mockUpdatePhotoSelection).toHaveBeenCalledTimes(1);
-    expect(props.collection.photos[0].selected).toBe(true);
-    expect(props.collection.photos[1].selected).toBe(true);
+
+    await waitFor(() => {
+      expect(props.collection.photos[0].selected).toBe(true);
+      expect(props.collection.photos[1].selected).toBe(true);
+    });
 
     user.click(selectBtn[0]);
 
     expect(mockUpdatePhotoSelection).toHaveBeenCalledTimes(2);
-    expect(props.collection.photos[0].selected).toBe(false);
-    expect(props.collection.photos[1].selected).toBe(true);
+    await waitFor(() => {
+      expect(props.collection.photos[0].selected).toBe(false);
+      expect(props.collection.photos[1].selected).toBe(true);
+    });
   });
 
   test('updating photo.selected to true, renders a different icon path', () => {
