@@ -10,6 +10,13 @@ import { Collection, Photo } from './types';
 import { firebaseConfig } from './config';
 
 firebase.initializeApp(firebaseConfig);
+
+try {
+  firebase.auth();
+} catch (err) {
+  alert('Firebase config file is invalid or missing.');
+}
+
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 export const storage = firebase.storage();
