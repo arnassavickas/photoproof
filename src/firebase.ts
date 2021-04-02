@@ -74,7 +74,7 @@ export const updateSettings = async (
     Collection,
     'status' | 'finalComment' | 'photos' | 'id' | 'dateCreated'
   >,
-  collectionId: string
+  collectionId: Collection['id']
 ) => {
   const { title, minSelect, maxSelect, allowComments } = data;
   const collectionRef = firestore.collection('collections').doc(collectionId);
@@ -200,8 +200,8 @@ const uploadPhotos = async (
 };
 
 export const updatePhotoSelection = async (
-  collectionId: string,
-  photoId: string,
+  collectionId: Collection['id'],
+  photoId: Photo['id'],
   selected: boolean
 ) => {
   const photoRef = firestore
@@ -213,8 +213,8 @@ export const updatePhotoSelection = async (
   await photoRef.update({ selected });
 };
 export const updatePhotoComment = async (
-  collectionId: string,
-  photoId: string,
+  collectionId: Collection['id'],
+  photoId: Photo['id'],
   comment: string
 ) => {
   const photoRef = firestore
@@ -227,15 +227,15 @@ export const updatePhotoComment = async (
 };
 
 export const confirmCollection = async (
-  id: Collection['id'],
+  collectionId: Collection['id'],
   title: Collection['title'],
   url: string,
   selectedPhotos: number | undefined,
   finalComment: string
 ) => {
-  const collectionRef = firestore.collection('collections').doc(id);
+  const collectionRef = firestore.collection('collections').doc(collectionId);
 
-  const mailRef = firestore.collection('mail').doc(id);
+  const mailRef = firestore.collection('mail').doc(collectionId);
 
   await mailRef.set({
     //TODO change to actual on production
@@ -259,8 +259,8 @@ export const confirmCollection = async (
 };
 
 export const deletePhotos = async (
-  collectionId: string,
-  photoIds: string[],
+  collectionId: Collection['id'],
+  photoIds: Photo['id'][],
   setDeleteProgress: React.Dispatch<React.SetStateAction<number>>
 ) => {
   setDeleteProgress(1);
@@ -287,7 +287,7 @@ export const deletePhotos = async (
   return;
 };
 
-export const resetPhotos = async (collectionId: string, photos: Photo[]) => {
+export const resetPhotos = async (collectionId: Collection['id'], photos: Photo[]) => {
   const photosRef = firestore
     .collection('collections')
     .doc(collectionId)
@@ -302,7 +302,7 @@ export const resetPhotos = async (collectionId: string, photos: Photo[]) => {
 };
 
 export const deleteCollection = async (
-  collectionId: string,
+  collectionId: Collection['id'],
   setDeleteProgress: React.Dispatch<React.SetStateAction<number>>
 ) => {
   setDeleteProgress(1);
@@ -384,16 +384,16 @@ export const getCollections = async () => {
   return collectionsArray;
 };
 
-export const getSingleCollection = async (id: string) => {
+export const getSingleCollection = async (collectionId: Collection['id']) => {
   console.log('getting single collection');
 
-  const collection = await firestore.collection('collections').doc(id).get();
+  const collection = await firestore.collection('collections').doc(collectionId).get();
   if (!collection.exists) {
     throw new Error("collection doesn't exist");
   }
   const photos = await firestore
     .collection('collections')
-    .doc(id)
+    .doc(collectionId)
     .collection('photos')
     .orderBy('dateTaken')
     .get();
@@ -432,7 +432,7 @@ export const getSingleCollection = async (id: string) => {
 };
 
 export const changeCollectionStatus = async (
-  collectionId: string,
+  collectionId: Collection['id'],
   status: Collection['status']
 ) => {
   const collectionRef = firestore.collection('collections').doc(collectionId);
