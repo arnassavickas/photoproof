@@ -227,10 +227,30 @@ export const updatePhotoComment = async (
 };
 
 export const confirmCollection = async (
-  collectionId: string,
-  finalComment?: string
+  id: Collection['id'],
+  title: Collection['title'],
+  url: string,
+  selectedPhotos: number | undefined,
+  finalComment: string
 ) => {
-  const collectionRef = firestore.collection('collections').doc(collectionId);
+  const collectionRef = firestore.collection('collections').doc(id);
+
+  const mailRef = firestore.collection('mail').doc(id);
+
+  await mailRef.set({
+    //TODO change to actual on production
+    to: 'arnas.savi@gmail.com',
+    message: {
+      subject: `${title} is confirmed`,
+      text: `Collection '${title}' is confirmed. URL: ${url}`,
+      html: `
+      <h1>${title} is confirmed</h1>
+      <p>Selected photos: ${selectedPhotos}</p>
+      <p>Final comment: ${finalComment}</p>
+      <p>You can see the selections here: <a href='${url}'>${url}</a></p>
+      `,
+    },
+  });
 
   await collectionRef.update({
     status: 'confirmed',
@@ -309,6 +329,8 @@ export const deleteCollection = async (
     setDeleteProgress(progress);
   }
   await collectionRef.delete();
+
+  deleteMailDoc(collectionId);
 
   return;
 };
@@ -416,4 +438,18 @@ export const changeCollectionStatus = async (
   const collectionRef = firestore.collection('collections').doc(collectionId);
 
   await collectionRef.update({ status });
+
+  if (status === 'editing') {
+    deleteMailDoc(collectionId);
+  }
+};
+
+const deleteMailDoc = async (collectionId: Collection['id']) => {
+  const mailRef = firestore.collection('mail').doc(collectionId);
+
+  const snapshot = await mailRef.get();
+
+  if (snapshot.exists) {
+    mailRef.delete();
+  }
 };

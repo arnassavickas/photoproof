@@ -33,17 +33,26 @@ const SelectionConfirmationDialog: React.FC<SelectionConfirmationDialogProps> = 
 
   const confirmSelections = async (data: { finalComment: string }) => {
     try {
-      await confirmCollection(collectionId, data.finalComment);
+      await confirmCollection(
+        collectionId,
+        collection.title,
+        `${window.location.origin.toString()}/edit/${collectionId}`,
+        selectedPhotos,
+        data.finalComment
+      );
       setConfirmDialogOpen(false);
       setCollection({
         ...collection,
         status: 'confirmed',
         finalComment: data.finalComment,
       });
-      //TODO redirect user
-    } catch (err) {
-      enqueueSnackbar('ERROR: Confirming collection failed', {
+      enqueueSnackbar('Collection confirmed successfully, thank you!', {
         variant: 'default',
+      });
+    } catch (err) {
+      console.error(err);
+      enqueueSnackbar('ERROR: Confirming collection failed', {
+        variant: 'error',
       });
     }
   };
