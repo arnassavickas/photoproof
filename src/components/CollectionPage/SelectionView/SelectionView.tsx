@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './styles.module.scss';
 import { SelectionViewProps } from '../../../types';
 import { updatePhotoSelection, updatePhotoComment } from '../../../firebase';
@@ -38,6 +38,17 @@ const SelectionView: React.FC<SelectionViewProps> = ({
   const [confirmForbidDialogOpen, setConfirmForbidDialogOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
+  useEffect(() => {
+    if (lightboxOpen) {
+      const reactPortal = document.querySelector('.ReactModalPortal');
+      if (reactPortal) {
+        reactPortal.addEventListener('keyup', keySelect);
+        return () => reactPortal.removeEventListener('keyup', keySelect);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lightboxOpen, photoIndex]);
+
   const selectPhotoLightbox = async () => {
     if (filteredPhotos && collection) {
       try {
@@ -70,7 +81,11 @@ const SelectionView: React.FC<SelectionViewProps> = ({
       try {
         const clickedPhoto = filteredPhotos[photoIndex];
         if (clickedPhoto && collection) {
-          await updatePhotoComment(collectionId, clickedPhoto.id, commentTextarea);
+          await updatePhotoComment(
+            collectionId,
+            clickedPhoto.id,
+            commentTextarea
+          );
           clickedPhoto.comment = commentTextarea;
           setCollection({
             ...collection,
@@ -82,6 +97,21 @@ const SelectionView: React.FC<SelectionViewProps> = ({
       } catch (err) {
         console.error(err);
       }
+    }
+  };
+
+  const keySelect = (event: any) => {
+    if (!lightboxOpen) {
+      return;
+    }
+
+    if (event.code === 'ArrowUp' && !filteredPhotos[photoIndex].selected) {
+      selectPhotoLightbox();
+    } else if (
+      event.code === 'ArrowDown' &&
+      filteredPhotos[photoIndex].selected
+    ) {
+      selectPhotoLightbox();
     }
   };
 
