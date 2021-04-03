@@ -32,8 +32,8 @@ function App() {
       } else {
         setUser(null);
       }
+      setLoading(false);
     });
-    setLoading(false);
   }, []);
 
   useEffect(() => {
