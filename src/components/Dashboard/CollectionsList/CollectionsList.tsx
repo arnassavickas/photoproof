@@ -89,7 +89,7 @@ const CollectionList: React.FC = () => {
   if (collections === null) {
     return (
       <Backdrop open={true}>
-        <CircularProgress color='inherit' />.
+        <CircularProgress color='inherit' />
       </Backdrop>
     );
   } else {
