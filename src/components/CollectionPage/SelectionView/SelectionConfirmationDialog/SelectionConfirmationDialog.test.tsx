@@ -38,7 +38,13 @@ describe('<SelectionConfirmationDialog/>', () => {
     user.click(confirmBtn);
 
     await waitFor(() => {
-      expect(confirmCollection).toHaveBeenCalledWith(props.collectionId, '');
+      expect(confirmCollection).toHaveBeenCalledWith(
+        props.collectionId,
+        props.collection.title,
+        expect.anything(),
+        1,
+        ''
+      );
     });
   });
 
@@ -54,6 +60,9 @@ describe('<SelectionConfirmationDialog/>', () => {
     await waitFor(() => {
       expect(confirmCollection).toHaveBeenCalledWith(
         props.collectionId,
+        props.collection.title,
+        expect.anything(),
+        1,
         'some final comment'
       );
     });
