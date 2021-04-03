@@ -214,7 +214,8 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
           Client URL:{' '}
           <Tooltip title={copied ? 'copied!' : 'copy'}>
             <Button onClick={copyUrl}>
-              {`${window.location.origin.toString()}/collection/${collectionId}`}
+              {/* //TODO make subfolder Context or .env */}
+              {`${window.location.origin.toString()}/photoproof/collection/${collectionId}`}
             </Button>
           </Tooltip>
           <Button
@@ -226,7 +227,6 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
             Open
           </Button>
         </Typography>
-        {/* <Typography>Status: {collection.status} </Typography> */}
 
         <Box
           className={

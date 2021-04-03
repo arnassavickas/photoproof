@@ -36,7 +36,8 @@ const SelectionConfirmationDialog: React.FC<SelectionConfirmationDialogProps> = 
       await confirmCollection(
         collectionId,
         collection.title,
-        `${window.location.origin.toString()}/edit/${collectionId}`,
+        //TODO make subfolder Context or .env
+        `${window.location.origin.toString()}/photoproof/edit/${collectionId}`,
         selectedPhotos,
         data.finalComment
       );
