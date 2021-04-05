@@ -62,7 +62,7 @@ function App() {
   }
 
   return (
-    <Container>
+    <Container maxWidth='xl'>
       <Box ml={2} mr={2}>
         {logoUrl && (
           <img
