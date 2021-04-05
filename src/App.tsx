@@ -15,6 +15,7 @@ import {
   Backdrop,
   CircularProgress,
   Button,
+  Box,
 } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 
@@ -62,41 +63,43 @@ function App() {
 
   return (
     <Container>
-      {logoUrl && (
-        <img
-          className={styles.logo}
-          src={logoUrl}
-          style={{ width: logoWidth }}
-          alt='logo'
-        />
-      )}
-      {user && (
-        <div className={styles.logoutBtn}>
-          <Button onClick={() => auth.signOut()} variant='outlined'>
-            Logout
-          </Button>
-        </div>
-      )}
-      <Router basename={'/photoproof/'}>
-        <Switch>
-          <Route path='/collection/:id' render={() => <CollectionPage />} />
-          {!user ? <Route path='/' render={() => <SignIn />} /> : null}
-          <Route
-            path='/settings'
-            render={() => (
-              <Settings
-                logoWidth={logoWidth}
-                setLogoUrl={setLogoUrl}
-                setLogoWidth={setLogoWidth}
-              />
-            )}
+      <Box ml={2} mr={2}>
+        {logoUrl && (
+          <img
+            className={styles.logo}
+            src={logoUrl}
+            style={{ width: logoWidth }}
+            alt='logo'
           />
-          <Route path='/new' render={() => <NewCollection />} />
-          <Route path='/edit/:id' render={() => <EditCollection />} />
-          <Route exact path='/' render={() => <Dashboard />} />
-          <Route render={() => <ErrorPage />} />
-        </Switch>
-      </Router>
+        )}
+        {user && (
+          <div className={styles.logoutBtn}>
+            <Button onClick={() => auth.signOut()} variant='outlined'>
+              Logout
+            </Button>
+          </div>
+        )}
+        <Router basename={'/photoproof/'}>
+          <Switch>
+            <Route path='/collection/:id' render={() => <CollectionPage />} />
+            {!user ? <Route path='/' render={() => <SignIn />} /> : null}
+            <Route
+              path='/settings'
+              render={() => (
+                <Settings
+                  logoWidth={logoWidth}
+                  setLogoUrl={setLogoUrl}
+                  setLogoWidth={setLogoWidth}
+                />
+              )}
+            />
+            <Route path='/new' render={() => <NewCollection />} />
+            <Route path='/edit/:id' render={() => <EditCollection />} />
+            <Route exact path='/' render={() => <Dashboard />} />
+            <Route render={() => <ErrorPage />} />
+          </Switch>
+        </Router>
+      </Box>
     </Container>
   );
 }

@@ -44,14 +44,16 @@ const EditCollection: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
-    getSingleCollection(collectionId).then((collection) => {
-      setCollection(collection);
-      setFilteredPhotos(collection.photos);
-    }).catch(err => {
-      enqueueSnackbar('ERROR: Getting collection failed', {
-        variant: 'error',
+    getSingleCollection(collectionId)
+      .then((collection) => {
+        setCollection(collection);
+        setFilteredPhotos(collection.photos);
+      })
+      .catch((err) => {
+        enqueueSnackbar('ERROR: Getting collection failed', {
+          variant: 'error',
+        });
       });
-    });
   }, [collectionId, enqueueSnackbar]);
 
   const openCommentModal = (index?: number) => {
@@ -66,10 +68,12 @@ const EditCollection: React.FC = () => {
     }
   };
 
+
+
   if (collection === null || filteredPhotos === null) {
     return (
       <Backdrop open={true}>
-        <CircularProgress color='inherit' />.
+        <CircularProgress color='inherit' />
       </Backdrop>
     );
   }

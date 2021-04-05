@@ -158,9 +158,6 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
     setProgress(0);
   };
 
-  const selectedPhotos = collection?.photos.filter((photo) => photo.selected)
-    .length;
-
   return (
     <div>
       <form onSubmit={handleSubmitSettings(onSubmitSettings)}>
@@ -374,9 +371,6 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
         </Box>
       </form>
       <Paper elevation={3} className={styles.centeredContainer}>
-        <Typography variant='h6'>
-          Selected: {selectedPhotos} / {collection.photos.length}
-        </Typography>
         {collection.status === 'confirmed' ? (
           <Typography>Final comment: {collection.finalComment}</Typography>
         ) : null}

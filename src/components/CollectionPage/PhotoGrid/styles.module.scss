@@ -2,7 +2,8 @@ $masonryGutter: 10px;
 
 .masonryGrid {
   display: flex;
-  margin-left: -$masonryGutter;
+  margin-left: -$masonryGutter - 20px;
+  margin-right: -20px;
   width: auto;
 }
 .masonryGridColumn {

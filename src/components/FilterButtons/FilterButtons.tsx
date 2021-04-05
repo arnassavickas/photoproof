@@ -22,6 +22,13 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({
     }
   };
 
+  const photosCount = (() => {
+    const all = collection.photos.length;
+    const selected = collection.photos.filter((photo) => photo.selected).length;
+    const notSelected = all - selected;
+    return { all, selected, notSelected };
+  })();
+
   useEffect(() => {
     if (collection) {
       switch (filter) {
@@ -53,19 +60,19 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({
         variant={filter === 'selected' ? 'contained' : undefined}
         onClick={() => setFilter('selected')}
       >
-        Selected
+        Selected {photosCount.selected}
       </Button>
       <Button
         variant={filter === 'all' ? 'contained' : undefined}
         onClick={() => setFilter('all')}
       >
-        All
+        All {photosCount.all}
       </Button>
       <Button
         variant={filter === 'unselected' ? 'contained' : undefined}
         onClick={() => setFilter('unselected')}
       >
-        Not Selected
+        Not Selected {photosCount.notSelected}
       </Button>
     </ButtonGroup>
   );

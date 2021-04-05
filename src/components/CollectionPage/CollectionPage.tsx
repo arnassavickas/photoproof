@@ -3,7 +3,7 @@ import styles from './styles.module.scss';
 import { useParams, useHistory } from 'react-router-dom';
 import { Collection, Photo } from '../../types';
 import { getSingleCollection } from '../../firebase';
-import { Backdrop, CircularProgress, Typography } from '@material-ui/core';
+import { Backdrop, Box, CircularProgress, Typography } from '@material-ui/core';
 import LockIcon from '@material-ui/icons/Lock';
 
 import LockedView from './LockedView/LockedView';
@@ -62,45 +62,42 @@ const CollectionPage: React.FC = () => {
 
   return (
     <div>
-      <Typography variant='h4'>
-        {collection.title} {collection.status !== 'selecting' && <LockIcon />}
-      </Typography>
-      <div className={styles.horizontal}>
-        <div className={styles.selectedDetails}>
-          {collection.minSelect.required && collection.maxSelect.required ? (
-            <Typography>
-              You must select from {collection.minSelect.goal} to{' '}
-              {collection.maxSelect.goal} photos
-            </Typography>
-          ) : collection.minSelect.required &&
-            !collection.maxSelect.required ? (
-            <Typography>
-              You must select at least {collection.minSelect.goal} photos
-            </Typography>
-          ) : !collection.minSelect.required &&
-            collection.maxSelect.required ? (
-            <Typography>
-              You must select a maximum of {collection.maxSelect.goal} photos
-            </Typography>
-          ) : null}
-          <Typography variant='h6' noWrap>
-            Selected: {selectedPhotos}
-          </Typography>
+        <Typography variant='h4'>
+          {collection.title} {collection.status !== 'selecting' && <LockIcon />}
+        </Typography>
+        <div className={styles.horizontal}>
+          <div className={styles.selectedDetails}>
+            {collection.minSelect.required && collection.maxSelect.required ? (
+              <Typography>
+                You must select from {collection.minSelect.goal} to{' '}
+                {collection.maxSelect.goal} photos
+              </Typography>
+            ) : collection.minSelect.required &&
+              !collection.maxSelect.required ? (
+              <Typography>
+                You must select at least {collection.minSelect.goal} photos
+              </Typography>
+            ) : !collection.minSelect.required &&
+              collection.maxSelect.required ? (
+              <Typography>
+                You must select a maximum of {collection.maxSelect.goal} photos
+              </Typography>
+            ) : null}
+          </div>
+          <FilterButtons
+            collection={collection}
+            setFilteredPhotos={setFilteredPhotos}
+            modifyLightbox
+            setLightboxOpen={setLightboxOpen}
+            photoIndex={photoIndex}
+            setPhotoIndex={setPhotoIndex}
+          />
         </div>
-        <FilterButtons
-          collection={collection}
-          setFilteredPhotos={setFilteredPhotos}
-          modifyLightbox
-          setLightboxOpen={setLightboxOpen}
-          photoIndex={photoIndex}
-          setPhotoIndex={setPhotoIndex}
-        />
-      </div>
-      {collection.photos.length === 0 ? (
-        <div>no photos in collection</div>
-      ) : filteredPhotos.length === 0 ? (
-        <div>no photos in this filter</div>
-      ) : null}
+        {collection.photos.length === 0 ? (
+          <div>no photos in collection</div>
+        ) : filteredPhotos.length === 0 ? (
+          <div>no photos in this filter</div>
+        ) : null}
       {collection.status === 'selecting' ? (
         <SelectionView
           collection={collection}
