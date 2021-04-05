@@ -11,7 +11,7 @@ import {
   TableRow,
 } from '@material-ui/core';
 
-import StarBorderIcon from '@material-ui/icons/StarBorder';
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 
 import ImageLoader from '../../ImageLoader/ImageLoader';
 
@@ -89,11 +89,7 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
         </TableHead>
         <TableBody>
           {filteredPhotos.map((photo, index) => (
-            <TableRow
-              key={photo.id}
-              selected={isSelected(photo.id)}
-              hover={true}
-            >
+            <TableRow key={photo.id} selected={isSelected(photo.id)}>
               {collection.status === 'editing' ? (
                 <TableCell
                   data-testid='checkbox'
@@ -120,7 +116,7 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
               <TableCell>{photo.filename}</TableCell>
               <TableCell padding='checkbox'>
                 {photo.selected ? (
-                  <StarBorderIcon data-testid='selected' />
+                  <FavoriteBorder data-testid='selected' />
                 ) : null}
               </TableCell>
               <TableCell data-testid='comment'>{photo.comment}</TableCell>
