@@ -60,19 +60,19 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({
         variant={filter === 'selected' ? 'contained' : undefined}
         onClick={() => setFilter('selected')}
       >
-        Selected {photosCount.selected}
+        Selected &nbsp;&nbsp;{photosCount.selected}
       </Button>
       <Button
         variant={filter === 'all' ? 'contained' : undefined}
         onClick={() => setFilter('all')}
       >
-        All {photosCount.all}
+        All &nbsp;&nbsp;{photosCount.all}
       </Button>
       <Button
         variant={filter === 'unselected' ? 'contained' : undefined}
         onClick={() => setFilter('unselected')}
       >
-        Not Selected {photosCount.notSelected}
+        Not Selected &nbsp;&nbsp;{photosCount.notSelected}
       </Button>
     </ButtonGroup>
   );
