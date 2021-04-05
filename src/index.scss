@@ -91,3 +91,23 @@ code {
 .noPointerEvents {
   pointer-events: none;
 }
+
+//lightbox toolbar buttons
+$iconHeight: 30px;
+
+.ril__closeButton {
+  background-size: contain;
+  height: $iconHeight;
+}
+
+.ril-toolbar__item {
+  margin: 10px 10px 0 10px;
+
+  svg {
+    font-size: $iconHeight;
+  }
+
+  button {
+    padding: 0;
+  }
+}
