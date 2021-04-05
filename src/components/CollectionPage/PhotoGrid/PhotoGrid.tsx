@@ -120,6 +120,7 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
                     <IconButton
                       aria-label='select'
                       className={styles.heartBtnSelected}
+                      disabled
                     >
                       <FavoriteIcon />
                     </IconButton>
