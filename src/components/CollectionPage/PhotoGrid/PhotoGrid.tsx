@@ -51,7 +51,8 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
   };
 
   const breakpointColumns = {
-    default: 4,
+    default: 5,
+    1600: 4,
     1100: 3,
     700: 2,
     430: 1,
