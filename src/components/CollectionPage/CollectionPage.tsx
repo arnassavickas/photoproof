@@ -65,33 +65,35 @@ const CollectionPage: React.FC = () => {
       <Typography variant='h4'>
         {collection.title} {collection.status !== 'selecting' && <LockIcon />}
       </Typography>
-      <div className={styles.horizontal}>
-        <div className={styles.selectedDetails}>
-          {collection.minSelect.required && collection.maxSelect.required ? (
-            <Typography>
-              You must select from {collection.minSelect.goal} to{' '}
-              {collection.maxSelect.goal} photos
-            </Typography>
-          ) : collection.minSelect.required &&
-            !collection.maxSelect.required ? (
-            <Typography>
-              You must select at least {collection.minSelect.goal} photos
-            </Typography>
-          ) : !collection.minSelect.required &&
-            collection.maxSelect.required ? (
-            <Typography>
-              You must select a maximum of {collection.maxSelect.goal} photos
-            </Typography>
-          ) : null}
+      <div>
+        <div className={styles.horizontal}>
+          <div className={styles.selectedDetails}>
+            {collection.minSelect.required && collection.maxSelect.required ? (
+              <Typography>
+                You must select from {collection.minSelect.goal} to{' '}
+                {collection.maxSelect.goal} photos
+              </Typography>
+            ) : collection.minSelect.required &&
+              !collection.maxSelect.required ? (
+              <Typography>
+                You must select at least {collection.minSelect.goal} photos
+              </Typography>
+            ) : !collection.minSelect.required &&
+              collection.maxSelect.required ? (
+              <Typography>
+                You must select a maximum of {collection.maxSelect.goal} photos
+              </Typography>
+            ) : null}
+          </div>
+          <FilterButtons
+            collection={collection}
+            setFilteredPhotos={setFilteredPhotos}
+            modifyLightbox
+            setLightboxOpen={setLightboxOpen}
+            photoIndex={photoIndex}
+            setPhotoIndex={setPhotoIndex}
+          />
         </div>
-        <FilterButtons
-          collection={collection}
-          setFilteredPhotos={setFilteredPhotos}
-          modifyLightbox
-          setLightboxOpen={setLightboxOpen}
-          photoIndex={photoIndex}
-          setPhotoIndex={setPhotoIndex}
-        />
       </div>
       {collection.photos.length === 0 ? (
         <div>no photos in collection</div>
