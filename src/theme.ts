@@ -93,6 +93,14 @@ export const theme = createMuiTheme({
         },
       },
     },
+    MuiTableRow: {
+      hover: {
+        '&:hover': {
+          backgroundColor: '#444 !important',
+          cursor: 'pointer',
+        },
+      },
+    },
   },
 });
 export default theme;
