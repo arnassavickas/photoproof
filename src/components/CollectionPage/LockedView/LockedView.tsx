@@ -41,7 +41,7 @@ const LockedView: React.FC<LockedViewProps> = ({
           lightboxIndex={photoIndex}
           setLightboxIndex={setPhotoIndex}
           toolbarButtons={[
-            <IconButton aria-label='selectLighbox'>
+            <IconButton aria-label='selectLighbox' disabled>
               {filteredPhotos[photoIndex].selected ? (
                 <FavoriteIcon className={styles.toolbarIcon} />
               ) : (
