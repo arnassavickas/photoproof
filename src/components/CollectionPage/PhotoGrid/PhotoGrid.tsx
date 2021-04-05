@@ -8,7 +8,7 @@ import { updatePhotoSelection } from '../../../firebase';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
-import MessageIcon from '@material-ui/icons/Message';
+import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
 
 import Masonry from 'react-masonry-css';
 
@@ -89,7 +89,7 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
                       onClick={() => openCommentModal(index)}
                     >
                       {photo.comment.length > 0 ? (
-                        <MessageIcon />
+                        <ChatBubbleIcon />
                       ) : (
                         <ChatBubbleOutlineIcon />
                       )}
@@ -113,7 +113,7 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
                       className={styles.commentBtnFilled}
                       onClick={() => openCommentModal(index)}
                     >
-                      <MessageIcon />
+                      <ChatBubbleIcon />
                     </IconButton>
                   ) : null}
                   {photo.selected ? (

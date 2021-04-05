@@ -6,7 +6,7 @@ import { IconButton } from '@material-ui/core';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
-import MessageIcon from '@material-ui/icons/Message';
+import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
 
 import Lightbox from '../../Lightbox/Lightbox';
 import CommentDialog from '../../CommentDialog/CommentDialog';
@@ -54,7 +54,7 @@ const LockedView: React.FC<LockedViewProps> = ({
                 onClick={() => openCommentModal()}
               >
                 {filteredPhotos[photoIndex].comment.length > 0 ? (
-                  <MessageIcon className={styles.toolbarIcon} />
+                  <ChatBubbleIcon className={styles.toolbarIcon} />
                 ) : (
                   <ChatBubbleOutlineIcon className={styles.toolbarIcon} />
                 )}
