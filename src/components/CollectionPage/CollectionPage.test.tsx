@@ -44,7 +44,7 @@ describe('<CollectionPage/>', () => {
     );
 
     await screen.findByText('collection title');
-    await screen.findByText(/selected: 1/i);
+    await screen.findByText(/^selected 1/i);
     await screen.findByText(/you must select from 1 to 2 photos/i);
 
     collection.minSelect.required = false;
@@ -87,9 +87,9 @@ describe('<CollectionPage/>', () => {
       </Router>
     );
 
-    await screen.findByText(/selected: 0/i);
+    await screen.findByText(/^selected 0/i);
 
-    const selectedBtn = screen.getByText(/^selected$/i);
+    const selectedBtn = screen.getByText(/^selected/i);
     user.click(selectedBtn);
 
     await screen.findByText(/no photos in this filter/i);
