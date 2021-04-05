@@ -97,12 +97,7 @@ export const changeSiteSettings = async (
   if (files.length > 0) {
     const list = await logoStorageRef.listAll();
     if (list.items.length > 0) {
-      const filenames = [
-        'logo.png',
-        'logo_1400x1000.webp',
-        'logo_400x700.png',
-        'logo_400x700.webp',
-      ];
+      const filenames = ['logo.png'];
 
       filenames.forEach(async (filename) => {
         try {
@@ -163,8 +158,8 @@ const uploadPhotos = async (
   const progressStep = 85 / files.length;
   let progress = 10;
   for (let i = 0; i < files.length; i++) {
-    if (files[i].size > 500000) {
-      throw new Error(`${files[i].name} filesize exceeds 0.5 MB`);
+    if (files[i].size > 5000000) {
+      throw new Error(`${files[i].name} filesize exceeds 5 MB`);
     }
 
     const uuid = uuidv4();
@@ -173,11 +168,14 @@ const uploadPhotos = async (
     const storageRef = storage.ref(`${id}/${uuid}.jpg`);
     const uploadTask = await storageRef.put(files[i]);
     const downloadUrl = await uploadTask.ref.getDownloadURL();
-    const urlWithoutEnding = downloadUrl.match(/.+?(?=.jpg\?alt=media)/);
-    const filenameWithoutExt = files[i].name.match(/.+?(?=.jpg)/);
-    const jpegUrl = `${urlWithoutEnding}.jpg?alt=media`;
+    const urlWithoutEnding = downloadUrl.match(/.+?(?=.jpg\?alt=media)/i);
+    let filenameWithoutExt = files[i].name.match(/.+?(?=.jpg)/i);
+    if (!filenameWithoutExt) {
+      filenameWithoutExt = files[i].name.match(/.+?(?=.jpeg)/i);
+    }
+    const jpegUrl = `${urlWithoutEnding}_1400x1000.jpeg?alt=media`;
     const webpUrl = `${urlWithoutEnding}_1400x1000.webp?alt=media`;
-    const jpegThumbnailUrl = `${urlWithoutEnding}_400x700.jpg?alt=media`;
+    const jpegThumbnailUrl = `${urlWithoutEnding}_400x700.jpeg?alt=media`;
     const webpThumbnailUrl = `${urlWithoutEnding}_400x700.webp?alt=media`;
 
     photosArray.push({
@@ -275,9 +273,9 @@ export const deletePhotos = async (
   for (let id of photoIds) {
     const storageRef = storage.ref(collectionId);
     const docRef = photosRef.doc(id);
-    await storageRef.child(`${id}.jpg`).delete();
+    await storageRef.child(`${id}_1400x1000.jpeg`).delete();
     await storageRef.child(`${id}_1400x1000.webp`).delete();
-    await storageRef.child(`${id}_400x700.jpg`).delete();
+    await storageRef.child(`${id}_400x700.jpeg`).delete();
     await storageRef.child(`${id}_400x700.webp`).delete();
     await docRef.delete();
     progress += progressStep;
@@ -287,7 +285,10 @@ export const deletePhotos = async (
   return;
 };
 
-export const resetPhotos = async (collectionId: Collection['id'], photos: Photo[]) => {
+export const resetPhotos = async (
+  collectionId: Collection['id'],
+  photos: Photo[]
+) => {
   const photosRef = firestore
     .collection('collections')
     .doc(collectionId)
@@ -320,9 +321,9 @@ export const deleteCollection = async (
   for (let photo of photos.docs) {
     const storageRef = storage.ref(collectionId);
     const docRef = photosRef.doc(photo.data().id);
-    await storageRef.child(`${photo.data().id}.jpg`).delete();
+    await storageRef.child(`${photo.data().id}_1400x1000.jpeg`).delete();
     await storageRef.child(`${photo.data().id}_1400x1000.webp`).delete();
-    await storageRef.child(`${photo.data().id}_400x700.jpg`).delete();
+    await storageRef.child(`${photo.data().id}_400x700.jpeg`).delete();
     await storageRef.child(`${photo.data().id}_400x700.webp`).delete();
     await docRef.delete();
     progress += progressStep;
@@ -387,7 +388,10 @@ export const getCollections = async () => {
 export const getSingleCollection = async (collectionId: Collection['id']) => {
   console.log('getting single collection');
 
-  const collection = await firestore.collection('collections').doc(collectionId).get();
+  const collection = await firestore
+    .collection('collections')
+    .doc(collectionId)
+    .get();
   if (!collection.exists) {
     throw new Error("collection doesn't exist");
   }
