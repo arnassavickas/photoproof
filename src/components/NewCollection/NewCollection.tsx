@@ -104,9 +104,10 @@ const NewCollection: React.FC = () => {
           error={!!errors.title}
           helperText={errors.title ? 'Title is required' : ' '}
         />
-        <div>
+        {/* TODO add watermark feature */}
+        {/* <div>
           <FormControlLabel control={<Checkbox />} label='Apply watermark' />
-        </div>
+        </div> */}
         <div>
           <FormControlLabel
             control={<Checkbox name='allowComments' inputRef={register} />}
