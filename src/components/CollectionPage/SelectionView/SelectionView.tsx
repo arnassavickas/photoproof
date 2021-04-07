@@ -95,7 +95,9 @@ const SelectionView: React.FC<SelectionViewProps> = ({
           });
         }
       } catch (err) {
-        console.error(err);
+        enqueueSnackbar('ERROR: Photo commenting failed', {
+          variant: 'error',
+        });
       }
     }
   };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './styles.module.scss';
 import { Link } from 'react-router-dom';
 import { Collection, CollectionDetailsProps } from '../../../types';
@@ -48,11 +48,6 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
       maxSelectGoal: collection.maxSelect.goal,
     },
   });
-
-  //HACK
-  useEffect(() => {
-    console.log(errorsSettings);
-  }, [errorsSettings]);
 
   const minToggle = watchSettings('minSelectRequired');
   const maxToggle = watchSettings('maxSelectRequired');

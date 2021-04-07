@@ -51,7 +51,6 @@ const SelectionConfirmationDialog: React.FC<SelectionConfirmationDialogProps> = 
         variant: 'default',
       });
     } catch (err) {
-      console.error(err);
       enqueueSnackbar('ERROR: Confirming collection failed', {
         variant: 'error',
       });

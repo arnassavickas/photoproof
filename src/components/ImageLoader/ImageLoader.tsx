@@ -27,13 +27,10 @@ const ImageLoader: React.FC<ImageLoaderProps> = ({
         let trie = 1;
         const intervalId = setInterval(() => {
           fetch(photo.cloudUrlWebp, {}).then((res) => {
-            console.log('trie :>> ', trie);
-            console.log(res);
             if (res.ok) {
               clearInterval(intervalId);
               setImageReady(true);
             } else if (trie > 10) {
-              console.log('set failed');
               setFailed(true);
             }
             trie += 1;
