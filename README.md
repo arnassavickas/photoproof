@@ -1,6 +1,6 @@
 # photoproof `(work-in-progress)`
 
-photoproof is an app created for photographers to ease the process of proofing the photos after a photoshoot.
+photoproof is a web app, created for photographers to ease the process of proofing the photos after a photoshoot.
 
 The app works on any shared hosting, the user just has to create a Firebase and any mail service account.
 
@@ -14,12 +14,12 @@ The app works on any shared hosting, the user just has to create a Firebase and 
 
 ### TODO
 
-- Add a feature to apply watermarks to the photos.
-- Add a feature to add spot-comments (comment linked to a spot on a photo for easier reference).
+- Setting to apply watermarks to the photos.
+- Feature to add spot-comments (comment linked to a spot on a photo for easier reference).
 
 ## Installation
 
-1.  Create new app on https://firebase.google.com/.
+1.  Create a new project and a web app on https://firebase.google.com/.
 2.  Select Blaze plan. Under normal usage, you should be charged cents per month.
 3.  `Authentication`:
 
@@ -27,14 +27,15 @@ The app works on any shared hosting, the user just has to create a Firebase and 
 - `Users` tab: create admin account with your credentials.
 - Copy the newly created user's `UID`.
 
-4.  `Database`:
+4.  `Firestore Database`:
 
 - Click `Create Database`.
 - Select `start in test mode` and click `next`.
 - Select your closest location and click `done`.
 - Go to `Rules` tab and paste this code:
 
-```rules_version = '1';
+```
+rules_version = '1';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /collections/{collectionId} {
@@ -69,11 +70,13 @@ service cloud.firestore {
 
 - Replace `<<<USER_UID>>>` with your user UID you saved earlier.
 - Replace `<<<YOUR_EMAIL>>>` with your user's email.
+- Click `Publish`
 
-5. `Rules` tab: paste this code:
+5. `Storage`:
+- `Rules` tab: paste this code:
 
 ```
-rules_version = '2';
+rules_version = '1';
 service firebase.storage {
   match /b/{bucket}/o {
     match /{allPaths=**} {
@@ -85,27 +88,32 @@ service firebase.storage {
 ```
 
 - Replace `<<<USER_UID>>>` with your user UID you saved earlier.
+- Click `Publish`
 
 6. Click the gear near Project Overview and select `Project settings`.
-7. Bellow at Firebase SDK snippet select Config and copy the code.
-8. Create new file at `/src/config.js` and paste your config code there. Edit the code so it starts with `const firebaseConfig = { ...`
-9. Go to `Extensions` and click `Explore official Firebase extensions`.
-10. Install `Resize Images extension` with these settings:
+7. Bellow at Firebase SDK snippet select `Config` and copy the code.
+8. Create new file at `/src/config.js` and paste your config code there. Edit the code so it starts with `export const firebaseConfig = { ...`
+9. Go to `Extensions`.
+10. Install `Resize Images` with these settings:
 
+- Cloud functions location: your closest one
 - Sizes of resized images: `1400x1000,400x700`
-- Deletion of original file: `true`
+- Deletion of original file: `Yes`
 - List of absolute paths not included for resized images: `/logo`
 - Convert image to preferred types: `jpeg, webp`
 
 11. Install `Trigger Email` with these settings (you can get this information at SendGrid or similar email service:
 
 - SMTP connection URI: follow this tutorial to get your unique URI https://medium.com/firebase-tips-tricks/how-to-send-e-mails-using-firebase-extensions-a10d7cd685c2
-- Email documents collection: mail
+- Email documents collection: `mail`
 - Default FROM address: `<<<YOUR_EMAIL>>>` that you entered previously .
 
 12. Change email to the one, where collection confirmation emails will be sent on `firebase.ts` file at `confirmCollection` function.
     //TODO email should be saved and loaded from a database.
-13. Clone and run your newly created photoproof app:
+13. Do the steps as written in this answer:
+https://stackoverflow.com/questions/37760695/firebase-storage-and-access-control-allow-origin/58613527#58613527
+- You can find your-bucket code by clicking on `Storage` at Firebase console of your project.
+14. Clone and run your newly created photoproof app:
 
 ```
 git clone https://github.com/arnassavickas/photoproof.git
@@ -114,11 +122,11 @@ npm install
 npm run
 ```
 
-14. Once everything works correctly, run `npm run build` and place `build` folder contents on your shared hosting at `/photoproof` folder.
-15. Your app will be accessible at: `yourdomain.com/photoproof`
+15. Once everything works correctly, run `npm run build` and place `build` folder contents on your shared hosting at `/photoproof` folder.
+16. Your app will be accessible at: `yourdomain.com/photoproof`
 
 ## Motivation
 
 The desire to build a custom photo proofing app arose from many headaches by using buggy Wordpress plugins of which none worked correcly or had all of the required features.
 
-photoproof project was done with simplicity in mind so both the photographer and the client has a smooth experience every single time.
+The project photoproof was done with simplicity in mind so both the photographer and the client has a smooth experience every single time they cooperate.
