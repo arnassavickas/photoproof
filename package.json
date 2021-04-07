@@ -37,7 +37,8 @@
     "coverage": "react-scripts test --maxWorkers=1 --coverage --watchAll",
     "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
     "eject": "react-scripts eject",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "lint": "eslint src --ext .tsx,.ts"
   },
   "eslintConfig": {
     "extends": [
@@ -60,7 +61,8 @@
         {
           "camelCase": true
         }
-      ]
+      ],
+      "no-console": "error"
     }
   },
   "browserslist": {
