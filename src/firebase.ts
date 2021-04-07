@@ -95,8 +95,12 @@ export const changeSiteSettings = async (
   const logoStorageRef = storage.ref(`logo`);
   let logoUrl: string | undefined;
   if (files.length > 0) {
-    const list = await logoStorageRef.listAll();
-    if (list.items.length > 0) {
+    debugger;
+    let list;
+    try {
+      list = await logoStorageRef.listAll();
+    } catch {}
+    if (list && list.items.length > 0) {
       const filenames = ['logo.png'];
 
       filenames.forEach(async (filename) => {
@@ -337,7 +341,6 @@ export const deleteCollection = async (
 };
 
 export const getCollections = async () => {
-  console.log('getting collections');
   const collectionsArray: Collection[] = [];
   const collections = await firestore
     .collection('collections')
@@ -386,8 +389,6 @@ export const getCollections = async () => {
 };
 
 export const getSingleCollection = async (collectionId: Collection['id']) => {
-  console.log('getting single collection');
-
   const collection = await firestore
     .collection('collections')
     .doc(collectionId)
