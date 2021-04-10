@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/photoproof/static/css/main.c01ecacd.chunk.css",
-    "main.js": "/photoproof/static/js/main.c3c2f03b.chunk.js",
-    "main.js.map": "/photoproof/static/js/main.c3c2f03b.chunk.js.map",
+    "main.css": "/photoproof/static/css/main.6c31f914.chunk.css",
+    "main.js": "/photoproof/static/js/main.c797b833.chunk.js",
+    "main.js.map": "/photoproof/static/js/main.c797b833.chunk.js.map",
     "runtime-main.js": "/photoproof/static/js/runtime-main.2bab3d3d.js",
     "runtime-main.js.map": "/photoproof/static/js/runtime-main.2bab3d3d.js.map",
     "static/css/2.ab18fb39.chunk.css": "/photoproof/static/css/2.ab18fb39.chunk.css",
-    "static/js/2.22e0aeab.chunk.js": "/photoproof/static/js/2.22e0aeab.chunk.js",
-    "static/js/2.22e0aeab.chunk.js.map": "/photoproof/static/js/2.22e0aeab.chunk.js.map",
+    "static/js/2.5b3e7731.chunk.js": "/photoproof/static/js/2.5b3e7731.chunk.js",
+    "static/js/2.5b3e7731.chunk.js.map": "/photoproof/static/js/2.5b3e7731.chunk.js.map",
     "index.html": "/photoproof/index.html",
     "static/css/2.ab18fb39.chunk.css.map": "/photoproof/static/css/2.ab18fb39.chunk.css.map",
-    "static/css/main.c01ecacd.chunk.css.map": "/photoproof/static/css/main.c01ecacd.chunk.css.map",
-    "static/js/2.22e0aeab.chunk.js.LICENSE.txt": "/photoproof/static/js/2.22e0aeab.chunk.js.LICENSE.txt"
+    "static/css/main.6c31f914.chunk.css.map": "/photoproof/static/css/main.6c31f914.chunk.css.map",
+    "static/js/2.5b3e7731.chunk.js.LICENSE.txt": "/photoproof/static/js/2.5b3e7731.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.2bab3d3d.js",
     "static/css/2.ab18fb39.chunk.css",
-    "static/js/2.22e0aeab.chunk.js",
-    "static/css/main.c01ecacd.chunk.css",
-    "static/js/main.c3c2f03b.chunk.js"
+    "static/js/2.5b3e7731.chunk.js",
+    "static/css/main.6c31f914.chunk.css",
+    "static/js/main.c797b833.chunk.js"
   ]
 }
