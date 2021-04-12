@@ -174,7 +174,6 @@ export interface StatusIconProps {
   status: Collection['status'];
 }
 
-
 //FilterButtons
 interface RequiredFilterButtonsProps {
   collection: Collection;
