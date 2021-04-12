@@ -65,12 +65,14 @@ function App() {
     <Container maxWidth='xl'>
       <Box ml={2} mr={2}>
         {logoUrl && (
-          <img
-            className={styles.logo}
-            src={logoUrl}
-            style={{ width: logoWidth }}
-            alt='logo'
-          />
+          <a href={window.location.origin.toString()}>
+            <img
+              className={styles.logo}
+              src={logoUrl}
+              style={{ width: logoWidth }}
+              alt='logo'
+            />
+          </a>
         )}
         {user && (
           <div className={styles.logoutBtn}>
