@@ -55,7 +55,7 @@ const CollectionPage: React.FC = () => {
   if (collection === null) {
     return (
       <Backdrop open={true}>
-        <CircularProgress color='inherit' />.
+        <CircularProgress color='inherit' />
       </Backdrop>
     );
   }
