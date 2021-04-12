@@ -88,11 +88,11 @@ const NewCollection: React.FC = () => {
             </Button>
           </div>
           {uploading ? (
-            <Box data-testid='uploading' p={'3px'}>
+            <Box data-testid='uploading' p={'8px'}>
               <LinearProgress variant='determinate' value={uploadProgress} />
             </Box>
           ) : (
-            <Box p={'5px'}></Box>
+            <Box p={'10px'}></Box>
           )}
         </div>
         <TextField
@@ -140,6 +140,7 @@ const NewCollection: React.FC = () => {
                 validate: {
                   lowerThanMax: (value) =>
                     !getValues('maxSelectRequired') ||
+                    !getValues('minSelectRequired') ||
                     getValues('maxSelectGoal') >= value,
                 },
               })}
@@ -175,6 +176,7 @@ const NewCollection: React.FC = () => {
                 validate: {
                   higherThanMin: (value) =>
                     !getValues('minSelectRequired') ||
+                    !getValues('maxSelectRequired') ||
                     getValues('minSelectGoal') <= value,
                 },
               })}
