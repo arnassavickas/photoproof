@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/photoproof/static/css/main.6c31f914.chunk.css",
-    "main.js": "/photoproof/static/js/main.38b74982.chunk.js",
-    "main.js.map": "/photoproof/static/js/main.38b74982.chunk.js.map",
+    "main.js": "/photoproof/static/js/main.a9622ea8.chunk.js",
+    "main.js.map": "/photoproof/static/js/main.a9622ea8.chunk.js.map",
     "runtime-main.js": "/photoproof/static/js/runtime-main.2bab3d3d.js",
     "runtime-main.js.map": "/photoproof/static/js/runtime-main.2bab3d3d.js.map",
     "static/css/2.ab18fb39.chunk.css": "/photoproof/static/css/2.ab18fb39.chunk.css",
@@ -18,6 +18,6 @@
     "static/css/2.ab18fb39.chunk.css",
     "static/js/2.5b3e7731.chunk.js",
     "static/css/main.6c31f914.chunk.css",
-    "static/js/main.38b74982.chunk.js"
+    "static/js/main.a9622ea8.chunk.js"
   ]
 }
