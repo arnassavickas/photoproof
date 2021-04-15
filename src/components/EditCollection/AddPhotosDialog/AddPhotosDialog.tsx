@@ -109,6 +109,7 @@ const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
                 dropzoneClass={`${styles.dropzone} ${
                   errors.files && styles.dropzoneErrorBorder
                 }`}
+                maxFileSize={5242880}
               />
             )}
           />

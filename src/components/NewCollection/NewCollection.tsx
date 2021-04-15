@@ -231,6 +231,7 @@ const NewCollection: React.FC = () => {
               dropzoneClass={`dropzoneClass ${
                 errors.files && styles.dropzoneErrorBorder
               }`}
+              maxFileSize={5242880}
             />
           )}
         />
