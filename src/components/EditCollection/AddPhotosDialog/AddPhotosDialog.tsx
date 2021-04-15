@@ -102,7 +102,7 @@ const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
                   },
                   item: { sm: 2, lg: 2, md: 2 },
                 }}
-                showAlerts={false}
+                showAlerts={true}
                 showPreviewsInDropzone={false}
                 showPreviews={true}
                 showFileNamesInPreview={true}

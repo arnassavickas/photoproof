@@ -224,7 +224,7 @@ const NewCollection: React.FC = () => {
                 },
                 item: { sm: 2, lg: 1, md: 1 },
               }}
-              showAlerts={false}
+              showAlerts={true}
               showPreviewsInDropzone={false}
               showPreviews={true}
               showFileNamesInPreview={true}
