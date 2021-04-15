@@ -130,3 +130,18 @@ npm run
 The desire to build a custom photo proofing app arose from many headaches by using buggy Wordpress plugins of which none worked correcly or had all of the required features.
 
 The project photoproof was done with simplicity in mind so both the photographer and the client has a smooth experience every single time they cooperate.
+
+
+## Screenshots
+
+### Collections List
+![collectionsList](https://user-images.githubusercontent.com/33692872/114734813-3c9e9300-9d4d-11eb-91aa-5d06ab56e4a8.jpg)
+
+### Editting Collection
+![editCollection](https://user-images.githubusercontent.com/33692872/114734824-3f00ed00-9d4d-11eb-8552-ae22bf503f81.jpg)
+
+### Creating Collection
+![newCollection](https://user-images.githubusercontent.com/33692872/114734840-432d0a80-9d4d-11eb-8316-7b263e6eed2d.jpg)
+
+### Collection page for the client
+![collectionPage](https://user-images.githubusercontent.com/33692872/114734844-458f6480-9d4d-11eb-8f95-f99b3f694d64.jpg)
