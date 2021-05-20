@@ -14,6 +14,8 @@ import {
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 
 import ImageLoader from '../../ImageLoader/ImageLoader';
+import DraggableComponent from './DraggableComponent/DraggableComponent';
+import DroppableComponent from './DroppableComponent/DroppableComponent';
 
 const PhotoTable: React.FC<PhotoTableProps> = ({
   collection,
@@ -58,6 +60,41 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
+  const onDragEnd = (result: {
+    destination: { index: number };
+    source: { index: number };
+  }) => {
+    // dropped outside the list
+    if (!result.destination) {
+      return;
+    }
+
+    console.log(
+      `dragEnd ${result.source.index} to  ${result.destination.index}`
+    );
+    // const items = reorder(
+    //   this.state.items,
+    //   result.source.index,
+    //   result.destination.index
+    // );
+
+    // this.setState({
+    //   items,
+    // });
+  };
+
+  const reorder = (
+    list: Iterable<unknown> | ArrayLike<unknown>,
+    startIndex: number,
+    endIndex: number
+  ) => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+
+    return result;
+  };
+
   return (
     <TableContainer>
       <Table size='small'>
@@ -87,9 +124,13 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
             <TableCell>comment</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody component={DroppableComponent(onDragEnd)}>
           {filteredPhotos.map((photo, index) => (
-            <TableRow key={photo.id} selected={isSelected(photo.id)}>
+            <TableRow
+              key={photo.id}
+              selected={isSelected(photo.id)}
+              component={DraggableComponent(photo.id, index)}
+            >
               {collection.status === 'editing' ? (
                 <TableCell
                   data-testid='checkbox'
