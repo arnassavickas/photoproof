@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Skeleton } from '@material-ui/lab';
 import CloseIcon from '@material-ui/icons/Close';
 import { Photo } from '../../types';
+import { setResizeReady } from '../../firebase';
 
 interface ImageLoaderProps {
+  collectionId: string;
   photo: Photo;
   children: React.ReactNode;
   width: number;
@@ -11,15 +13,19 @@ interface ImageLoaderProps {
 }
 
 const ImageLoader: React.FC<ImageLoaderProps> = ({
+  collectionId,
   photo,
   children,
   width,
   height,
 }) => {
-  const [imageReady, setImageReady] = useState(false);
+  const [imageReady, setImageReady] = useState(photo.resizeReady);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
+    if (photo.resizeReady) {
+      return;
+    }
     fetch(photo.cloudUrlWebp, {}).then((res) => {
       if (res.ok) {
         setImageReady(true);
@@ -30,6 +36,7 @@ const ImageLoader: React.FC<ImageLoaderProps> = ({
             if (res.ok) {
               clearInterval(intervalId);
               setImageReady(true);
+              setResizeReady(collectionId, photo.id);
             } else if (trie > 10) {
               setFailed(true);
             }

@@ -24,6 +24,7 @@ export type Photo = {
   cloudUrlWebp: string;
   thumbnail: string;
   thumbnailWebp: string;
+  resizeReady: boolean;
   selected: boolean;
   comment: string;
   dateTaken: Date | null;

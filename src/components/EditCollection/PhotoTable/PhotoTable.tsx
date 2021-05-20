@@ -142,7 +142,12 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
               ) : null}
               <TableCell>{photo.index}.</TableCell>
               <TableCell padding='none'>
-                <ImageLoader photo={photo} width={150} height={100}>
+                <ImageLoader
+                  collectionId={collection.id}
+                  photo={photo}
+                  width={150}
+                  height={100}
+                >
                   <picture>
                     <source srcSet={photo.thumbnailWebp} type='image/webp' />
                     <img

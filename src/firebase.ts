@@ -190,6 +190,7 @@ const uploadPhotos = async (
       cloudUrlWebp: webpUrl,
       thumbnail: jpegThumbnailUrl,
       thumbnailWebp: webpThumbnailUrl,
+      resizeReady: false,
       selected: false,
       comment: '',
       dateTaken: data ? data.ModifyDate : null,
@@ -199,6 +200,19 @@ const uploadPhotos = async (
     setUploadProgress(progress);
   }
   return photosArray;
+};
+
+export const setResizeReady = (
+  collectionId: Collection['id'],
+  photoId: Photo['id']
+) => {
+  const photoRef = firestore
+    .collection('collections')
+    .doc(collectionId)
+    .collection('photos')
+    .doc(photoId);
+
+  photoRef.update({ resizeReady: true });
 };
 
 export const updatePhotoSelection = async (
@@ -365,6 +379,7 @@ export const getCollections = async () => {
         thumbnailWebp: photo.data().thumbnailWebp,
         filename: photo.data().filename,
         filenameNumber: photo.data().filenameNumber,
+        resizeReady: photo.data().resizeReady,
         selected: photo.data().selected,
         comment: photo.data().comment,
         dateTaken: photo.data().dateTaken,
@@ -412,6 +427,7 @@ export const getSingleCollection = async (collectionId: Collection['id']) => {
       cloudUrlWebp: photo.data().cloudUrlWebp,
       thumbnail: photo.data().thumbnail,
       thumbnailWebp: photo.data().thumbnailWebp,
+      resizeReady: photo.data().resizeReady,
       filename: photo.data().filename,
       filenameNumber: photo.data().filenameNumber,
       selected: photo.data().selected,
