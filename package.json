@@ -51,18 +51,8 @@
       "css-modules"
     ],
     "rules": {
-      "css-modules/no-unused-class": [
-        2,
-        {
-          "camelCase": true
-        }
-      ],
-      "css-modules/no-undef-class": [
-        2,
-        {
-          "camelCase": true
-        }
-      ]
+      "css-modules/no-unused-class": "warn",
+      "css-modules/no-undef-class": "warn"
     }
   },
   "browserslist": {
