@@ -98,6 +98,7 @@ export interface PhotoTableToolbarProps {
 
 export interface PhotoTableProps {
   collection: Collection;
+  setCollection: React.Dispatch<React.SetStateAction<Collection | null>>;
   filteredPhotos: Photo[];
   selected: string[];
   setSelected: React.Dispatch<React.SetStateAction<string[]>>;

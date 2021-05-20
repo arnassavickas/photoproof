@@ -29,7 +29,7 @@ const DraggableComponent =
       Pick<any, string | number | symbol>
   ) => {
     return (
-      <Draggable draggableId={id} index={index}>
+      <Draggable draggableId={id} index={index} >
         {(provided, snapshot) => (
           <TableRow
             ref={provided.innerRef}

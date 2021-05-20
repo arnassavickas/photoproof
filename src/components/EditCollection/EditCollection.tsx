@@ -107,6 +107,7 @@ const EditCollection: React.FC = () => {
       />
       <PhotoTable
         collection={collection}
+        setCollection={setCollection}
         filteredPhotos={filteredPhotos}
         selected={selected}
         setSelected={setSelected}

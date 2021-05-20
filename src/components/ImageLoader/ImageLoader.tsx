@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Skeleton } from '@material-ui/lab';
 import CloseIcon from '@material-ui/icons/Close';
-import { Photo } from '../../types';
+import { Photo, Collection } from '../../types';
 import { setResizeReady } from '../../firebase';
 
 interface ImageLoaderProps {
   collectionId: string;
+  setCollection: React.Dispatch<React.SetStateAction<Collection | null>>;
   photo: Photo;
   children: React.ReactNode;
   width: number;
@@ -14,6 +15,7 @@ interface ImageLoaderProps {
 
 const ImageLoader: React.FC<ImageLoaderProps> = ({
   collectionId,
+  setCollection,
   photo,
   children,
   width,
@@ -37,6 +39,19 @@ const ImageLoader: React.FC<ImageLoaderProps> = ({
               clearInterval(intervalId);
               setImageReady(true);
               setResizeReady(collectionId, photo.id);
+              setCollection((collection) => {
+                if (!collection) {
+                  return null;
+                }
+                return {
+                  ...collection,
+                  photos: collection?.photos.map((collectionPhoto) =>
+                    collectionPhoto.id === photo.id
+                      ? { ...photo, resizeReady: true }
+                      : collectionPhoto
+                  ),
+                };
+              });
             } else if (trie > 10) {
               setFailed(true);
             }

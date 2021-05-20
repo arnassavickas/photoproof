@@ -19,6 +19,7 @@ import DroppableComponent from './DroppableComponent/DroppableComponent';
 
 const PhotoTable: React.FC<PhotoTableProps> = ({
   collection,
+  setCollection,
   filteredPhotos,
   selected,
   setSelected,
@@ -143,6 +144,7 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
               <TableCell>{photo.index}.</TableCell>
               <TableCell padding='none'>
                 <ImageLoader
+                  setCollection={setCollection}
                   collectionId={collection.id}
                   photo={photo}
                   width={150}
