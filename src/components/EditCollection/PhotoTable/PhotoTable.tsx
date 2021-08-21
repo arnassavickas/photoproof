@@ -61,6 +61,14 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1
 
+  const reorder = <T,>(list: T[], startIndex: number, endIndex: number): T[] => {
+    const result = Array.from(list)
+    const [removed] = result.splice(startIndex, 1)
+    result.splice(endIndex, 0, removed)
+
+    return result
+  }
+
   const onDragEnd = (result: { destination: { index: number }; source: { index: number } }) => {
     // dropped outside the list
     if (!result.destination) {
@@ -68,27 +76,11 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
     }
 
     console.log(`dragEnd ${result.source.index} to  ${result.destination.index}`)
-    // const items = reorder(
-    //   this.state.items,
-    //   result.source.index,
-    //   result.destination.index
-    // );
 
-    // this.setState({
-    //   items,
-    // });
-  }
-
-  const reorder = (
-    list: Iterable<unknown> | ArrayLike<unknown>,
-    startIndex: number,
-    endIndex: number,
-  ) => {
-    const result = Array.from(list)
-    const [removed] = result.splice(startIndex, 1)
-    result.splice(endIndex, 0, removed)
-
-    return result
+    setCollection({
+      ...collection,
+      photos: reorder(collection.photos, result.source.index, result.destination.index),
+    })
   }
 
   return (
