@@ -1,6 +1,4 @@
-import React from 'react';
-import styles from './styles.module.scss';
-import { PhotoTableProps } from '../../../types';
+import React from 'react'
 import {
   Checkbox,
   Table,
@@ -9,13 +7,15 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@material-ui/core';
+} from '@material-ui/core'
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
 
-import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
+import styles from './styles.module.scss'
+import { PhotoTableProps } from '../../../types'
 
-import ImageLoader from '../../ImageLoader/ImageLoader';
-import DraggableComponent from './DraggableComponent/DraggableComponent';
-import DroppableComponent from './DroppableComponent/DroppableComponent';
+import ImageLoader from '../../ImageLoader/ImageLoader'
+import DraggableComponent from './DraggableComponent/DraggableComponent'
+import DroppableComponent from './DroppableComponent/DroppableComponent'
 
 const PhotoTable: React.FC<PhotoTableProps> = ({
   collection,
@@ -26,53 +26,48 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
   setPhotoIndex,
   setLightboxOpen,
 }) => {
-  const openLightbox = (index: number) => (event: any) => {
-    setPhotoIndex(index);
-    setLightboxOpen(true);
-  };
+  const openLightbox = (index: number) => () => {
+    setPhotoIndex(index)
+    setLightboxOpen(true)
+  }
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked && filteredPhotos) {
-      const newSelecteds = filteredPhotos.map((n) => n.id);
-      setSelected(newSelecteds);
-      return;
+      const newSelecteds = filteredPhotos.map(photo => photo.id)
+      setSelected(newSelecteds)
+      return
     }
-    setSelected([]);
-  };
+    setSelected([])
+  }
 
   const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected: string[] = [];
+    const selectedIndex = selected.indexOf(id)
+    let newSelected: string[] = []
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
+      newSelected = newSelected.concat(selected, id)
     } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
+      newSelected = newSelected.concat(selected.slice(1))
     } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
+      newSelected = newSelected.concat(selected.slice(0, -1))
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
+        selected.slice(selectedIndex + 1),
+      )
     }
-    setSelected(newSelected);
-  };
+    setSelected(newSelected)
+  }
 
-  const isSelected = (id: string) => selected.indexOf(id) !== -1;
+  const isSelected = (id: string) => selected.indexOf(id) !== -1
 
-  const onDragEnd = (result: {
-    destination: { index: number };
-    source: { index: number };
-  }) => {
+  const onDragEnd = (result: { destination: { index: number }; source: { index: number } }) => {
     // dropped outside the list
     if (!result.destination) {
-      return;
+      return
     }
 
-    console.log(
-      `dragEnd ${result.source.index} to  ${result.destination.index}`
-    );
+    console.log(`dragEnd ${result.source.index} to  ${result.destination.index}`)
     // const items = reorder(
     //   this.state.items,
     //   result.source.index,
@@ -82,46 +77,40 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
     // this.setState({
     //   items,
     // });
-  };
+  }
 
   const reorder = (
     list: Iterable<unknown> | ArrayLike<unknown>,
     startIndex: number,
-    endIndex: number
+    endIndex: number,
   ) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
+    const result = Array.from(list)
+    const [removed] = result.splice(startIndex, 1)
+    result.splice(endIndex, 0, removed)
 
-    return result;
-  };
+    return result
+  }
 
   return (
     <TableContainer>
-      <Table size='small'>
+      <Table size="small">
         <TableHead>
           <TableRow>
             {collection.status === 'editing' ? (
-              <TableCell padding='checkbox' size='medium'>
+              <TableCell padding="checkbox" size="medium">
                 <Checkbox
-                  indeterminate={
-                    selected.length > 0 &&
-                    selected.length < filteredPhotos.length
-                  }
-                  checked={
-                    filteredPhotos.length > 0 &&
-                    selected.length === filteredPhotos.length
-                  }
+                  indeterminate={selected.length > 0 && selected.length < filteredPhotos.length}
+                  checked={filteredPhotos.length > 0 && selected.length === filteredPhotos.length}
                   onChange={handleSelectAllClick}
                 />
               </TableCell>
             ) : null}
-            <TableCell width='5%' size='medium'>
+            <TableCell width="5%" size="medium">
               no.
             </TableCell>
-            <TableCell width='10%'>thumbnail</TableCell>
-            <TableCell width='30%'>filename</TableCell>
-            <TableCell padding='checkbox'></TableCell>
+            <TableCell width="10%">thumbnail</TableCell>
+            <TableCell width="30%">filename</TableCell>
+            <TableCell padding="checkbox" />
             <TableCell>comment</TableCell>
           </TableRow>
         </TableHead>
@@ -134,15 +123,15 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
             >
               {collection.status === 'editing' ? (
                 <TableCell
-                  data-testid='checkbox'
-                  padding='checkbox'
-                  onClick={(event) => handleClick(event, photo.id)}
+                  data-testid="checkbox"
+                  padding="checkbox"
+                  onClick={event => handleClick(event, photo.id)}
                 >
                   <Checkbox checked={isSelected(photo.id)} />
                 </TableCell>
               ) : null}
               <TableCell>{photo.index}.</TableCell>
-              <TableCell padding='none'>
+              <TableCell padding="none">
                 <ImageLoader
                   setCollection={setCollection}
                   collectionId={collection.id}
@@ -151,7 +140,7 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
                   height={100}
                 >
                   <picture>
-                    <source srcSet={photo.thumbnailWebp} type='image/webp' />
+                    <source srcSet={photo.thumbnailWebp} type="image/webp" />
                     <img
                       src={photo.thumbnail}
                       alt={collection.title}
@@ -162,18 +151,16 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
                 </ImageLoader>
               </TableCell>
               <TableCell>{photo.filename}</TableCell>
-              <TableCell padding='checkbox'>
-                {photo.selected ? (
-                  <FavoriteBorder data-testid='selected' />
-                ) : null}
+              <TableCell padding="checkbox">
+                {photo.selected ? <FavoriteBorder data-testid="selected" /> : null}
               </TableCell>
-              <TableCell data-testid='comment'>{photo.comment}</TableCell>
+              <TableCell data-testid="comment">{photo.comment}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
-  );
-};
+  )
+}
 
-export default PhotoTable;
+export default PhotoTable

@@ -1,6 +1,4 @@
-import React from 'react';
-import styles from './styles.module.scss';
-import { ConfirmationForbiddenProps } from '../../../../types';
+import React from 'react'
 import {
   Dialog,
   DialogContent,
@@ -9,8 +7,11 @@ import {
   Button,
   DialogContentText,
   IconButton,
-} from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+} from '@material-ui/core'
+import CloseIcon from '@material-ui/icons/Close'
+
+import styles from './styles.module.scss'
+import { ConfirmationForbiddenProps } from '../../../../types'
 
 const ConfirmationForbiddenDialog: React.FC<ConfirmationForbiddenProps> = ({
   collection,
@@ -28,61 +29,44 @@ const ConfirmationForbiddenDialog: React.FC<ConfirmationForbiddenProps> = ({
           </strong>{' '}
           photos.
         </span>
-      );
-    } else if (
-      collection.minSelect.required &&
-      !collection.maxSelect.required
-    ) {
-      return (
-        <span>
-          you must select <strong>at least {collection.minSelect.goal}</strong>{' '}
-          photos.
-        </span>
-      );
-    } else if (
-      !collection.minSelect.required &&
-      collection.maxSelect.required
-    ) {
-      return (
-        <span>
-          you must select{' '}
-          <strong>a maximum of {collection.maxSelect.goal}</strong> photos.
-        </span>
-      );
+      )
     }
-  };
+    if (collection.minSelect.required && !collection.maxSelect.required) {
+      return (
+        <span>
+          you must select <strong>at least {collection.minSelect.goal}</strong> photos.
+        </span>
+      )
+    }
+    if (!collection.minSelect.required && collection.maxSelect.required) {
+      return (
+        <span>
+          you must select <strong>a maximum of {collection.maxSelect.goal}</strong> photos.
+        </span>
+      )
+    }
+
+    return null
+  }
 
   return (
-    <Dialog
-      open={confirmForbidDialogOpen}
-      onClose={() => setConfirmForbidDialogOpen(false)}
-    >
-      <DialogTitle id='alert-dialog-title'>
-        Please adjust your selections!
-      </DialogTitle>
-      <IconButton
-        onClick={() => setConfirmForbidDialogOpen(false)}
-        className={styles.exitBtn}
-      >
+    <Dialog open={confirmForbidDialogOpen} onClose={() => setConfirmForbidDialogOpen(false)}>
+      <DialogTitle id="alert-dialog-title">Please adjust your selections!</DialogTitle>
+      <IconButton onClick={() => setConfirmForbidDialogOpen(false)} className={styles.exitBtn}>
         <CloseIcon />
       </IconButton>
       <DialogContent>
         <DialogContentText>
-          You have selected <strong>{selectedPhotos}</strong> photos, but{' '}
-          {requirementsText()}
+          You have selected <strong>{selectedPhotos}</strong> photos, but {requirementsText()}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button
-          onClick={() => setConfirmForbidDialogOpen(false)}
-          color='primary'
-          autoFocus
-        >
+        <Button onClick={() => setConfirmForbidDialogOpen(false)} color="primary" autoFocus>
           Cancel
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}
 
-export default ConfirmationForbiddenDialog;
+export default ConfirmationForbiddenDialog

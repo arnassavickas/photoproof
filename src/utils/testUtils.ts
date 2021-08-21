@@ -1,4 +1,4 @@
-import { Collection, Photo } from '../types';
+import { Collection, Photo } from '../types'
 
 export const filteredPhotos: Photo[] = [
   {
@@ -29,7 +29,7 @@ export const filteredPhotos: Photo[] = [
     comment: 'test comment',
     dateTaken: new Date(),
   },
-];
+]
 
 export const collection: Collection = {
   id: 'collectionId',
@@ -41,7 +41,7 @@ export const collection: Collection = {
   status: 'selecting',
   finalComment: '',
   photos: filteredPhotos,
-};
+}
 
 export const collectionList: Collection[] = [
   {
@@ -66,4 +66,4 @@ export const collectionList: Collection[] = [
     finalComment: '',
     photos: filteredPhotos,
   },
-];
+]

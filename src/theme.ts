@@ -1,4 +1,4 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles'
 
 export const theme = createMuiTheme({
   palette: {
@@ -33,13 +33,7 @@ export const theme = createMuiTheme({
     },
   },
   typography: {
-    fontFamily: [
-      'Nunito',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-    ].join(','),
+    fontFamily: ['Nunito', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif'].join(','),
   },
   overrides: {
     MuiButton: {
@@ -102,5 +96,5 @@ export const theme = createMuiTheme({
       },
     },
   },
-});
-export default theme;
+})
+export default theme

@@ -1,14 +1,15 @@
-import React from 'react';
+import React from 'react'
 
-import { render, waitFor, screen } from '../../../utils/customTestRenderer';
-import { CollectionDetailsProps } from '../../../types';
-import user from '@testing-library/user-event';
-import CollectionDetails from './CollectionDetails';
-import { collection } from '../../../utils/testUtils';
-import { changeCollectionStatus, updateSettings } from '../../../firebase';
-import { BrowserRouter as Router } from 'react-router-dom';
+import user from '@testing-library/user-event'
+import { BrowserRouter as Router } from 'react-router-dom'
 
-jest.mock('../../../firebase');
+import { render, waitFor, screen } from '../../../utils/customTestRenderer'
+import { CollectionDetailsProps } from '../../../types'
+import CollectionDetails from './CollectionDetails'
+import { collection } from '../../../utils/testUtils'
+import { changeCollectionStatus, updateSettings } from '../../../firebase'
+
+jest.mock('../../../firebase')
 
 const props: CollectionDetailsProps = {
   collectionId: 'collectionId',
@@ -19,141 +20,141 @@ const props: CollectionDetailsProps = {
   setConfirmationDialogContentText: jest.fn(),
   setConfirmationDialogAgree: jest.fn(),
   setProgress: jest.fn(),
-};
+}
 
 describe('<PhotoTableToolbar/> selecting', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-  });
+    jest.spyOn(console, 'error').mockImplementation(() => {})
+  })
 
   test('clicking "edit" button calls changeCollectionStatus one time', async () => {
     render(
       <Router>
         <CollectionDetails {...props} />
-      </Router>
-    );
+      </Router>,
+    )
 
-    const editButton = screen.getByText('Edit');
-    user.click(editButton);
+    const editButton = screen.getByText('Edit')
+    user.click(editButton)
     await waitFor(() => {
-      expect(changeCollectionStatus).toHaveBeenCalledTimes(1);
-    });
-  });
+      expect(changeCollectionStatus).toHaveBeenCalledTimes(1)
+    })
+  })
 
   test('clicking "copy selections" calls copySelections one time', async () => {
     render(
       <Router>
         <CollectionDetails {...props} />
-      </Router>
-    );
-    const copyButton = screen.getByText(/copy selections/i);
-    user.click(copyButton);
+      </Router>,
+    )
+    const copyButton = screen.getByText(/copy selections/i)
+    user.click(copyButton)
 
     await waitFor(() => {
-      expect(props.setConfirmationDialogAgree).toHaveBeenCalledTimes(1);
-    });
-  });
-});
+      expect(props.setConfirmationDialogAgree).toHaveBeenCalledTimes(1)
+    })
+  })
+})
 
 describe('<PhotoTableToolbar/> confirmed', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-  });
+    jest.spyOn(console, 'error').mockImplementation(() => {})
+  })
   beforeAll(() => {
-    props.collection.status = 'confirmed';
-  });
+    props.collection.status = 'confirmed'
+  })
 
   test('clicking "edit" button calls setConfirmationDialogAgree one time', async () => {
     render(
       <Router>
         <CollectionDetails {...props} />
-      </Router>
-    );
+      </Router>,
+    )
 
-    const editButton = screen.getByText('Edit');
-    user.click(editButton);
+    const editButton = screen.getByText('Edit')
+    user.click(editButton)
 
     await waitFor(() => {
-      expect(props.setConfirmationDialogAgree).toHaveBeenCalledTimes(1);
-    });
-  });
+      expect(props.setConfirmationDialogAgree).toHaveBeenCalledTimes(1)
+    })
+  })
 
   test('clicking "copy selections" calls navigator.clipboard.writeText one time', async () => {
     Object.assign(navigator, {
       clipboard: {
         writeText: () => {},
       },
-    });
-    jest.spyOn(navigator.clipboard, 'writeText');
+    })
+    jest.spyOn(navigator.clipboard, 'writeText')
 
     render(
       <Router>
         <CollectionDetails {...props} />
-      </Router>
-    );
+      </Router>,
+    )
 
-    const copyButton = screen.getByText(/copy selections/i);
-    user.click(copyButton);
+    const copyButton = screen.getByText(/copy selections/i)
+    user.click(copyButton)
 
     await waitFor(() => {
-      expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(1);
-    });
-  });
-});
+      expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(1)
+    })
+  })
+})
 
 describe('<PhotoTableToolbar/> editing', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-  });
+    jest.spyOn(console, 'error').mockImplementation(() => {})
+  })
   beforeAll(() => {
-    props.collection.status = 'editing';
-  });
+    props.collection.status = 'editing'
+  })
 
   test('saving empty title renders error', async () => {
-    const {baseElement } = render(
+    const { baseElement } = render(
       <Router>
         <CollectionDetails {...props} />
-      </Router>
-    );
+      </Router>,
+    )
 
-    const title = screen.getByLabelText('Title');
-    user.clear(title);
+    const title = screen.getByLabelText('Title')
+    user.clear(title)
 
-    const saveButton = screen.getByText('Save');
-    user.click(saveButton);
+    const saveButton = screen.getByText('Save')
+    user.click(saveButton)
 
     await waitFor(() => {
-      expect(baseElement).toHaveTextContent('Title is required');
-    });
-  });
+      expect(baseElement).toHaveTextContent('Title is required')
+    })
+  })
 
   test('entering valid data calls updateSettings one time with correct args', async () => {
     render(
       <Router>
         <CollectionDetails {...props} />
-      </Router>
-    );
+      </Router>,
+    )
 
-    const title = screen.getByLabelText('Title');
-    user.clear(title);
-    user.type(title, 'new title');
+    const title = screen.getByLabelText('Title')
+    user.clear(title)
+    user.type(title, 'new title')
 
-    const allowComments = screen.getByLabelText('Allow comments');
-    user.click(allowComments);
+    const allowComments = screen.getByLabelText('Allow comments')
+    user.click(allowComments)
 
-    const minSelectRequired = screen.getByLabelText(/minimum/i);
-    user.click(minSelectRequired);
+    const minSelectRequired = screen.getByLabelText(/minimum/i)
+    user.click(minSelectRequired)
     const maxSelectGoal = screen
       .getByTestId('maxSelectGoal')
-      .querySelector('input') as HTMLInputElement;
-    user.clear(maxSelectGoal);
-    user.type(maxSelectGoal, '4');
+      .querySelector('input') as HTMLInputElement
+    user.clear(maxSelectGoal)
+    user.type(maxSelectGoal, '4')
 
-    const saveButton = screen.getByText('Save');
-    user.click(saveButton);
+    const saveButton = screen.getByText('Save')
+    user.click(saveButton)
 
     await waitFor(() => {
-      expect(updateSettings).toHaveBeenCalledTimes(1);
+      expect(updateSettings).toHaveBeenCalledTimes(1)
       expect(updateSettings).toHaveBeenCalledWith(
         {
           title: 'new title',
@@ -167,23 +168,23 @@ describe('<PhotoTableToolbar/> editing', () => {
           },
           allowComments: false,
         },
-        'collectionId'
-      );
-    });
-  });
+        'collectionId',
+      )
+    })
+  })
 
   test('clicking "copy selections" calls navigator.clipboard.writeText one time', async () => {
     render(
       <Router>
         <CollectionDetails {...props} />
-      </Router>
-    );
+      </Router>,
+    )
 
-    const copyButton = screen.getByText(/copy selections/i);
-    user.click(copyButton);
+    const copyButton = screen.getByText(/copy selections/i)
+    user.click(copyButton)
 
     await waitFor(() => {
-      expect(props.setConfirmationDialogAgree).toHaveBeenCalledTimes(1);
-    });
-  });
-});
+      expect(props.setConfirmationDialogAgree).toHaveBeenCalledTimes(1)
+    })
+  })
+})

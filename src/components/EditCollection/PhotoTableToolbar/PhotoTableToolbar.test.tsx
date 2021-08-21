@@ -1,12 +1,13 @@
-import React from 'react';
+import React from 'react'
 
-import { render, screen } from '../../../utils/customTestRenderer';
-import { PhotoTableToolbarProps } from '../../../types';
-import user from '@testing-library/user-event';
-import PhotoTableToolbar from './PhotoTableToolbar';
-import { collection, filteredPhotos } from '../../../utils/testUtils';
+import user from '@testing-library/user-event'
 
-jest.mock('../../../firebase');
+import { render, screen } from '../../../utils/customTestRenderer'
+import { PhotoTableToolbarProps } from '../../../types'
+import PhotoTableToolbar from './PhotoTableToolbar'
+import { collection, filteredPhotos } from '../../../utils/testUtils'
+
+jest.mock('../../../firebase')
 
 const props: PhotoTableToolbarProps = {
   collectionId: 'collectionId',
@@ -22,56 +23,57 @@ const props: PhotoTableToolbarProps = {
   selected: [],
   setSelected: jest.fn(),
   setAddPhotosDialogOpen: jest.fn(),
-};
+}
 
 describe('<PhotoTableToolbar/>', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-  });
+    jest.spyOn(console, 'error').mockImplementation(() => {
+      //
+    })
+  })
 
   test('changing filter calls setFilteredPhotos', async () => {
-    render(<PhotoTableToolbar {...props} />);
+    render(<PhotoTableToolbar {...props} />)
 
-    const selectedBtn = screen.getByRole('button', { name: /^selected/i });
-    user.click(selectedBtn);
+    const selectedBtn = screen.getByRole('button', { name: /^selected/i })
+    user.click(selectedBtn)
 
-    expect(props.setFilteredPhotos).toHaveBeenCalled();
-  });
-});
+    expect(props.setFilteredPhotos).toHaveBeenCalled()
+  })
+})
 
 describe('<PhotoTableToolbar/> editing', () => {
-  props.collection.status = 'editing';
+  props.collection.status = 'editing'
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-  });
+    jest.spyOn(console, 'error').mockImplementation(() => {
+      //
+    })
+  })
 
   test('clicking "add photos" calls setAddPhotosDialogOpen', async () => {
-    render(<PhotoTableToolbar {...props} />);
+    render(<PhotoTableToolbar {...props} />)
 
-    const addPhotos = screen.getByText(/add photos/i);
-    user.click(addPhotos);
+    user.click(screen.getByText(/add photos/i))
 
-    expect(props.setAddPhotosDialogOpen).toHaveBeenCalledTimes(1);
-  });
+    expect(props.setAddPhotosDialogOpen).toHaveBeenCalledTimes(1)
+  })
 
   test('clicking "reset selections and comments" calls setConfirmationDialogAgree one time', async () => {
-    render(<PhotoTableToolbar {...props} />);
+    render(<PhotoTableToolbar {...props} />)
 
-    const resetButton = screen.getByText(/reset selections and comments/i);
-    user.click(resetButton);
-    expect(props.setConfirmationDialogAgree).toHaveBeenCalledTimes(1);
-  });
+    user.click(screen.getByText(/reset selections and comments/i))
+
+    expect(props.setConfirmationDialogAgree).toHaveBeenCalledTimes(1)
+  })
 
   test('clicking checkbox and delete calls setConfirmationDialogAgree one time', () => {
-    props.selected = ['photoId1', 'photoId2'];
-    render(
-      <PhotoTableToolbar {...props} />
-    );
+    props.selected = ['photoId1', 'photoId2']
+    render(<PhotoTableToolbar {...props} />)
 
-    screen.getByText('2 to be deleted');
-    const deleteButton = screen.getByLabelText('delete');
-    user.click(deleteButton);
+    expect(screen.getByText('2 to be deleted')).toBeInTheDocument()
 
-    expect(props.setConfirmationDialogAgree).toHaveBeenCalledTimes(1);
-  });
-});
+    user.click(screen.getByLabelText('delete'))
+
+    expect(props.setConfirmationDialogAgree).toHaveBeenCalledTimes(1)
+  })
+})

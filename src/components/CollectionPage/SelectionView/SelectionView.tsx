@@ -1,21 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import styles from './styles.module.scss';
-import { SelectionViewProps } from '../../../types';
-import { updatePhotoSelection, updatePhotoComment } from '../../../firebase';
-import { IconButton, Button } from '@material-ui/core';
+import React, { useState, useEffect } from 'react'
+import { IconButton, Button } from '@material-ui/core'
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
 
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
-import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
+import FavoriteIcon from '@material-ui/icons/Favorite'
 
-import Lightbox from '../../Lightbox/Lightbox';
-import CommentDialog from '../../CommentDialog/CommentDialog';
-import PhotoGrid from '../PhotoGrid/PhotoGrid';
-import ConfirmationForbiddenDialog from './ConfirmationForbiddenDialog/ConfirmationForbiddenDialog';
-import SelectionConfirmationDialog from './SelectionConfirmationDialog/SelectionConfirmationDialog';
+import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline'
 
-import { useSnackbar } from 'notistack';
+import ChatBubbleIcon from '@material-ui/icons/ChatBubble'
+
+import { useSnackbar } from 'notistack'
+
+import styles from './styles.module.scss'
+import { SelectionViewProps } from '../../../types'
+import { updatePhotoSelection, updatePhotoComment } from '../../../firebase'
+
+import Lightbox from '../../Lightbox/Lightbox'
+import CommentDialog from '../../CommentDialog/CommentDialog'
+import PhotoGrid from '../PhotoGrid/PhotoGrid'
+import ConfirmationForbiddenDialog from './ConfirmationForbiddenDialog/ConfirmationForbiddenDialog'
+import SelectionConfirmationDialog from './SelectionConfirmationDialog/SelectionConfirmationDialog'
 
 const SelectionView: React.FC<SelectionViewProps> = ({
   collection,
@@ -34,88 +37,79 @@ const SelectionView: React.FC<SelectionViewProps> = ({
   setCommentTextarea,
   selectedPhotos,
 }) => {
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [confirmForbidDialogOpen, setConfirmForbidDialogOpen] = useState(false);
-  const { enqueueSnackbar } = useSnackbar();
-
-  useEffect(() => {
-    if (lightboxOpen) {
-      const reactPortal = document.querySelector('.ReactModalPortal');
-      if (reactPortal) {
-        reactPortal.addEventListener('keyup', keySelect);
-        return () => reactPortal.removeEventListener('keyup', keySelect);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lightboxOpen, photoIndex]);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
+  const [confirmForbidDialogOpen, setConfirmForbidDialogOpen] = useState(false)
+  const { enqueueSnackbar } = useSnackbar()
 
   const selectPhotoLightbox = async () => {
     if (filteredPhotos && collection) {
       try {
-        const clickedPhoto = filteredPhotos[photoIndex];
+        const clickedPhoto = filteredPhotos[photoIndex]
         if (clickedPhoto && collection) {
-          await updatePhotoSelection(
-            collectionId,
-            clickedPhoto.id,
-            !clickedPhoto.selected
-          );
-          clickedPhoto.selected = !clickedPhoto?.selected;
+          await updatePhotoSelection(collectionId, clickedPhoto.id, !clickedPhoto.selected)
+          clickedPhoto.selected = !clickedPhoto?.selected
           setCollection({
             ...collection,
-            photos: collection.photos.map((photo) =>
-              photo.id === clickedPhoto.id ? clickedPhoto : photo
+            photos: collection.photos.map(photo =>
+              photo.id === clickedPhoto.id ? clickedPhoto : photo,
             ),
-          });
+          })
         }
       } catch (err) {
         enqueueSnackbar('ERROR: Photo selection failed', {
           variant: 'error',
-        });
+        })
       }
     }
-  };
+  }
+
+  const keySelect = (event: any) => {
+    if (!lightboxOpen) {
+      return
+    }
+
+    if (event.code === 'ArrowUp' && !filteredPhotos[photoIndex].selected) {
+      selectPhotoLightbox()
+    } else if (event.code === 'ArrowDown' && filteredPhotos[photoIndex].selected) {
+      selectPhotoLightbox()
+    }
+  }
+
+  useEffect(() => {
+    if (lightboxOpen) {
+      const reactPortal = document.querySelector('.ReactModalPortal')
+      if (reactPortal) {
+        reactPortal.addEventListener('keyup', keySelect)
+        return () => reactPortal.removeEventListener('keyup', keySelect)
+      }
+    }
+
+    return () => null
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lightboxOpen, photoIndex])
 
   const savePhotoComment = async () => {
-    setCommentOpen(false);
+    setCommentOpen(false)
     if (filteredPhotos && collection) {
       try {
-        const clickedPhoto = filteredPhotos[photoIndex];
+        const clickedPhoto = filteredPhotos[photoIndex]
         if (clickedPhoto && collection) {
-          await updatePhotoComment(
-            collectionId,
-            clickedPhoto.id,
-            commentTextarea
-          );
-          clickedPhoto.comment = commentTextarea;
+          await updatePhotoComment(collectionId, clickedPhoto.id, commentTextarea)
+          clickedPhoto.comment = commentTextarea
           setCollection({
             ...collection,
-            photos: collection.photos.map((photo) =>
-              photo.id === clickedPhoto.id ? clickedPhoto : photo
+            photos: collection.photos.map(photo =>
+              photo.id === clickedPhoto.id ? clickedPhoto : photo,
             ),
-          });
+          })
         }
       } catch (err) {
         enqueueSnackbar('ERROR: Photo commenting failed', {
           variant: 'error',
-        });
+        })
       }
     }
-  };
-
-  const keySelect = (event: any) => {
-    if (!lightboxOpen) {
-      return;
-    }
-
-    if (event.code === 'ArrowUp' && !filteredPhotos[photoIndex].selected) {
-      selectPhotoLightbox();
-    } else if (
-      event.code === 'ArrowDown' &&
-      filteredPhotos[photoIndex].selected
-    ) {
-      selectPhotoLightbox();
-    }
-  };
+  }
 
   return (
     <div>
@@ -135,10 +129,7 @@ const SelectionView: React.FC<SelectionViewProps> = ({
           lightboxIndex={photoIndex}
           setLightboxIndex={setPhotoIndex}
           toolbarButtons={[
-            <IconButton
-              aria-label='selectLighbox'
-              onClick={selectPhotoLightbox}
-            >
+            <IconButton aria-label="selectLighbox" onClick={selectPhotoLightbox}>
               {filteredPhotos[photoIndex].selected ? (
                 <FavoriteIcon className={styles.toolbarIcon} />
               ) : (
@@ -146,10 +137,7 @@ const SelectionView: React.FC<SelectionViewProps> = ({
               )}
             </IconButton>,
             collection.allowComments ? (
-              <IconButton
-                aria-label='commentLightbox'
-                onClick={() => openCommentModal()}
-              >
+              <IconButton aria-label="commentLightbox" onClick={() => openCommentModal()}>
                 {filteredPhotos[photoIndex].comment.length > 0 ? (
                   <ChatBubbleIcon className={styles.toolbarIcon} />
                 ) : (
@@ -168,34 +156,27 @@ const SelectionView: React.FC<SelectionViewProps> = ({
         setCommentTextarea={setCommentTextarea}
         disabled={!collection.allowComments}
         actionButtons={[
-          <Button
-            key={'cancel'}
-            onClick={() => setCommentOpen(false)}
-            color='secondary'
-            autoFocus
-          >
+          <Button key="cancel" onClick={() => setCommentOpen(false)} color="secondary" autoFocus>
             Cancel
           </Button>,
-          <Button key={'save'} onClick={savePhotoComment} color='primary'>
+          <Button key="save" onClick={savePhotoComment} color="primary">
             Save
           </Button>,
         ]}
       />
 
       <Button
-        variant='contained'
+        variant="contained"
         classes={{ root: styles.fixedBtn }}
         onClick={() => {
           if (selectedPhotos != null) {
             if (
-              (collection.minSelect.required &&
-                selectedPhotos < collection.minSelect.goal) ||
-              (collection.maxSelect.required &&
-                selectedPhotos > collection.maxSelect.goal)
+              (collection.minSelect.required && selectedPhotos < collection.minSelect.goal) ||
+              (collection.maxSelect.required && selectedPhotos > collection.maxSelect.goal)
             ) {
-              return setConfirmForbidDialogOpen(true);
+              return setConfirmForbidDialogOpen(true)
             }
-            return setConfirmDialogOpen(true);
+            return setConfirmDialogOpen(true)
           }
         }}
       >
@@ -218,7 +199,7 @@ const SelectionView: React.FC<SelectionViewProps> = ({
         setConfirmDialogOpen={setConfirmDialogOpen}
       />
     </div>
-  );
-};
+  )
+}
 
-export default SelectionView;
+export default SelectionView

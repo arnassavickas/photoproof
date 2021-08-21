@@ -1,8 +1,6 @@
-import React, { useState, Fragment } from 'react';
-import styles from './styles.module.scss';
-import { Link, useHistory } from 'react-router-dom';
-import { generateNewCollection } from '../../firebase';
-import { useForm, Controller } from 'react-hook-form';
+import React, { useState } from 'react'
+import { Link, useHistory } from 'react-router-dom'
+import { useForm, Controller } from 'react-hook-form'
 import {
   Checkbox,
   Typography,
@@ -11,33 +9,30 @@ import {
   FormControlLabel,
   LinearProgress,
   Box,
-} from '@material-ui/core';
-import { DropzoneArea } from 'material-ui-dropzone';
-import { NewCollectionInputs } from '../../types';
-import { useSnackbar } from 'notistack';
+} from '@material-ui/core'
+import { DropzoneArea } from 'material-ui-dropzone'
+import { useSnackbar } from 'notistack'
+
+import { NewCollectionInputs } from '../../types'
+import { generateNewCollection } from '../../firebase'
+import styles from './styles.module.scss'
 
 const NewCollection: React.FC = () => {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    errors,
-    getValues,
-    control,
-  } = useForm<NewCollectionInputs>();
-  const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
+  const { register, handleSubmit, watch, errors, getValues, control } =
+    useForm<NewCollectionInputs>()
+  const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
 
-  const history = useHistory();
+  const history = useHistory()
 
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar()
 
-  const minToggle = watch('minSelectRequired');
-  const maxToggle = watch('maxSelectRequired');
+  const minToggle = watch('minSelectRequired')
+  const maxToggle = watch('maxSelectRequired')
 
   const onSubmit = async (data: NewCollectionInputs) => {
     try {
-      setUploading(true);
+      setUploading(true)
       const collectionId = await generateNewCollection(
         {
           title: data.title,
@@ -52,55 +47,50 @@ const NewCollection: React.FC = () => {
           allowComments: data.allowComments,
         },
         data.files,
-        setUploadProgress
-      );
-      setUploading(false);
-      history.push(`/edit/${collectionId}`);
+        setUploadProgress,
+      )
+      setUploading(false)
+      history.push(`/edit/${collectionId}`)
     } catch (err) {
       enqueueSnackbar('ERROR: Creating new collection failed', {
         variant: 'error',
-      });
+      })
     }
-  };
+  }
 
   return (
     <div>
-      <Typography variant='h4'>New collection</Typography>
+      <Typography variant="h4">New collection</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <div className='horizontalButtons'>
-            <Button
-              to='/'
-              component={Link}
-              color='secondary'
-              variant='contained'
-            >
+          <div className="horizontalButtons">
+            <Button to="/" component={Link} color="secondary" variant="contained">
               Cancel
             </Button>
             <Button
-              aria-label='create'
-              id='create'
-              color='primary'
-              variant='contained'
-              type='submit'
+              aria-label="create"
+              id="create"
+              color="primary"
+              variant="contained"
+              type="submit"
             >
               Create
             </Button>
           </div>
           {uploading ? (
-            <Box data-testid='uploading' p={'3px'}>
-              <LinearProgress variant='determinate' value={uploadProgress} />
+            <Box data-testid="uploading" p="3px">
+              <LinearProgress variant="determinate" value={uploadProgress} />
             </Box>
           ) : (
-            <Box p={'5px'}></Box>
+            <Box p="5px" />
           )}
         </div>
         <TextField
-          id='title'
-          name='title'
+          id="title"
+          name="title"
           inputRef={register({ required: true, maxLength: 50 })}
-          variant='outlined'
-          label='Title'
+          variant="outlined"
+          label="Title"
           error={!!errors.title}
           helperText={errors.title ? 'Title is required' : ' '}
         />
@@ -110,23 +100,23 @@ const NewCollection: React.FC = () => {
         </div> */}
         <div>
           <FormControlLabel
-            control={<Checkbox name='allowComments' inputRef={register} />}
-            label='Allow comments'
+            control={<Checkbox name="allowComments" inputRef={register} />}
+            label="Allow comments"
           />
         </div>
-        <Typography variant='body1'>selection goals:</Typography>
+        <Typography variant="body1">selection goals:</Typography>
         <div>
           <FormControlLabel
-            control={<Checkbox name='minSelectRequired' inputRef={register} />}
-            label='minimum'
+            control={<Checkbox name="minSelectRequired" inputRef={register} />}
+            label="minimum"
           />
           <div style={{ display: minToggle ? 'inline' : 'none' }}>
             <TextField
-              data-testid='minSelectGoal'
-              name='minSelectGoal'
-              type='number'
-              variant='outlined'
-              size='small'
+              data-testid="minSelectGoal"
+              name="minSelectGoal"
+              type="number"
+              variant="outlined"
+              size="small"
               InputProps={{
                 inputProps: {
                   max: 999,
@@ -138,30 +128,27 @@ const NewCollection: React.FC = () => {
                 max: '999',
                 valueAsNumber: true,
                 validate: {
-                  lowerThanMax: (value) =>
-                    !getValues('maxSelectRequired') ||
-                    getValues('maxSelectGoal') >= value,
+                  lowerThanMax: value =>
+                    !getValues('maxSelectRequired') || getValues('maxSelectGoal') >= value,
                 },
               })}
               error={!!errors.minSelectGoal}
-              helperText={
-                errors.minSelectGoal && 'Must be higher than maximum value'
-              }
+              helperText={errors.minSelectGoal && 'Must be higher than maximum value'}
             />
           </div>
         </div>
         <div>
           <FormControlLabel
-            control={<Checkbox name='maxSelectRequired' inputRef={register} />}
-            label='maximum'
+            control={<Checkbox name="maxSelectRequired" inputRef={register} />}
+            label="maximum"
           />
           <div style={{ display: maxToggle ? 'inline' : 'none' }}>
             <TextField
-              data-testid='maxSelectGoal'
-              name='maxSelectGoal'
-              type='number'
-              variant='outlined'
-              size='small'
+              data-testid="maxSelectGoal"
+              name="maxSelectGoal"
+              type="number"
+              variant="outlined"
+              size="small"
               InputProps={{
                 inputProps: {
                   max: 999,
@@ -173,44 +160,37 @@ const NewCollection: React.FC = () => {
                 max: '999',
                 valueAsNumber: true,
                 validate: {
-                  higherThanMin: (value) =>
-                    !getValues('minSelectRequired') ||
-                    getValues('minSelectGoal') <= value,
+                  higherThanMin: value =>
+                    !getValues('minSelectRequired') || getValues('minSelectGoal') <= value,
                 },
               })}
               error={!!errors.maxSelectGoal}
-              helperText={
-                errors.maxSelectGoal && 'Must be higher than minimum value'
-              }
+              helperText={errors.maxSelectGoal && 'Must be higher than minimum value'}
             />
           </div>
         </div>
         <div className={styles.dropzoneError}>
-          <Typography variant='body1'>
-            {errors.files ? (
-              'Images are required'
-            ) : (
-              <Fragment>&#8203;</Fragment>
-            )}
+          <Typography variant="body1">
+            {errors.files ? 'Images are required' : <>&#8203;</>}
           </Typography>
         </div>
         <Controller
-          name='files'
+          name="files"
           control={control}
           defaultValue={[]}
           rules={{
             validate: {
-              notEmpty: (array) => {
-                return array.length > 0;
+              notEmpty: array => {
+                return array.length > 0
               },
             },
           }}
           render={({ onChange }) => (
             <DropzoneArea
               acceptedFiles={['image/jpeg']}
-              dropzoneText={'Drop images or click to upload here'}
-              onChange={(files) => {
-                return onChange([...files]);
+              dropzoneText="Drop images or click to upload here"
+              onChange={files => {
+                return onChange([...files])
               }}
               filesLimit={999}
               previewGridClasses={{
@@ -224,17 +204,17 @@ const NewCollection: React.FC = () => {
               }}
               showAlerts={false}
               showPreviewsInDropzone={false}
-              showPreviews={true}
-              showFileNamesInPreview={true}
-              dropzoneClass={`dropzoneClass ${
-                errors.files && styles.dropzoneErrorBorder
-              }`}
+              showPreviews
+              showFileNamesInPreview
+              dropzoneClass={`dropzoneClass ${errors.files && styles.dropzoneErrorBorder}`}
+              // @ts-ignore data-testid should be passable
+              inputProps={{ 'data-testid': 'dropzone-input' }}
             />
           )}
         />
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default NewCollection;
+export default NewCollection

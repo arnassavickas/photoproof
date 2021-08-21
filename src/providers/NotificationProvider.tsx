@@ -1,7 +1,7 @@
-import React from 'react';
-import { SnackbarProvider } from 'notistack';
-import { Button, Slide } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import React from 'react'
+import { SnackbarProvider } from 'notistack'
+import { Button, Slide } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles({
   success: {
@@ -37,21 +37,21 @@ const useStyles = makeStyles({
       },
     },
   },
-});
+})
 
 interface NotificationProviderProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
-const NotificationProvider: React.FC<NotificationProviderProps> = ({
-  children,
-}) => {
-  const classes = useStyles();
+const NotificationProvider: React.FC<NotificationProviderProps> = ({ children }) => {
+  const classes = useStyles()
 
-  const notistackRef = React.createRef() as React.RefObject<SnackbarProvider>;
+  const notistackRef = React.createRef() as React.RefObject<SnackbarProvider>
   const onClickDismiss = (key: React.ReactText) => () => {
-    (notistackRef.current as any).closeSnackbar(key);
-  };
+    if (notistackRef.current) {
+      notistackRef.current.closeSnackbar(key)
+    }
+  }
 
   return (
     <SnackbarProvider
@@ -69,13 +69,13 @@ const NotificationProvider: React.FC<NotificationProviderProps> = ({
         vertical: 'bottom',
         horizontal: 'left',
       }}
-      action={(key) => <Button onClick={onClickDismiss(key)}>✕</Button>}
-      // @ts-ignore
+      action={key => <Button onClick={onClickDismiss(key)}>✕</Button>}
+      // @ts-ignore bug in package
       TransitionComponent={Slide}
     >
       {children}
     </SnackbarProvider>
-  );
-};
+  )
+}
 
-export default NotificationProvider;
+export default NotificationProvider

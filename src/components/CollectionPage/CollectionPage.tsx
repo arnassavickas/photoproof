@@ -1,68 +1,69 @@
-import React, { useEffect, useState } from 'react';
-import styles from './styles.module.scss';
-import { useParams, useHistory } from 'react-router-dom';
-import { Collection, Photo } from '../../types';
-import { getSingleCollection } from '../../firebase';
-import { Backdrop, CircularProgress, Typography } from '@material-ui/core';
-import LockIcon from '@material-ui/icons/Lock';
+import React, { useEffect, useState } from 'react'
+import { useParams, useHistory } from 'react-router-dom'
+import { Backdrop, CircularProgress, Typography } from '@material-ui/core'
 
-import LockedView from './LockedView/LockedView';
-import SelectionView from './SelectionView/SelectionView';
-import FilterButtons from '../FilterButtons/FilterButtons';
+import LockIcon from '@material-ui/icons/Lock'
+
+import styles from './styles.module.scss'
+import { Collection, Photo } from '../../types'
+import { getSingleCollection } from '../../firebase'
+
+import LockedView from './LockedView/LockedView'
+import SelectionView from './SelectionView/SelectionView'
+import FilterButtons from '../FilterButtons/FilterButtons'
 
 const CollectionPage: React.FC = () => {
-  const { id: collectionId } = useParams<{ id: string }>();
-  const [collection, setCollection] = useState<Collection | null>(null);
-  const [filteredPhotos, setFilteredPhotos] = useState<Photo[]>([]);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [photoIndex, setPhotoIndex] = useState(0);
-  const [commentTextarea, setCommentTextarea] = useState('');
-  const [commentOpen, setCommentOpen] = useState(false);
-  const history = useHistory();
+  const { id: collectionId } = useParams<{ id: string }>()
+  const [collection, setCollection] = useState<Collection | null>(null)
+  const [filteredPhotos, setFilteredPhotos] = useState<Photo[]>([])
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [photoIndex, setPhotoIndex] = useState(0)
+  const [commentTextarea, setCommentTextarea] = useState('')
+  const [commentOpen, setCommentOpen] = useState(false)
+  const history = useHistory()
 
   useEffect(() => {
     getSingleCollection(collectionId)
-      .then((collection) => {
-        setCollection(collection);
-        setFilteredPhotos(collection.photos);
+      .then(collection => {
+        setCollection(collection)
+        setFilteredPhotos(collection.photos)
       })
-      .catch((err) => {
-        history.push('/error');
-      });
+      .catch(err => {
+        history.push('/error')
+      })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collectionId]);
+  }, [collectionId])
 
   const openCommentModal = (index?: number) => {
-    setCommentOpen(true);
+    setCommentOpen(true)
     if (filteredPhotos) {
       if (index) {
-        setPhotoIndex(index);
-        setCommentTextarea(filteredPhotos[index].comment);
+        setPhotoIndex(index)
+        setCommentTextarea(filteredPhotos[index].comment)
       } else {
-        setCommentTextarea(filteredPhotos[photoIndex].comment);
+        setCommentTextarea(filteredPhotos[photoIndex].comment)
       }
     }
-  };
+  }
 
   const openLightbox = (index: number) => {
-    setPhotoIndex(index);
-    setLightboxOpen(true);
-  };
+    setPhotoIndex(index)
+    setLightboxOpen(true)
+  }
 
-  const selectedPhotos = collection?.photos.filter((photo) => photo.selected)
-    .length;
+  const selectedPhotos = collection?.photos.filter(photo => photo.selected).length
 
   if (collection === null) {
     return (
-      <Backdrop open={true}>
-        <CircularProgress color='inherit' />.
+      <Backdrop open>
+        <CircularProgress color="inherit" />.
       </Backdrop>
-    );
+    )
   }
 
   return (
     <div>
-      <Typography variant='h4'>
+      <Typography variant="h4">
         {collection.title} {collection.status !== 'selecting' && <LockIcon />}
       </Typography>
       <div>
@@ -70,16 +71,12 @@ const CollectionPage: React.FC = () => {
           <div className={styles.selectedDetails}>
             {collection.minSelect.required && collection.maxSelect.required ? (
               <Typography>
-                You must select from {collection.minSelect.goal} to{' '}
-                {collection.maxSelect.goal} photos
+                You must select from {collection.minSelect.goal} to {collection.maxSelect.goal}{' '}
+                photos
               </Typography>
-            ) : collection.minSelect.required &&
-              !collection.maxSelect.required ? (
-              <Typography>
-                You must select at least {collection.minSelect.goal} photos
-              </Typography>
-            ) : !collection.minSelect.required &&
-              collection.maxSelect.required ? (
+            ) : collection.minSelect.required && !collection.maxSelect.required ? (
+              <Typography>You must select at least {collection.minSelect.goal} photos</Typography>
+            ) : !collection.minSelect.required && collection.maxSelect.required ? (
               <Typography>
                 You must select a maximum of {collection.maxSelect.goal} photos
               </Typography>
@@ -134,7 +131,7 @@ const CollectionPage: React.FC = () => {
         />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default CollectionPage;
+export default CollectionPage

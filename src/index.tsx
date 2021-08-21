@@ -1,11 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-import './index.scss';
-import { ThemeProvider } from '@material-ui/core/styles';
-import { theme } from './theme';
-import { CssBaseline } from '@material-ui/core';
-import NotificationProvider from './providers/NotificationProvider';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { CssBaseline } from '@material-ui/core'
+import { ThemeProvider } from '@material-ui/core/styles'
+
+import App from './App'
+
+import './index.scss'
+
+import { theme } from './theme'
+
+import NotificationProvider from './providers/NotificationProvider'
 
 ReactDOM.render(
   <React.StrictMode>
@@ -16,5 +20,5 @@ ReactDOM.render(
       </NotificationProvider>
     </ThemeProvider>
   </React.StrictMode>,
-  document.getElementById('root')
-);
+  document.getElementById('root'),
+)

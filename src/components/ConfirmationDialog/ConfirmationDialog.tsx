@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
   Dialog,
   DialogTitle,
@@ -8,11 +8,11 @@ import {
   DialogActions,
   Button,
   IconButton,
-} from '@material-ui/core';
-import styles from './styles.module.scss';
-import { ConfirmationDialogProps } from '../../types';
+} from '@material-ui/core'
+import CloseIcon from '@material-ui/icons/Close'
 
-import CloseIcon from '@material-ui/icons/Close';
+import styles from './styles.module.scss'
+import { ConfirmationDialogProps } from '../../types'
 
 const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   dialogOpen,
@@ -24,33 +24,24 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
 }) => {
   return (
     <Dialog open={dialogOpen}>
-      <DialogTitle id='alert-dialog-title'>{dialogTitle}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">{dialogTitle}</DialogTitle>
       <IconButton onClick={onClickCancel} className={styles.exitBtn}>
         <CloseIcon />
       </IconButton>
       <DialogContent>
-        <DialogContentText id='alert-dialog-description'>
-          {dialogContentText}
-        </DialogContentText>
-        {progress ? (
-          <LinearProgress variant='determinate' value={progress} />
-        ) : null}
+        <DialogContentText id="alert-dialog-description">{dialogContentText}</DialogContentText>
+        {progress ? <LinearProgress variant="determinate" value={progress} /> : null}
       </DialogContent>
       <DialogActions>
-        <Button
-          disabled={!!progress}
-          onClick={onClickCancel}
-          color='primary'
-          autoFocus
-        >
+        <Button disabled={!!progress} onClick={onClickCancel} color="primary" autoFocus>
           Cancel
         </Button>
-        <Button disabled={!!progress} onClick={onClickAgree} color='secondary'>
+        <Button disabled={!!progress} onClick={onClickAgree} color="secondary">
           Yes
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}
 
-export default ConfirmationDialog;
+export default ConfirmationDialog
