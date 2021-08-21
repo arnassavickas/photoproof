@@ -43,16 +43,6 @@ module.exports = {
       },
     },
     {
-      files: ['**/types-ts/global.d.ts', '**/types-ts/index.d.ts'],
-      rules: {
-        'import/no-unresolved': 'off',
-        'import/first': 'off',
-        'max-classes-per-file': 'off',
-        'no-undef': 'off',
-        '@typescript-eslint/no-unused-vars': 'off',
-      },
-    },
-    {
       files: ['*.test.ts', '*.test.tsx'],
       excludedFiles: ['app/components/@vinted/**'], // components/@vinted holds obsolete DS components
       parser: '@typescript-eslint/parser',
