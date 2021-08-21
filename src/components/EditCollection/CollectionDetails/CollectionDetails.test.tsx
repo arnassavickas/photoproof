@@ -24,7 +24,9 @@ const props: CollectionDetailsProps = {
 
 describe('<PhotoTableToolbar/> selecting', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {})
+    jest.spyOn(console, 'error').mockImplementation(() => {
+      //
+    })
   })
 
   test('clicking "edit" button calls changeCollectionStatus one time', async () => {
@@ -58,7 +60,9 @@ describe('<PhotoTableToolbar/> selecting', () => {
 
 describe('<PhotoTableToolbar/> confirmed', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {})
+    jest.spyOn(console, 'error').mockImplementation(() => {
+      //
+    })
   })
   beforeAll(() => {
     props.collection.status = 'confirmed'
@@ -82,7 +86,9 @@ describe('<PhotoTableToolbar/> confirmed', () => {
   test('clicking "copy selections" calls navigator.clipboard.writeText one time', async () => {
     Object.assign(navigator, {
       clipboard: {
-        writeText: () => {},
+        writeText: () => {
+          //
+        },
       },
     })
     jest.spyOn(navigator.clipboard, 'writeText')
@@ -104,7 +110,9 @@ describe('<PhotoTableToolbar/> confirmed', () => {
 
 describe('<PhotoTableToolbar/> editing', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {})
+    jest.spyOn(console, 'error').mockImplementation(() => {
+      //
+    })
   })
   beforeAll(() => {
     props.collection.status = 'editing'
@@ -144,9 +152,7 @@ describe('<PhotoTableToolbar/> editing', () => {
 
     const minSelectRequired = screen.getByLabelText(/minimum/i)
     user.click(minSelectRequired)
-    const maxSelectGoal = screen
-      .getByTestId('maxSelectGoal')
-      .querySelector('input') as HTMLInputElement
+    const maxSelectGoal = screen.getByTestId('maxSelectGoal')
     user.clear(maxSelectGoal)
     user.type(maxSelectGoal, '4')
 
@@ -155,22 +161,22 @@ describe('<PhotoTableToolbar/> editing', () => {
 
     await waitFor(() => {
       expect(updateSettings).toHaveBeenCalledTimes(1)
-      expect(updateSettings).toHaveBeenCalledWith(
-        {
-          title: 'new title',
-          minSelect: {
-            required: false,
-            goal: 1,
-          },
-          maxSelect: {
-            required: true,
-            goal: 4,
-          },
-          allowComments: false,
-        },
-        'collectionId',
-      )
     })
+    expect(updateSettings).toHaveBeenCalledWith(
+      {
+        title: 'new title',
+        minSelect: {
+          required: false,
+          goal: 1,
+        },
+        maxSelect: {
+          required: true,
+          goal: 4,
+        },
+        allowComments: false,
+      },
+      'collectionId',
+    )
   })
 
   test('clicking "copy selections" calls navigator.clipboard.writeText one time', async () => {

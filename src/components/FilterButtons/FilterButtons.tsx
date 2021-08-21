@@ -30,20 +30,32 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({
     return { all, selected, notSelected }
   })()
 
+  const handleAllFilter = () => {
+    setFilteredPhotos(collection.photos)
+  }
+
+  const handleSelectedFiler = () => {
+    const selectedPhotos = collection.photos.filter(photo => photo.selected)
+    modifyLightbox(selectedPhotos)
+    setFilteredPhotos(selectedPhotos)
+  }
+
+  const handleUnselectedFilter = () => {
+    const unselectedPhotos = collection.photos.filter(photo => !photo.selected)
+    modifyLightbox(unselectedPhotos)
+    setFilteredPhotos(unselectedPhotos)
+  }
+
   useEffect(() => {
     switch (filter) {
       case 'all':
-        setFilteredPhotos(collection.photos)
+        handleAllFilter()
         break
       case 'selected':
-        const selectedPhotos = collection.photos.filter(photo => photo.selected)
-        modifyLightbox(selectedPhotos)
-        setFilteredPhotos(selectedPhotos)
+        handleSelectedFiler()
         break
       case 'unselected':
-        const unselectedPhotos = collection.photos.filter(photo => !photo.selected)
-        modifyLightbox(unselectedPhotos)
-        setFilteredPhotos(unselectedPhotos)
+        handleUnselectedFilter()
         break
       default:
         break

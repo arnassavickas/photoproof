@@ -25,7 +25,7 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
 }) => {
   const { enqueueSnackbar } = useSnackbar()
 
-  const selectPhoto = (photoId: string) => async (event: any) => {
+  const selectPhoto = (photoId: string) => async () => {
     try {
       const clickedPhoto = collection?.photos.find(photo => photo.id === photoId)
       if (clickedPhoto && collection && setCollection && collectionId) {

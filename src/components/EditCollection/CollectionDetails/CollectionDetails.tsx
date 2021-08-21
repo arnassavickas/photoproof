@@ -320,8 +320,8 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
             />
             <div style={{ display: maxToggle ? 'inline' : 'none' }}>
               <TextField
-                data-testid="maxSelectGoal"
                 name="maxSelectGoal"
+                label="maxSelectGoal"
                 type="number"
                 variant="outlined"
                 size="small"
@@ -329,6 +329,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
                   inputProps: {
                     max: 999,
                     min: 1,
+                    'data-testid': 'maxSelectGoal',
                   },
                 }}
                 inputRef={registerSettings({

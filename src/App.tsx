@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { Container, Backdrop, CircularProgress, Button, Box } from '@material-ui/core'
+import { useSnackbar } from 'notistack'
 
 import styles from './styles.module.scss'
 
 import 'react-image-lightbox/style.css'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import Dashboard from './components/Dashboard/Dashboard'
 import NewCollection from './components/NewCollection/NewCollection'
@@ -14,9 +16,6 @@ import EditCollection from './components/EditCollection/EditCollection'
 import ErrorPage from './components/ErrorPage/ErrorPage'
 import { auth, getSiteSettings } from './firebase'
 
-import { Container, Backdrop, CircularProgress, Button, Box } from '@material-ui/core'
-import { useSnackbar } from 'notistack'
-
 function App() {
   const [user, setUser] = useState<null | string>(null)
   const [loading, setLoading] = useState(true)
@@ -25,7 +24,7 @@ function App() {
   const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
-    auth.onAuthStateChanged(function (user) {
+    auth.onAuthStateChanged(user => {
       if (user) {
         setUser(user.uid)
       } else {
@@ -43,7 +42,7 @@ function App() {
           setLogoWidth(settings.logoWidth)
         }
       })
-      .catch(err => {
+      .catch(() => {
         enqueueSnackbar('ERROR: Getting site settings failed', {
           variant: 'error',
           persist: true,

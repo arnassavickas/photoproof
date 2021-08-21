@@ -178,6 +178,7 @@ const SelectionView: React.FC<SelectionViewProps> = ({
             }
             return setConfirmDialogOpen(true)
           }
+          return null
         }}
       >
         confirm {selectedPhotos} selections

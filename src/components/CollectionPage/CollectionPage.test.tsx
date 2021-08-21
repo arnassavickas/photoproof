@@ -14,7 +14,9 @@ const mockedGetSingleCollection = getSingleCollection as any
 
 describe('<CollectionPage/>', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {})
+    jest.spyOn(console, 'error').mockImplementation(() => {
+      //
+    })
   })
 
   test('getSingleCollection is called with correct id', async () => {
@@ -45,9 +47,9 @@ describe('<CollectionPage/>', () => {
       </Router>,
     )
 
-    await screen.findByText('collection title')
-    await screen.findByText(/^selected 1/i)
-    await screen.findByText(/you must select from 1 to 2 photos/i)
+    expect(await screen.findByText('collection title')).toBeInTheDocument()
+    expect(await screen.findByText(/^selected 1/i)).toBeInTheDocument()
+    expect(await screen.findByText(/you must select from 1 to 2 photos/i)).toBeInTheDocument()
 
     collection.minSelect.required = false
 
@@ -59,7 +61,7 @@ describe('<CollectionPage/>', () => {
       </Router>,
     )
 
-    await screen.findByText(/you must select a maximum of 2 photos/i)
+    expect(await screen.findByText(/you must select a maximum of 2 photos/i)).toBeInTheDocument()
 
     collection.minSelect.required = true
     collection.maxSelect.required = false
@@ -72,7 +74,7 @@ describe('<CollectionPage/>', () => {
       </Router>,
     )
 
-    await screen.findByText(/you must select at least 1 photos/i)
+    expect(await screen.findByText(/you must select at least 1 photos/i)).toBeInTheDocument()
   })
 
   test('changing filter where no photos exist, shows text', async () => {
@@ -89,12 +91,12 @@ describe('<CollectionPage/>', () => {
       </Router>,
     )
 
-    await screen.findByText(/^selected 0/i)
+    expect(await screen.findByText(/^selected 0/i)).toBeInTheDocument()
 
     const selectedBtn = screen.getByText(/^selected/i)
     user.click(selectedBtn)
 
-    await screen.findByText(/no photos in this filter/i)
+    expect(await screen.findByText(/no photos in this filter/i)).toBeInTheDocument()
   })
 
   test('collection without photos shows text', async () => {
@@ -111,6 +113,6 @@ describe('<CollectionPage/>', () => {
       </Router>,
     )
 
-    await screen.findByText(/no photos in collection/i)
+    expect(await screen.findByText(/no photos in collection/i)).toBeInTheDocument()
   })
 })

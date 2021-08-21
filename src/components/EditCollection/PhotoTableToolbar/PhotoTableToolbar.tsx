@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import React from 'react'
 import { Toolbar, IconButton, Typography, Tooltip, Button } from '@material-ui/core'
 import { useSnackbar } from 'notistack'
@@ -25,6 +26,16 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
   setAddPhotosDialogOpen,
 }) => {
   const { enqueueSnackbar } = useSnackbar()
+
+  const resetDialog = () => {
+    setConfirmationDialogOpen(false)
+    setConfirmationDialogTitle('')
+    setConfirmationDialogContentText('')
+    setConfirmationDialogAgree(() => {
+      //
+    })
+    setProgress(0)
+  }
 
   const agreeDelete = async () => {
     try {
@@ -89,14 +100,6 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
     setConfirmationDialogTitle('Do you really want to reset all selections and comments?')
     setConfirmationDialogContentText('WARNING: Reset action cannot be reverted!')
     setConfirmationDialogAgree(() => agreeResetPhotos)
-  }
-
-  const resetDialog = () => {
-    setConfirmationDialogOpen(false)
-    setConfirmationDialogTitle('')
-    setConfirmationDialogContentText('')
-    setConfirmationDialogAgree(() => {})
-    setProgress(0)
   }
 
   return (

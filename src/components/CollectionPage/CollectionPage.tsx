@@ -28,7 +28,7 @@ const CollectionPage: React.FC = () => {
         setCollection(collection)
         setFilteredPhotos(collection.photos)
       })
-      .catch(err => {
+      .catch(() => {
         history.push('/error')
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -61,6 +61,40 @@ const CollectionPage: React.FC = () => {
     )
   }
 
+  const renderMustMessage = () => {
+    if (collection.minSelect.required && collection.maxSelect.required) {
+      return (
+        <Typography>
+          You must select from {collection.minSelect.goal} to {collection.maxSelect.goal} photos
+        </Typography>
+      )
+    }
+
+    if (collection.minSelect.required && !collection.maxSelect.required) {
+      return <Typography>You must select at least {collection.minSelect.goal} photos</Typography>
+    }
+
+    if (!collection.minSelect.required && collection.maxSelect.required) {
+      return (
+        <Typography>You must select a maximum of {collection.maxSelect.goal} photos</Typography>
+      )
+    }
+
+    return null
+  }
+
+  const renderWarningMessage = () => {
+    if (collection.photos.length === 0) {
+      return <div>no photos in collection</div>
+    }
+
+    if (filteredPhotos.length === 0) {
+      return <div>no photos in this filter</div>
+    }
+
+    return null
+  }
+
   return (
     <div>
       <Typography variant="h4">
@@ -68,20 +102,7 @@ const CollectionPage: React.FC = () => {
       </Typography>
       <div>
         <div className={styles.horizontal}>
-          <div className={styles.selectedDetails}>
-            {collection.minSelect.required && collection.maxSelect.required ? (
-              <Typography>
-                You must select from {collection.minSelect.goal} to {collection.maxSelect.goal}{' '}
-                photos
-              </Typography>
-            ) : collection.minSelect.required && !collection.maxSelect.required ? (
-              <Typography>You must select at least {collection.minSelect.goal} photos</Typography>
-            ) : !collection.minSelect.required && collection.maxSelect.required ? (
-              <Typography>
-                You must select a maximum of {collection.maxSelect.goal} photos
-              </Typography>
-            ) : null}
-          </div>
+          <div className={styles.selectedDetails}>{renderMustMessage()}</div>
           <FilterButtons
             collection={collection}
             setFilteredPhotos={setFilteredPhotos}
@@ -92,11 +113,7 @@ const CollectionPage: React.FC = () => {
           />
         </div>
       </div>
-      {collection.photos.length === 0 ? (
-        <div>no photos in collection</div>
-      ) : filteredPhotos.length === 0 ? (
-        <div>no photos in this filter</div>
-      ) : null}
+      {renderWarningMessage()}
       {collection.status === 'selecting' ? (
         <SelectionView
           collection={collection}
