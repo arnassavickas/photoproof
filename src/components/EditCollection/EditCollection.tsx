@@ -10,7 +10,7 @@ import MessageIcon from '@material-ui/icons/Message'
 import { useSnackbar } from 'notistack'
 
 import styles from './styles.module.scss'
-import { Photo, UiState } from '../../types'
+import { UiState } from '../../types'
 import { getSingleCollection } from '../../firebase'
 
 import ConfirmationDialog from '../ConfirmationDialog/ConfirmationDialog'
@@ -30,8 +30,8 @@ const EditCollection: React.FC = () => {
 
   const dispatch = useDispatch()
   const uiState = useSelector((state: RootState) => state.uiState.value)
+  const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
 
-  const [filteredPhotos, setFilteredPhotos] = useState<Photo[]>([])
   const [photoIndex, setPhotoIndex] = useState(0)
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [selected, setSelected] = useState<string[]>([])
@@ -54,7 +54,6 @@ const EditCollection: React.FC = () => {
     getSingleCollection(collectionId)
       .then(collection => {
         dispatch(setCollection(collection))
-        setFilteredPhotos(collection.photos)
         dispatch(setUiState(UiState.Success))
       })
       .catch(() => {

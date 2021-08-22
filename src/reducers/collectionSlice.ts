@@ -9,6 +9,7 @@ export interface CollectionState {
   data: Collection
   filter: Filter
   filteredPhotos: Collection['photos']
+  reorderPending: boolean
 }
 
 const initialState: CollectionState = {
@@ -25,6 +26,7 @@ const initialState: CollectionState = {
   },
   filter: 'all',
   filteredPhotos: [],
+  reorderPending: false,
 }
 
 const getFilteredPhotos = (filter: Filter, photos: Collection['photos']) => {
@@ -64,16 +66,22 @@ export const collectionSlice = createSlice({
       state.filteredPhotos = getFilteredPhotos(action.payload, state.data.photos)
     },
     changeOrder: (state, action: PayloadAction<{ source: number; destination: number }>) => {
-      state.data.photos = reorder(
+      state.reorderPending = true
+      const reorderedPhotos = reorder(
         state.data.photos,
         action.payload.source,
         action.payload.destination,
       )
+      state.data.photos = reorderedPhotos.map((photo, index) => ({ ...photo, index: index + 1 }))
       state.filteredPhotos = getFilteredPhotos(state.filter, state.data.photos)
+    },
+    setReorderPending: (state, action: PayloadAction<boolean>) => {
+      state.reorderPending = action.payload
     },
   },
 })
 
-export const { setCollection, setPhotoFilter, changeOrder } = collectionSlice.actions
+export const { setCollection, setPhotoFilter, changeOrder, setReorderPending } =
+  collectionSlice.actions
 
 export default collectionSlice.reducer

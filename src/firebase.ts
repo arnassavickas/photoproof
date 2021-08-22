@@ -30,7 +30,7 @@ const uploadPhotos = async (
   files: FileList,
   setUploadProgress: React.Dispatch<React.SetStateAction<number>>,
 ) => {
-  const photosArray: Omit<Photo, 'index'>[] = []
+  const photosArray: Photo[] = []
   const progressStep = 85 / files.length
   let progress = 10
 
@@ -56,6 +56,7 @@ const uploadPhotos = async (
     const webpThumbnailUrl = `${urlWithoutEnding}_400x700.webp?alt=media`
 
     photosArray.push({
+      index: null,
       id: uuid,
       filename: `${filenameWithoutExt}`,
       filenameNumber: Number(files[index].name.match(/\d+/)),
@@ -135,6 +136,18 @@ export const updateSettings = async (
     allowComments,
     status: 'selecting',
   })
+}
+
+export const reorderPhotos = async (photos: Photo[], collectionId: Collection['id']) => {
+  const photosRef = firestore.collection('collections').doc(collectionId).collection('photos')
+
+  const batch = firestore.batch()
+
+  photos.forEach(photo => {
+    batch.set(photosRef.doc(photo.id), photo)
+  })
+
+  await batch.commit()
 }
 
 export const changeSiteSettings = async (
@@ -399,6 +412,7 @@ export const getSingleCollection = async (collectionId: Collection['id']) => {
     .collection('collections')
     .doc(collectionId)
     .collection('photos')
+    .orderBy('index')
     .orderBy('dateTaken')
     .get()
   const photosArray: Photo[] = []

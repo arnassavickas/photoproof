@@ -16,7 +16,7 @@ export type SelectionGoal = {
 }
 
 export type Photo = {
-  index: number
+  index: number | null
   id: string
   filename: string
   filenameNumber: number

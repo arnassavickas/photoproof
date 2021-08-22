@@ -18,10 +18,10 @@ import { useSnackbar } from 'notistack'
 
 import styles from './styles.module.scss'
 import { Collection, CollectionDetailsProps } from '../../../types'
-import { changeCollectionStatus, updateSettings } from '../../../firebase'
+import { changeCollectionStatus, reorderPhotos, updateSettings } from '../../../firebase'
 import StatusIcon from '../../StatusIcon/StatusIcon'
 import { RootState } from '../../../store'
-import { setCollection } from '../../../reducers/collectionSlice'
+import { setCollection, setReorderPending } from '../../../reducers/collectionSlice'
 
 const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   collectionId,
@@ -36,6 +36,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
 
   const dispatch = useDispatch()
   const collection = useSelector((state: RootState) => state.collection.data)
+  const reorderPending = useSelector((state: RootState) => state.collection.reorderPending)
 
   const {
     register: registerSettings,
@@ -118,6 +119,12 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
         },
         collectionId,
       )
+
+      if (reorderPending) {
+        await reorderPhotos(collection.photos, collectionId)
+        dispatch(setReorderPending(false))
+      }
+
       if (collection) {
         dispatch(
           setCollection({
@@ -222,7 +229,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
         )}
 
         <Typography>
-          Client URL:{' '}
+          Client URL:
           <Tooltip title={copied ? 'copied!' : 'copy'}>
             <Button onClick={copyUrl}>
               {/* //TODO make subfolder Context or .env */}

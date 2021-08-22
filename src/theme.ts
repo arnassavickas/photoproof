@@ -95,6 +95,11 @@ export const theme = createMuiTheme({
         },
       },
     },
+    MuiIconButton: {
+      root: {
+        color: '#fff',
+      },
+    },
   },
 })
 export default theme
