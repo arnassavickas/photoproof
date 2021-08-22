@@ -3,11 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { UiState } from '../types'
 
-export interface CollectionState {
-  value: UiState
-}
-
-const initialState: CollectionState = {
+const initialState: { value: UiState } = {
   value: UiState.Pending,
 }
 

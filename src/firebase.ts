@@ -153,6 +153,7 @@ export const reorderPhotos = async (photos: Photo[], collectionId: Collection['i
 export const changeSiteSettings = async (
   files: FileList,
   logoWidth: number,
+  email: string,
   setUploadProgress: React.Dispatch<React.SetStateAction<number>>,
 ) => {
   const logoStorageRef = storage.ref(`logo`)
@@ -182,9 +183,9 @@ export const changeSiteSettings = async (
 
   const settings = firestore.collection('settings').doc('settings')
   if (files.length > 0) {
-    await settings.set({ logoUrl, logoWidth }, { merge: true })
+    await settings.set({ logoUrl, logoWidth, email }, { merge: true })
   } else {
-    await settings.set({ logoWidth }, { merge: true })
+    await settings.set({ logoWidth, email }, { merge: true })
   }
   setUploadProgress(100)
 }
@@ -262,9 +263,10 @@ export const confirmCollection = async (
 
   const mailRef = firestore.collection('mail').doc(collectionId)
 
+  const settings = await getSiteSettings()
+
   await mailRef.set({
-    // TODO change to actual on production
-    to: 'arnas.savi@gmail.com',
+    to: settings?.email,
     message: {
       subject: `${title} is confirmed`,
       text: `Collection '${title}' is confirmed. URL: ${url}`,

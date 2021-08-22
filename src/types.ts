@@ -138,12 +138,6 @@ export interface CommentDialogProps {
   disabled?: boolean
 }
 
-export interface SettingsProps {
-  logoWidth: number
-  setLogoWidth: React.Dispatch<React.SetStateAction<number>>
-  setLogoUrl: React.Dispatch<React.SetStateAction<string | undefined>>
-}
-
 export interface StatusIconProps {
   status: Collection['status'] | undefined
 }

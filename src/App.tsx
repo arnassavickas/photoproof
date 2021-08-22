@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { Container, Backdrop, CircularProgress, Button, Box } from '@material-ui/core'
 import { useSnackbar } from 'notistack'
@@ -15,12 +16,15 @@ import CollectionPage from './components/CollectionPage/CollectionPage'
 import EditCollection from './components/EditCollection/EditCollection'
 import ErrorPage from './components/ErrorPage/ErrorPage'
 import { auth, getSiteSettings } from './firebase'
+import { RootState } from './store'
+import { setSiteSettings } from './reducers/siteSettingsSlice'
 
 function App() {
   const [user, setUser] = useState<null | string>(null)
   const [loading, setLoading] = useState(true)
-  const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined)
-  const [logoWidth, setLogoWidth] = useState(100)
+
+  const dispatch = useDispatch()
+  const { logoUrl, logoWidth } = useSelector((state: RootState) => state.siteSettings)
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -39,8 +43,13 @@ function App() {
     getSiteSettings()
       .then(settings => {
         if (settings && settings.logoUrl && settings.logoWidth) {
-          setLogoUrl(settings.logoUrl)
-          setLogoWidth(settings.logoWidth)
+          dispatch(
+            setSiteSettings({
+              logoUrl: settings.logoUrl,
+              logoWidth: settings.logoWidth,
+              email: settings.email,
+            }),
+          )
         }
       })
       .catch(() => {
@@ -49,7 +58,7 @@ function App() {
           persist: true,
         })
       })
-  }, [enqueueSnackbar])
+  }, [dispatch, enqueueSnackbar])
 
   if (loading) {
     return (
@@ -76,16 +85,7 @@ function App() {
           <Switch>
             <Route path="/collection/:id" render={() => <CollectionPage />} />
             {!user ? <Route path="/" render={() => <SignIn />} /> : null}
-            <Route
-              path="/settings"
-              render={() => (
-                <Settings
-                  logoWidth={logoWidth}
-                  setLogoUrl={setLogoUrl}
-                  setLogoWidth={setLogoWidth}
-                />
-              )}
-            />
+            <Route path="/settings" render={() => <Settings />} />
             <Route path="/new" render={() => <NewCollection />} />
             <Route path="/edit/:id" render={() => <EditCollection />} />
             <Route exact path="/" render={() => <Dashboard />} />
