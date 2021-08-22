@@ -1,4 +1,5 @@
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   Checkbox,
   Table,
@@ -9,7 +10,7 @@ import {
   TableRow,
 } from '@material-ui/core'
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSnackbar } from 'notistack'
 
 import styles from './styles.module.scss'
 import { PhotoTableProps } from '../../../types'
@@ -18,7 +19,7 @@ import ImageLoader from '../../ImageLoader/ImageLoader'
 import DraggableComponent from './DraggableComponent/DraggableComponent'
 import DroppableComponent from './DroppableComponent/DroppableComponent'
 import { RootState } from '../../../store'
-import { setCollection } from '../../../reducers/collectionSlice'
+import { changeOrder } from '../../../reducers/collectionSlice'
 
 const PhotoTable: React.FC<PhotoTableProps> = ({
   selected,
@@ -29,6 +30,9 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
   const dispatch = useDispatch()
   const collection = useSelector((state: RootState) => state.collection.data)
   const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
+  const filter = useSelector((state: RootState) => state.collection.filter)
+
+  const { enqueueSnackbar } = useSnackbar()
 
   const openLightbox = (index: number) => () => {
     setPhotoIndex(index)
@@ -65,28 +69,23 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1
 
-  const reorder = <T,>(list: T[], startIndex: number, endIndex: number): T[] => {
-    const result = Array.from(list)
-    const [removed] = result.splice(startIndex, 1)
-    result.splice(endIndex, 0, removed)
-
-    return result
-  }
-
   const onDragEnd = (result: { destination: { index: number }; source: { index: number } }) => {
-    // dropped outside the list
     if (!result.destination) {
       return
     }
 
-    // console.log(`dragEnd ${result.source.index} to  ${result.destination.index}`)
-
-    dispatch(
-      setCollection({
-        ...collection,
-        photos: reorder(collection.photos, result.source.index, result.destination.index),
-      }),
-    )
+    if (filter !== 'all') {
+      enqueueSnackbar('Reordering is only allowed when filter is "ALL"', {
+        variant: 'warning',
+      })
+    } else {
+      dispatch(
+        changeOrder({
+          source: result.source.index,
+          destination: result.destination.index,
+        }),
+      )
+    }
   }
 
   return (

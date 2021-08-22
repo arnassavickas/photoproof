@@ -13,6 +13,8 @@ import SelectionView from './SelectionView/SelectionView'
 import FilterButtons from '../FilterButtons/FilterButtons'
 import { RootState } from '../../store'
 import { setCollection } from '../../reducers/collectionSlice'
+import { setUiState } from '../../reducers/uiStateSlice'
+import { UiState } from '../../types'
 
 const CollectionPage: React.FC = () => {
   const { id: collectionId } = useParams<{ id: string }>()
@@ -32,6 +34,7 @@ const CollectionPage: React.FC = () => {
         dispatch(setCollection(collection))
       })
       .catch(() => {
+        dispatch(setUiState(UiState.Idle))
         history.push('/error')
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -61,6 +61,7 @@ const EditCollection: React.FC = () => {
         enqueueSnackbar('ERROR: Getting collection failed', {
           variant: 'error',
         })
+        dispatch(setUiState(UiState.Idle))
       })
   }, [collectionId, dispatch, enqueueSnackbar])
 
