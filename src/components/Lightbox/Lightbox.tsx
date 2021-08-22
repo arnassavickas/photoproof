@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 
 // @ts-ignore always returns boolean
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -8,15 +9,17 @@ import { Typography } from '@material-ui/core'
 
 import styles from './styles.module.scss'
 import { LightboxProps } from '../../types'
+import { RootState } from '../../store'
 
 const LightboxComponent: React.FC<LightboxProps> = ({
-  filteredPhotos,
   lightboxOpen,
   setLightboxOpen,
   lightboxIndex,
   setLightboxIndex,
   toolbarButtons,
 }) => {
+  const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
+
   useEffect(() => {
     if (window.innerHeight < document.body.clientHeight) {
       if (lightboxOpen) {

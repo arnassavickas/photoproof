@@ -1,32 +1,35 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import { Backdrop, CircularProgress, Typography } from '@material-ui/core'
 
 import LockIcon from '@material-ui/icons/Lock'
 
 import styles from './styles.module.scss'
-import { Collection, Photo } from '../../types'
 import { getSingleCollection } from '../../firebase'
 
 import LockedView from './LockedView/LockedView'
 import SelectionView from './SelectionView/SelectionView'
 import FilterButtons from '../FilterButtons/FilterButtons'
+import { RootState } from '../../store'
+import { setCollection } from '../../reducers/collectionSlice'
 
 const CollectionPage: React.FC = () => {
   const { id: collectionId } = useParams<{ id: string }>()
-  const [collection, setCollection] = useState<Collection | null>(null)
-  const [filteredPhotos, setFilteredPhotos] = useState<Photo[]>([])
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [photoIndex, setPhotoIndex] = useState(0)
   const [commentTextarea, setCommentTextarea] = useState('')
   const [commentOpen, setCommentOpen] = useState(false)
   const history = useHistory()
 
+  const dispatch = useDispatch()
+  const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
+  const collection = useSelector((state: RootState) => state.collection.data)
+
   useEffect(() => {
     getSingleCollection(collectionId)
       .then(collection => {
-        setCollection(collection)
-        setFilteredPhotos(collection.photos)
+        dispatch(setCollection(collection))
       })
       .catch(() => {
         history.push('/error')
@@ -105,7 +108,6 @@ const CollectionPage: React.FC = () => {
           <div className={styles.selectedDetails}>{renderMustMessage()}</div>
           <FilterButtons
             collection={collection}
-            setFilteredPhotos={setFilteredPhotos}
             modifyLightbox
             setLightboxOpen={setLightboxOpen}
             photoIndex={photoIndex}
@@ -116,10 +118,7 @@ const CollectionPage: React.FC = () => {
       {renderWarningMessage()}
       {collection.status === 'selecting' ? (
         <SelectionView
-          collection={collection}
-          setCollection={setCollection}
           collectionId={collectionId}
-          filteredPhotos={filteredPhotos}
           lightboxOpen={lightboxOpen}
           setLightboxOpen={setLightboxOpen}
           openLightbox={openLightbox}
@@ -134,8 +133,6 @@ const CollectionPage: React.FC = () => {
         />
       ) : (
         <LockedView
-          collection={collection}
-          filteredPhotos={filteredPhotos}
           lightboxOpen={lightboxOpen}
           setLightboxOpen={setLightboxOpen}
           openLightbox={openLightbox}

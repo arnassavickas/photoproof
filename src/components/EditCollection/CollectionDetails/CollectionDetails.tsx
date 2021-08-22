@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   Checkbox,
@@ -10,6 +10,7 @@ import {
   Paper,
   Box,
 } from '@material-ui/core'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { useForm, Controller } from 'react-hook-form'
 
@@ -19,11 +20,11 @@ import styles from './styles.module.scss'
 import { Collection, CollectionDetailsProps } from '../../../types'
 import { changeCollectionStatus, updateSettings } from '../../../firebase'
 import StatusIcon from '../../StatusIcon/StatusIcon'
+import { RootState } from '../../../store'
+import { setCollection } from '../../../reducers/collectionSlice'
 
 const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   collectionId,
-  collection,
-  setCollection,
   setConfirmationDialogOpen,
   setConfirmationDialogTitle,
   setConfirmationDialogContentText,
@@ -33,12 +34,16 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   const [copied, setCopied] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
 
+  const dispatch = useDispatch()
+  const collection = useSelector((state: RootState) => state.collection.data)
+
   const {
     register: registerSettings,
     handleSubmit: handleSubmitSettings,
     watch: watchSettings,
     errors: errorsSettings,
     getValues: getValuesSettings,
+    setValue: setValueSettings,
     control: controlSettings,
   } = useForm({
     defaultValues: {
@@ -50,6 +55,15 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
       maxSelectGoal: collection.maxSelect.goal,
     },
   })
+
+  useEffect(() => {
+    setValueSettings('title', collection.title)
+    setValueSettings('allowComments', collection.allowComments)
+    setValueSettings('maxSelectRequired', collection.maxSelect.required)
+    setValueSettings('minSelectRequired', collection.minSelect.required)
+    setValueSettings('minSelectGoal', collection.minSelect.goal)
+    setValueSettings('maxSelectGoal', collection.maxSelect.goal)
+  }, [collection, setValueSettings])
 
   const minToggle = watchSettings('minSelectRequired')
   const maxToggle = watchSettings('maxSelectRequired')
@@ -77,7 +91,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
     try {
       await changeCollectionStatus(collectionId, status)
       if (collection) {
-        setCollection({ ...collection, status })
+        dispatch(setCollection({ ...collection, status }))
       }
       resetDialog()
     } catch (err) {
@@ -105,20 +119,22 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
         collectionId,
       )
       if (collection) {
-        setCollection({
-          ...collection,
-          title: data.title,
-          minSelect: {
-            required: data.minSelectRequired,
-            goal: data.minSelectGoal,
-          },
-          maxSelect: {
-            required: data.maxSelectRequired,
-            goal: data.maxSelectGoal,
-          },
-          allowComments: data.allowComments,
-          status: 'selecting',
-        })
+        dispatch(
+          setCollection({
+            ...collection,
+            title: data.title,
+            minSelect: {
+              required: data.minSelectRequired,
+              goal: data.minSelectGoal,
+            },
+            maxSelect: {
+              required: data.maxSelectRequired,
+              goal: data.maxSelectGoal,
+            },
+            allowComments: data.allowComments,
+            status: 'selecting',
+          }),
+        )
       }
     } catch (err) {
       enqueueSnackbar('ERROR: Saving collection settings failed', {
@@ -145,7 +161,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   const confirmEdit = () => {
     setConfirmationDialogOpen(true)
     setConfirmationDialogTitle('This collection is already confirmed')
-    setConfirmationDialogContentText('Do you really want to edit an already confirmed collection?')
+    setConfirmationDialogContentText('Do you really want to edit an already confirmed collection')
     setConfirmationDialogAgree(() => () => changeStatus('editing'))
   }
 
@@ -153,7 +169,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
     setConfirmationDialogOpen(true)
     setConfirmationDialogTitle('This collection is not yet confirmed')
     setConfirmationDialogContentText(
-      'Do you really want to copy selections from an unconfirmed collection?',
+      'Do you really want to copy selections from an unconfirmed collection',
     )
     setConfirmationDialogAgree(() => copySelections)
   }

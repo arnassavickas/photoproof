@@ -14,14 +14,17 @@ import {
 } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete'
 
+import { useDispatch, useSelector } from 'react-redux'
 import { useSnackbar } from 'notistack'
 
-import { Collection, Photo } from '../../../types'
+import { Collection, Photo, UiState } from '../../../types'
 import { getCollections, deleteCollection } from '../../../firebase'
 import styles from './styles.module.scss'
 
 import ConfirmationDialog from '../../ConfirmationDialog/ConfirmationDialog'
 import StatusIcon from '../../StatusIcon/StatusIcon'
+import { RootState } from '../../../store'
+import { setUiState } from '../../../reducers/uiStateSlice'
 
 const CollectionList: React.FC = () => {
   const [collections, setCollections] = useState<Collection[] | null>(null)
@@ -29,19 +32,27 @@ const CollectionList: React.FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [requestDeleteId, setRequestDeleteId] = useState('')
   const [requestDeleteName, setRequestDeleteName] = useState('')
+
   const history = useHistory()
+
   const { enqueueSnackbar } = useSnackbar()
+
+  const dispatch = useDispatch()
+  const uiState = useSelector((state: RootState) => state.uiState.value)
 
   useEffect(() => {
     getCollections()
-      .then(data => setCollections(data))
+      .then(data => {
+        setCollections(data)
+        dispatch(setUiState(UiState.Success))
+      })
       .catch(() => {
         enqueueSnackbar('ERROR: Getting collections failed. Please refresh the page', {
           variant: 'error',
           persist: true,
         })
       })
-  }, [enqueueSnackbar])
+  }, [dispatch, enqueueSnackbar])
 
   const selectedPhotos = (photos: Photo[]) => {
     return photos.filter(photo => photo.selected).length
@@ -82,13 +93,14 @@ const CollectionList: React.FC = () => {
     history.push(`edit/${collectionId}`)
   }
 
-  if (collections === null) {
+  if (uiState === UiState.Pending) {
     return (
       <Backdrop open>
         <CircularProgress color="inherit" />
       </Backdrop>
     )
   }
+
   return (
     <div className={styles.tableContainer}>
       <TableContainer>
@@ -103,7 +115,7 @@ const CollectionList: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {collections.map(collection => {
+            {collections?.map(collection => {
               return (
                 <TableRow key={collection.id} hover>
                   <TableCell onClick={() => handleRowClick(collection.id)}>

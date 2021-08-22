@@ -15,16 +15,16 @@ import CloseIcon from '@material-ui/icons/Close'
 
 import { DropzoneArea } from 'material-ui-dropzone'
 import { useForm, Controller } from 'react-hook-form'
-
+import { useDispatch } from 'react-redux'
 import { useSnackbar } from 'notistack'
 
 import { getSingleCollection, addMorePhotos } from '../../../firebase'
 import { AddPhotosDialogProps } from '../../../types'
 import styles from './styles.module.scss'
+import { setCollection } from '../../../reducers/collectionSlice'
 
 const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
   collectionId,
-  setCollection,
   setProgress,
   addPhotosDialogOpen,
   setAddPhotosDialogOpen,
@@ -35,13 +35,15 @@ const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
   })
   const { enqueueSnackbar } = useSnackbar()
 
+  const dispatch = useDispatch()
+
   const onConfirmUpload = async (data: { files: FileList }) => {
     try {
       await addMorePhotos(collectionId, data.files, setProgress)
       setAddPhotosDialogOpen(false)
       setProgress(0)
       const collection = await getSingleCollection(collectionId)
-      setCollection(collection)
+      dispatch(setCollection(collection))
     } catch (err) {
       enqueueSnackbar('ERROR: Photo upload failed', {
         variant: 'error',

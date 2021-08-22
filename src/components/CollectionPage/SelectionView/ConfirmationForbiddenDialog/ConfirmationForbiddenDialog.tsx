@@ -1,4 +1,6 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
+
 import {
   Dialog,
   DialogContent,
@@ -12,13 +14,15 @@ import CloseIcon from '@material-ui/icons/Close'
 
 import styles from './styles.module.scss'
 import { ConfirmationForbiddenProps } from '../../../../types'
+import { RootState } from '../../../../store'
 
 const ConfirmationForbiddenDialog: React.FC<ConfirmationForbiddenProps> = ({
-  collection,
   selectedPhotos,
   confirmForbidDialogOpen,
   setConfirmForbidDialogOpen,
 }) => {
+  const collection = useSelector((state: RootState) => state.collection.data)
+
   const requirementsText = () => {
     if (collection.minSelect.required && collection.maxSelect.required) {
       return (

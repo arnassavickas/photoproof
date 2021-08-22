@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { Skeleton } from '@material-ui/lab'
 import CloseIcon from '@material-ui/icons/Close'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { Photo, Collection } from '../../types'
+import { Photo } from '../../types'
 import { setResizeReady } from '../../firebase'
+import { RootState } from '../../store'
+import { setCollection } from '../../reducers/collectionSlice'
 
 interface ImageLoaderProps {
   collectionId: string
-  setCollection: React.Dispatch<React.SetStateAction<Collection | null>>
   photo: Photo
   children: React.ReactNode
   width: number
@@ -16,7 +18,6 @@ interface ImageLoaderProps {
 
 const ImageLoader: React.FC<ImageLoaderProps> = ({
   collectionId,
-  setCollection,
   photo,
   children,
   width,
@@ -24,6 +25,9 @@ const ImageLoader: React.FC<ImageLoaderProps> = ({
 }) => {
   const [imageReady, setImageReady] = useState(photo.resizeReady)
   const [failed, setFailed] = useState(false)
+
+  const dispatch = useDispatch()
+  const collection = useSelector((state: RootState) => state.collection.data)
 
   useEffect(() => {
     if (photo.resizeReady) {
@@ -40,19 +44,16 @@ const ImageLoader: React.FC<ImageLoaderProps> = ({
               clearInterval(intervalId)
               setImageReady(true)
               setResizeReady(collectionId, photo.id)
-              setCollection(collection => {
-                if (!collection) {
-                  return null
-                }
-                return {
+              dispatch(
+                setCollection({
                   ...collection,
                   photos: collection?.photos.map(collectionPhoto =>
                     collectionPhoto.id === photo.id
                       ? { ...photo, resizeReady: true }
                       : collectionPhoto,
                   ),
-                }
-              })
+                }),
+              )
             } else if (trie > 10) {
               setFailed(true)
             }

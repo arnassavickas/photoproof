@@ -21,6 +21,7 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined)
   const [logoWidth, setLogoWidth] = useState(100)
+
   const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {

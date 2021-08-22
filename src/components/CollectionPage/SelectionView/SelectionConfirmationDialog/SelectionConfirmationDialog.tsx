@@ -1,4 +1,5 @@
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import {
   Dialog,
@@ -19,10 +20,10 @@ import { useForm } from 'react-hook-form'
 import { confirmCollection } from '../../../../firebase'
 import { SelectionConfirmationDialogProps } from '../../../../types'
 import styles from './styles.module.scss'
+import { RootState } from '../../../../store'
+import { setCollection } from '../../../../reducers/collectionSlice'
 
 const SelectionConfirmationDialog: React.FC<SelectionConfirmationDialogProps> = ({
-  collection,
-  setCollection,
   collectionId,
   selectedPhotos,
   confirmDialogOpen,
@@ -32,6 +33,9 @@ const SelectionConfirmationDialog: React.FC<SelectionConfirmationDialogProps> = 
     defaultValues: { files: [] },
   })
   const { enqueueSnackbar } = useSnackbar()
+
+  const dispatch = useDispatch()
+  const collection = useSelector((state: RootState) => state.collection.data)
 
   const confirmSelections = async (data: { finalComment: string }) => {
     try {
@@ -44,11 +48,13 @@ const SelectionConfirmationDialog: React.FC<SelectionConfirmationDialogProps> = 
         data.finalComment,
       )
       setConfirmDialogOpen(false)
-      setCollection({
-        ...collection,
-        status: 'confirmed',
-        finalComment: data.finalComment,
-      })
+      dispatch(
+        setCollection({
+          ...collection,
+          status: 'confirmed',
+          finalComment: data.finalComment,
+        }),
+      )
       enqueueSnackbar('Collection confirmed successfully, thank you!', {
         variant: 'default',
       })

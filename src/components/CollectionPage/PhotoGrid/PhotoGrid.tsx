@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { useDispatch, useSelector } from 'react-redux'
 import { IconButton } from '@material-ui/core'
 
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
@@ -14,16 +14,15 @@ import { useSnackbar } from 'notistack'
 import { updatePhotoSelection } from '../../../firebase'
 import { PhotoGridProps } from '../../../types'
 import styles from './styles.module.scss'
+import { RootState } from '../../../store'
+import { setCollection } from '../../../reducers/collectionSlice'
 
-const PhotoGrid: React.FC<PhotoGridProps> = ({
-  collectionId,
-  collection,
-  setCollection,
-  filteredPhotos,
-  openLightbox,
-  openCommentModal,
-}) => {
+const PhotoGrid: React.FC<PhotoGridProps> = ({ collectionId, openLightbox, openCommentModal }) => {
   const { enqueueSnackbar } = useSnackbar()
+
+  const dispatch = useDispatch()
+  const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
+  const collection = useSelector((state: RootState) => state.collection.data)
 
   const selectPhoto = (photoId: string) => async () => {
     try {
@@ -31,10 +30,12 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
       if (clickedPhoto && collection && setCollection && collectionId) {
         await updatePhotoSelection(collectionId, photoId, !clickedPhoto.selected)
         clickedPhoto.selected = !clickedPhoto?.selected
-        setCollection({
-          ...collection,
-          photos: collection.photos.map(photo => (photo.id === photoId ? clickedPhoto : photo)),
-        })
+        dispatch(
+          setCollection({
+            ...collection,
+            photos: collection.photos.map(photo => (photo.id === photoId ? clickedPhoto : photo)),
+          }),
+        )
       }
     } catch (err) {
       enqueueSnackbar('ERROR: Photo selection failed', {

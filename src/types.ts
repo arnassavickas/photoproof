@@ -41,8 +41,6 @@ export interface NewCollectionInputs {
 }
 
 export interface LockedViewProps {
-  collection: Collection
-  filteredPhotos: Photo[]
   lightboxOpen: boolean
   setLightboxOpen: React.Dispatch<React.SetStateAction<boolean>>
   openLightbox: (index: number) => void
@@ -55,7 +53,6 @@ export interface LockedViewProps {
 }
 
 export interface SelectionViewProps extends LockedViewProps {
-  setCollection: React.Dispatch<React.SetStateAction<Collection | null>>
   collectionId: string
   setCommentTextarea: React.Dispatch<React.SetStateAction<string>>
   selectedPhotos: number | undefined
@@ -63,8 +60,6 @@ export interface SelectionViewProps extends LockedViewProps {
 
 export interface CollectionDetailsProps {
   collectionId: string
-  collection: Collection
-  setCollection: React.Dispatch<React.SetStateAction<Collection | null>>
   setConfirmationDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
   setConfirmationDialogTitle: React.Dispatch<React.SetStateAction<string>>
   setConfirmationDialogContentText: React.Dispatch<React.SetStateAction<string>>
@@ -74,10 +69,6 @@ export interface CollectionDetailsProps {
 
 export interface PhotoTableToolbarProps {
   collectionId: string
-  collection: Collection
-  setCollection: React.Dispatch<React.SetStateAction<Collection | null>>
-  filteredPhotos: Photo[]
-  setFilteredPhotos: React.Dispatch<React.SetStateAction<Photo[]>>
   setConfirmationDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
   setConfirmationDialogTitle: React.Dispatch<React.SetStateAction<string>>
   setConfirmationDialogContentText: React.Dispatch<React.SetStateAction<string>>
@@ -89,9 +80,6 @@ export interface PhotoTableToolbarProps {
 }
 
 export interface PhotoTableProps {
-  collection: Collection
-  setCollection: React.Dispatch<React.SetStateAction<Collection | null>>
-  filteredPhotos: Photo[]
   selected: string[]
   setSelected: React.Dispatch<React.SetStateAction<string[]>>
   setPhotoIndex: React.Dispatch<React.SetStateAction<number>>
@@ -100,14 +88,12 @@ export interface PhotoTableProps {
 
 export interface AddPhotosDialogProps {
   collectionId: string
-  setCollection: React.Dispatch<React.SetStateAction<Collection | null>>
   setProgress: React.Dispatch<React.SetStateAction<number>>
   addPhotosDialogOpen: boolean
   setAddPhotosDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
   progress: number
 }
 export interface ConfirmationForbiddenProps {
-  collection: Collection
   selectedPhotos: number | undefined
   confirmForbidDialogOpen: boolean
   setConfirmForbidDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -115,16 +101,11 @@ export interface ConfirmationForbiddenProps {
 
 export interface PhotoGridProps {
   collectionId?: string
-  collection: Collection
-  setCollection?: React.Dispatch<React.SetStateAction<Collection | null>>
-  filteredPhotos: Photo[]
   openLightbox: (index: number) => void
   openCommentModal: (index?: number | undefined) => void
 }
 
 export interface SelectionConfirmationDialogProps {
-  collection: Collection
-  setCollection: React.Dispatch<React.SetStateAction<Collection | null>>
   collectionId: string
   selectedPhotos: number | undefined
   confirmDialogOpen: boolean
@@ -132,7 +113,6 @@ export interface SelectionConfirmationDialogProps {
 }
 
 export interface LightboxProps {
-  filteredPhotos: Photo[]
   lightboxOpen: boolean
   setLightboxOpen: React.Dispatch<React.SetStateAction<boolean>>
   lightboxIndex: number
@@ -165,13 +145,12 @@ export interface SettingsProps {
 }
 
 export interface StatusIconProps {
-  status: Collection['status']
+  status: Collection['status'] | undefined
 }
 
 // FilterButtons
 interface RequiredFilterButtonsProps {
   collection: Collection
-  setFilteredPhotos: React.Dispatch<React.SetStateAction<Photo[]>>
 }
 
 type TruncateFilterButtonsProps =
@@ -189,3 +168,10 @@ type TruncateFilterButtonsProps =
     }
 
 export type FilterButtonsProps = RequiredFilterButtonsProps & TruncateFilterButtonsProps
+
+export enum UiState {
+  Idle = 'Idle',
+  Pending = 'Pending',
+  Success = 'Success',
+  Failure = 'Failure',
+}

@@ -9,6 +9,7 @@ import {
   TableRow,
 } from '@material-ui/core'
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
+import { useDispatch, useSelector } from 'react-redux'
 
 import styles from './styles.module.scss'
 import { PhotoTableProps } from '../../../types'
@@ -16,16 +17,19 @@ import { PhotoTableProps } from '../../../types'
 import ImageLoader from '../../ImageLoader/ImageLoader'
 import DraggableComponent from './DraggableComponent/DraggableComponent'
 import DroppableComponent from './DroppableComponent/DroppableComponent'
+import { RootState } from '../../../store'
+import { setCollection } from '../../../reducers/collectionSlice'
 
 const PhotoTable: React.FC<PhotoTableProps> = ({
-  collection,
-  setCollection,
-  filteredPhotos,
   selected,
   setSelected,
   setPhotoIndex,
   setLightboxOpen,
 }) => {
+  const dispatch = useDispatch()
+  const collection = useSelector((state: RootState) => state.collection.data)
+  const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
+
   const openLightbox = (index: number) => () => {
     setPhotoIndex(index)
     setLightboxOpen(true)
@@ -75,12 +79,14 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
       return
     }
 
-    console.log(`dragEnd ${result.source.index} to  ${result.destination.index}`)
+    // console.log(`dragEnd ${result.source.index} to  ${result.destination.index}`)
 
-    setCollection({
-      ...collection,
-      photos: reorder(collection.photos, result.source.index, result.destination.index),
-    })
+    dispatch(
+      setCollection({
+        ...collection,
+        photos: reorder(collection.photos, result.source.index, result.destination.index),
+      }),
+    )
   }
 
   return (
@@ -124,13 +130,7 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
               ) : null}
               <TableCell>{photo.index}.</TableCell>
               <TableCell padding="none">
-                <ImageLoader
-                  setCollection={setCollection}
-                  collectionId={collection.id}
-                  photo={photo}
-                  width={150}
-                  height={100}
-                >
+                <ImageLoader collectionId={collection.id} photo={photo} width={150} height={100}>
                   <picture>
                     <source srcSet={photo.thumbnailWebp} type="image/webp" />
                     <img

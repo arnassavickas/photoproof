@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useSnackbar } from 'notistack'
+
 import { IconButton, Button } from '@material-ui/core'
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
-
 import FavoriteIcon from '@material-ui/icons/Favorite'
-
 import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline'
-
 import ChatBubbleIcon from '@material-ui/icons/ChatBubble'
-
-import { useSnackbar } from 'notistack'
 
 import styles from './styles.module.scss'
 import { SelectionViewProps } from '../../../types'
@@ -19,12 +17,11 @@ import CommentDialog from '../../CommentDialog/CommentDialog'
 import PhotoGrid from '../PhotoGrid/PhotoGrid'
 import ConfirmationForbiddenDialog from './ConfirmationForbiddenDialog/ConfirmationForbiddenDialog'
 import SelectionConfirmationDialog from './SelectionConfirmationDialog/SelectionConfirmationDialog'
+import { RootState } from '../../../store'
+import { setCollection } from '../../../reducers/collectionSlice'
 
 const SelectionView: React.FC<SelectionViewProps> = ({
-  collection,
-  setCollection,
   collectionId,
-  filteredPhotos,
   lightboxOpen,
   setLightboxOpen,
   openLightbox,
@@ -41,6 +38,10 @@ const SelectionView: React.FC<SelectionViewProps> = ({
   const [confirmForbidDialogOpen, setConfirmForbidDialogOpen] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
 
+  const dispatch = useDispatch()
+  const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
+  const collection = useSelector((state: RootState) => state.collection.data)
+
   const selectPhotoLightbox = async () => {
     if (filteredPhotos && collection) {
       try {
@@ -48,12 +49,14 @@ const SelectionView: React.FC<SelectionViewProps> = ({
         if (clickedPhoto && collection) {
           await updatePhotoSelection(collectionId, clickedPhoto.id, !clickedPhoto.selected)
           clickedPhoto.selected = !clickedPhoto?.selected
-          setCollection({
-            ...collection,
-            photos: collection.photos.map(photo =>
-              photo.id === clickedPhoto.id ? clickedPhoto : photo,
-            ),
-          })
+          dispatch(
+            setCollection({
+              ...collection,
+              photos: collection.photos.map(photo =>
+                photo.id === clickedPhoto.id ? clickedPhoto : photo,
+              ),
+            }),
+          )
         }
       } catch (err) {
         enqueueSnackbar('ERROR: Photo selection failed', {
@@ -115,15 +118,11 @@ const SelectionView: React.FC<SelectionViewProps> = ({
     <div>
       <PhotoGrid
         collectionId={collectionId}
-        collection={collection}
-        setCollection={setCollection}
-        filteredPhotos={filteredPhotos}
         openLightbox={openLightbox}
         openCommentModal={openCommentModal}
       />
       {filteredPhotos.length > 0 && (
         <Lightbox
-          filteredPhotos={filteredPhotos}
           lightboxOpen={lightboxOpen}
           setLightboxOpen={setLightboxOpen}
           lightboxIndex={photoIndex}
@@ -185,15 +184,12 @@ const SelectionView: React.FC<SelectionViewProps> = ({
       </Button>
 
       <ConfirmationForbiddenDialog
-        collection={collection}
         selectedPhotos={selectedPhotos}
         confirmForbidDialogOpen={confirmForbidDialogOpen}
         setConfirmForbidDialogOpen={setConfirmForbidDialogOpen}
       />
 
       <SelectionConfirmationDialog
-        collection={collection}
-        setCollection={setCollection}
         collectionId={collectionId}
         selectedPhotos={selectedPhotos}
         confirmDialogOpen={confirmDialogOpen}

@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { useSelector } from 'react-redux'
 import { IconButton } from '@material-ui/core'
 
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
@@ -13,10 +13,9 @@ import styles from './styles.module.scss'
 import Lightbox from '../../Lightbox/Lightbox'
 import CommentDialog from '../../CommentDialog/CommentDialog'
 import PhotoGrid from '../PhotoGrid/PhotoGrid'
+import { RootState } from '../../../store'
 
 const LockedView: React.FC<LockedViewProps> = ({
-  collection,
-  filteredPhotos,
   lightboxOpen,
   setLightboxOpen,
   openLightbox,
@@ -27,17 +26,14 @@ const LockedView: React.FC<LockedViewProps> = ({
   setCommentOpen,
   commentTextarea,
 }) => {
+  const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
+  const collection = useSelector((state: RootState) => state.collection.data)
+
   return (
     <div>
-      <PhotoGrid
-        collection={collection}
-        filteredPhotos={filteredPhotos}
-        openLightbox={openLightbox}
-        openCommentModal={openCommentModal}
-      />
+      <PhotoGrid openLightbox={openLightbox} openCommentModal={openCommentModal} />
       {filteredPhotos.length > 0 && (
         <Lightbox
-          filteredPhotos={filteredPhotos}
           lightboxOpen={lightboxOpen}
           setLightboxOpen={setLightboxOpen}
           lightboxIndex={photoIndex}

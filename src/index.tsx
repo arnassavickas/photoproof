@@ -2,8 +2,10 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { CssBaseline } from '@material-ui/core'
 import { ThemeProvider } from '@material-ui/core/styles'
+import { Provider } from 'react-redux'
 
 import App from './App'
+import { store } from './store'
 
 import './index.scss'
 
@@ -16,7 +18,9 @@ ReactDOM.render(
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <NotificationProvider>
-        <App />
+        <Provider store={store}>
+          <App />
+        </Provider>
       </NotificationProvider>
     </ThemeProvider>
   </React.StrictMode>,

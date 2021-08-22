@@ -2,6 +2,7 @@
 import React from 'react'
 import { Toolbar, IconButton, Typography, Tooltip, Button } from '@material-ui/core'
 import { useSnackbar } from 'notistack'
+import { useDispatch, useSelector } from 'react-redux'
 
 import DeleteIcon from '@material-ui/icons/Delete'
 
@@ -10,12 +11,11 @@ import { PhotoTableToolbarProps } from '../../../types'
 import { deletePhotos, resetPhotos } from '../../../firebase'
 
 import FilterButtons from '../../FilterButtons/FilterButtons'
+import { RootState } from '../../../store'
+import { setCollection } from '../../../reducers/collectionSlice'
 
 const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
   collectionId,
-  collection,
-  setCollection,
-  setFilteredPhotos,
   setConfirmationDialogOpen,
   setConfirmationDialogTitle,
   setConfirmationDialogContentText,
@@ -26,6 +26,9 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
   setAddPhotosDialogOpen,
 }) => {
   const { enqueueSnackbar } = useSnackbar()
+
+  const dispatch = useDispatch()
+  const collection = useSelector((state: RootState) => state.collection.data)
 
   const resetDialog = () => {
     setConfirmationDialogOpen(false)
@@ -53,10 +56,12 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
           .map((photo, index) => {
             return { ...photo, index: index + 1 }
           })
-        setCollection({
-          ...collection,
-          photos: removeDeleted,
-        })
+        dispatch(
+          setCollection({
+            ...collection,
+            photos: removeDeleted,
+          }),
+        )
       }
       setSelected([])
       resetDialog()
@@ -71,14 +76,16 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
     if (collection) {
       try {
         await resetPhotos(collectionId, collection.photos)
-        setCollection({
-          ...collection,
-          photos: collection.photos.map(photo => ({
-            ...photo,
-            selected: false,
-            comment: '',
-          })),
-        })
+        dispatch(
+          setCollection({
+            ...collection,
+            photos: collection.photos.map(photo => ({
+              ...photo,
+              selected: false,
+              comment: '',
+            })),
+          }),
+        )
         resetDialog()
       } catch (err) {
         enqueueSnackbar('ERROR: Resetting photos failed', {
@@ -134,7 +141,7 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
           ) : null}
         </div>
       )}
-      <FilterButtons collection={collection} setFilteredPhotos={setFilteredPhotos} />
+      <FilterButtons collection={collection} />
     </Toolbar>
   )
 }
