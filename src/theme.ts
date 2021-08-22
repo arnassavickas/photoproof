@@ -61,27 +61,31 @@ export const theme = createMuiTheme({
         backgroundColor: 'rgba(255,255,255,0.1)',
       },
     },
+    MuiFormLabel: {
+      root: {
+        '&.Mui-focused': {
+          color: '#eee',
+          fontWeight: 600,
+        },
+      },
+    },
     MuiOutlinedInput: {
       root: {
         '&$disabled': {
           color: '#eee',
+        },
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+          borderColor: '#eee',
         },
       },
       notchedOutline: {
         borderWidth: '1px',
         borderColor: '#eee',
       },
-      // disabled: {
-      //   borderColor: '#555',
-      //   color: '#eee',
-      // },
     },
     MuiCheckbox: {
       root: {
         color: '#aaa',
-        // '&$checked': {
-        //   color: 'green',
-        // },
         '&$disabled': {
           color: '#555',
         },
