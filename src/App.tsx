@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { Container, Backdrop, CircularProgress, Button, Box } from '@material-ui/core'
@@ -72,7 +72,9 @@ function App() {
     <Container maxWidth="xl">
       <Box ml={2} mr={2}>
         {logoUrl && (
-          <img className={styles.logo} src={logoUrl} style={{ width: logoWidth }} alt="logo" />
+          <a href={window.location.origin.toString()}>
+            <img className={styles.logo} src={logoUrl} style={{ width: logoWidth }} alt="logo" />
+          </a>
         )}
         {user && (
           <div className={styles.logoutBtn}>

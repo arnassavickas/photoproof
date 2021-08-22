@@ -107,7 +107,7 @@ const Settings = () => {
         <Controller
           name="logoWidth"
           control={control}
-          defaultValue={initialWidth.current}
+          defaultValue={0}
           render={({ onChange }) => (
             <Box>
               <Slider

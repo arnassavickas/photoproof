@@ -31,6 +31,7 @@ const EditCollection: React.FC = () => {
   const dispatch = useDispatch()
   const uiState = useSelector((state: RootState) => state.uiState.value)
   const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
+  const collection = useSelector((state: RootState) => state.collection.data)
 
   const [photoIndex, setPhotoIndex] = useState(0)
   const [lightboxOpen, setLightboxOpen] = useState(false)
@@ -51,18 +52,20 @@ const EditCollection: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
-    getSingleCollection(collectionId)
-      .then(collection => {
-        dispatch(setCollection(collection))
-        dispatch(setUiState(UiState.Success))
-      })
-      .catch(() => {
-        enqueueSnackbar('ERROR: Getting collection failed', {
-          variant: 'error',
+    if (collection.id !== collectionId) {
+      getSingleCollection(collectionId)
+        .then(collection => {
+          dispatch(setCollection(collection))
+          dispatch(setUiState(UiState.Success))
         })
-        dispatch(setUiState(UiState.Idle))
-      })
-  }, [collectionId, dispatch, enqueueSnackbar])
+        .catch(() => {
+          enqueueSnackbar('ERROR: Getting collection failed', {
+            variant: 'error',
+          })
+          dispatch(setUiState(UiState.Idle))
+        })
+    }
+  }, [collection.id, collectionId, dispatch, enqueueSnackbar])
 
   const openCommentModal = (index?: number) => {
     setCommentOpen(true)
