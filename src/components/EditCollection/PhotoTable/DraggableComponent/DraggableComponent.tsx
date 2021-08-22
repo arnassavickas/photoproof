@@ -16,7 +16,7 @@ const getItemStyle = (
 })
 
 const DraggableComponent =
-  (id: string, index: number) =>
+  (id: string, index: number, disabled: boolean) =>
   (
     props: JSX.IntrinsicAttributes & { component: React.ElementType<any> } & {
       hover?: boolean | undefined
@@ -24,6 +24,10 @@ const DraggableComponent =
     } & CommonProps<TableRowTypeMap<{}, 'tr'>> &
       Pick<any, string | number | symbol>,
   ) => {
+    if (disabled) {
+      return <TableRow {...props}>{props.children}</TableRow>
+    }
+
     return (
       <Draggable draggableId={id} index={index}>
         {(provided, snapshot) => (

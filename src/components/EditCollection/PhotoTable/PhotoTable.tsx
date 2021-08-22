@@ -111,12 +111,12 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
             <TableCell>comment</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody component={DroppableComponent(onDragEnd)}>
+        <TableBody component={DroppableComponent(onDragEnd, collection.status !== 'editing')}>
           {filteredPhotos.map((photo, index) => (
             <TableRow
               key={photo.id}
               selected={isSelected(photo.id)}
-              component={DraggableComponent(photo.id, index)}
+              component={DraggableComponent(photo.id, index, collection.status !== 'editing')}
             >
               {collection.status === 'editing' ? (
                 <TableCell
