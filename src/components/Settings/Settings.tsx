@@ -74,7 +74,7 @@ const Settings = () => {
         <div className="horizonalButtons">
           <Button onClick={handleCancel} color="secondary" variant="contained">
             Cancel
-          </Button>{' '}
+          </Button>
           <Button
             aria-label="save"
             id="save"
