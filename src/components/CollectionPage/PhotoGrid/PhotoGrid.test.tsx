@@ -28,6 +28,10 @@ describe('<PhotoGrid />', () => {
   })
 
   describe('when collection status is selecting', () => {
+    beforeEach(() => {
+      mockStore.collection.data.status = 'selecting'
+    })
+
     test('renders one photo', async () => {
       render(<PhotoGrid {...props} />, { initialState: mockStore })
 
@@ -59,12 +63,9 @@ describe('<PhotoGrid />', () => {
     test('select button click calls api with correct args', async () => {
       render(<PhotoGrid {...props} />, { initialState: mockStore })
 
-      const selectBtns = screen.getAllByRole('button', {
-        name: /select/i,
-      })
+      const selectBtns = screen.getAllByTestId('select-btn')
 
       userEvent.click(selectBtns[0])
-      screen.debug()
 
       expect(updatePhotoSelection).toHaveBeenCalledTimes(1)
       expect(updatePhotoSelection).toHaveBeenCalledWith(
@@ -76,7 +77,9 @@ describe('<PhotoGrid />', () => {
   })
 
   describe('when collection status is confirmed', () => {
-    mockStore.collection.data.status = 'confirmed'
+    beforeEach(() => {
+      mockStore.collection.data.status = 'confirmed'
+    })
 
     test('renders only one comment button', () => {
       render(<PhotoGrid {...props} />, { initialState: mockStore })

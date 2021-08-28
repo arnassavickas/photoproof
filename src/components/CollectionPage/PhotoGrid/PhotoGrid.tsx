@@ -88,7 +88,7 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({ openLightbox, openCommentModal })
                     </IconButton>
                   ) : null}
                   <IconButton
-                    aria-label="select"
+                    data-testid="select-btn"
                     className={photo.selected ? styles.heartBtnSelected : styles.heartBtn}
                     onClick={selectPhoto(photo.id)}
                   >
@@ -107,7 +107,11 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({ openLightbox, openCommentModal })
                     </IconButton>
                   ) : null}
                   {photo.selected ? (
-                    <IconButton aria-label="select" className={styles.heartBtnSelected} disabled>
+                    <IconButton
+                      data-testid="select-btn"
+                      className={styles.heartBtnSelected}
+                      disabled
+                    >
                       <FavoriteIcon />
                     </IconButton>
                   ) : null}
