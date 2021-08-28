@@ -99,7 +99,6 @@ export interface ConfirmationForbiddenProps {
 }
 
 export interface PhotoGridProps {
-  collectionId?: string
   openLightbox: (index: number) => void
   openCommentModal: (index?: number | undefined) => void
 }

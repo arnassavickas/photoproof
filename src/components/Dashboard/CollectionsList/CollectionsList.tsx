@@ -40,18 +40,22 @@ const CollectionList: React.FC = () => {
   const collection = useSelector((state: RootState) => state.collection.data)
 
   useEffect(() => {
-    getCollections()
-      .then(collections => {
-        dispatch(setCollectionsList(collections))
-        dispatch(setUiState(UiState.Success))
-      })
-      .catch(() => {
-        enqueueSnackbar('ERROR: Getting collections failed. Please refresh the page', {
-          variant: 'error',
-          persist: true,
+    if (collectionsList.length === 0) {
+      dispatch(setUiState(UiState.Pending))
+
+      getCollections()
+        .then(collections => {
+          dispatch(setCollectionsList(collections))
+          dispatch(setUiState(UiState.Success))
         })
-      })
-  }, [dispatch, enqueueSnackbar])
+        .catch(() => {
+          enqueueSnackbar('ERROR: Getting collections failed. Please refresh the page', {
+            variant: 'error',
+            persist: true,
+          })
+        })
+    }
+  }, [collectionsList.length, dispatch, enqueueSnackbar])
 
   const selectedPhotos = (photos: Photo[]) => {
     return photos.filter(photo => photo.selected).length

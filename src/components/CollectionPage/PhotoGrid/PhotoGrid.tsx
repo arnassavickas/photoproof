@@ -27,13 +27,16 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({ openLightbox, openCommentModal })
   const selectPhoto = (photoId: string) => async () => {
     try {
       const clickedPhoto = collection.photos.find(photo => photo.id === photoId)
-      if (clickedPhoto && setCollection) {
+
+      if (clickedPhoto) {
         await updatePhotoSelection(collection.id, photoId, !clickedPhoto.selected)
-        clickedPhoto.selected = !clickedPhoto?.selected
+
         dispatch(
           setCollection({
             ...collection,
-            photos: collection.photos.map(photo => (photo.id === photoId ? clickedPhoto : photo)),
+            photos: collection.photos.map(photo =>
+              photo.id === photoId ? { ...photo, selected: !clickedPhoto.selected } : photo,
+            ),
           }),
         )
       }

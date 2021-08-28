@@ -106,8 +106,16 @@ export const theme = createMuiTheme({
     },
     MuiBackdrop: {
       root: {
-        backgroundColor: '#111',
-        zIndex: 999,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 2,
+        backdropFilter: 'blur(4px)',
+      },
+    },
+    MuiDialog: {
+      root: {
+        '& .MuiBackdrop-root': {
+          zIndex: -1,
+        },
       },
     },
   },

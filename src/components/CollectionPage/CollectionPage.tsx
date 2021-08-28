@@ -32,6 +32,7 @@ const CollectionPage: React.FC = () => {
     getSingleCollection(collectionId)
       .then(collection => {
         dispatch(setCollection(collection))
+        dispatch(setUiState(UiState.Success))
       })
       .catch(() => {
         dispatch(setUiState(UiState.Idle))

@@ -10,6 +10,8 @@ import { changeSiteSettings } from '../../firebase'
 import styles from './styles.module.scss'
 import { RootState } from '../../store'
 import { setLogoUrl, setLogoWidth } from '../../reducers/siteSettingsSlice'
+import { setUiState } from '../../reducers/uiStateSlice'
+import { UiState } from '../../types'
 
 // TODO implement interactive watermark size/angle adjustment
 
@@ -35,7 +37,8 @@ const Settings = () => {
   useEffect(() => {
     setValue('email', email)
     setValue('logoWidth', logoWidth)
-  }, [email, logoWidth, setValue])
+    dispatch(setUiState(UiState.Success))
+  }, [dispatch, email, logoWidth, setValue])
 
   const onSubmit = async (data: { logoFile: FileList; logoWidth: number; email: string }) => {
     try {
