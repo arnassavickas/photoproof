@@ -1,45 +1,69 @@
-import React, { useEffect, useState } from 'react';
-import { Skeleton } from '@material-ui/lab';
-import CloseIcon from '@material-ui/icons/Close';
-import { Photo } from '../../types';
+import React, { useEffect, useState } from 'react'
+import { Skeleton } from '@material-ui/lab'
+import CloseIcon from '@material-ui/icons/Close'
+import { useDispatch, useSelector } from 'react-redux'
+
+import { Photo } from '../../types'
+import { setResizeReady } from '../../firebase'
+import { RootState } from '../../store'
+import { setCollection } from '../../reducers/collectionSlice'
 
 interface ImageLoaderProps {
-  photo: Photo;
-  children: React.ReactNode;
-  width: number;
-  height: number;
+  collectionId: string
+  photo: Photo
+  children: React.ReactNode
+  width: number
+  height: number
 }
 
 const ImageLoader: React.FC<ImageLoaderProps> = ({
+  collectionId,
   photo,
   children,
   width,
   height,
 }) => {
-  const [imageReady, setImageReady] = useState(false);
-  const [failed, setFailed] = useState(false);
+  const [imageReady, setImageReady] = useState(photo.resizeReady)
+  const [failed, setFailed] = useState(false)
+
+  const dispatch = useDispatch()
+  const collection = useSelector((state: RootState) => state.collection.data)
 
   useEffect(() => {
-    fetch(photo.cloudUrlWebp, {}).then((res) => {
+    if (photo.resizeReady) {
+      return
+    }
+    fetch(photo.cloudUrlWebp, {}).then(res => {
       if (res.ok) {
-        setImageReady(true);
+        setImageReady(true)
       } else {
-        let trie = 1;
+        let trie = 1
         const intervalId = setInterval(() => {
-          fetch(photo.cloudUrlWebp, {}).then((res) => {
+          fetch(photo.cloudUrlWebp, {}).then(res => {
             if (res.ok) {
-              clearInterval(intervalId);
-              setImageReady(true);
+              clearInterval(intervalId)
+              setImageReady(true)
+              setResizeReady(collectionId, photo.id)
+              dispatch(
+                setCollection({
+                  ...collection,
+                  photos: collection?.photos.map(collectionPhoto =>
+                    collectionPhoto.id === photo.id
+                      ? { ...photo, resizeReady: true }
+                      : collectionPhoto,
+                  ),
+                }),
+              )
             } else if (trie > 10) {
-              setFailed(true);
+              setFailed(true)
             }
-            trie += 1;
-          });
-        }, 500);
+            trie += 1
+          })
+        }, 500)
       }
-    });
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [])
 
   if (failed) {
     return (
@@ -54,14 +78,14 @@ const ImageLoader: React.FC<ImageLoaderProps> = ({
       >
         <CloseIcon />
       </div>
-    );
+    )
   }
 
   if (!imageReady) {
-    return <Skeleton variant='rect' width={width} height={height} />;
+    return <Skeleton variant="rect" width={width} height={height} />
   }
 
-  return <div>{children}</div>;
-};
+  return <div>{children}</div>
+}
 
-export default ImageLoader;
+export default ImageLoader

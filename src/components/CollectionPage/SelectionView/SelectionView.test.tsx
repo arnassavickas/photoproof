@@ -1,18 +1,15 @@
-import React from 'react';
-import { render, screen } from '../../../utils/customTestRenderer';
-import user from '@testing-library/user-event';
-import SelectionView from './SelectionView';
-import { collection, filteredPhotos } from '../../../utils/testUtils';
-import { SelectionViewProps } from '../../../types';
-import { updatePhotoSelection, updatePhotoComment } from '../../../firebase';
+import React from 'react'
+import user from '@testing-library/user-event'
 
-jest.mock('../../../firebase');
+import { render, screen } from '../../../utils/customTestRenderer'
+import SelectionView from './SelectionView'
+import { collection, filteredPhotos } from '../../../utils/testUtils'
+import { SelectionViewProps } from '../../../types'
+import { updatePhotoSelection, updatePhotoComment } from '../../../firebase'
+
+jest.mock('../../../firebase')
 
 const props: SelectionViewProps = {
-  collection,
-  setCollection: jest.fn(),
-  collectionId: collection.id,
-  filteredPhotos,
   lightboxOpen: false,
   setLightboxOpen: jest.fn(),
   openLightbox: jest.fn(),
@@ -24,115 +21,117 @@ const props: SelectionViewProps = {
   commentTextarea: 'test comment',
   setCommentTextarea: jest.fn(),
   selectedPhotos: 1,
-};
+}
 
 describe('<SelectionView/>', () => {
-  test(`confirm button calls confimation dialog
-  if allowed`, async () => {
-    render(<SelectionView {...props} />);
+  let mockStore = { collection: { data: collection, filteredPhotos } }
 
-    const confirmBtn = screen.getByText(/confirm 1 selections/);
+  beforeEach(() => {
+    mockStore = { collection: { data: collection, filteredPhotos } }
+  })
 
-    user.click(confirmBtn);
+  test(`confirm button calls confimation dialog if allowed`, async () => {
+    render(<SelectionView {...props} />, { initialState: mockStore })
 
-    await screen.findByText('Confirm selections');
-  });
+    const confirmBtn = screen.getByText(/confirm 1 selections/)
 
-  test(`confirm button calls confimation forbidden dialog
-  if selections are out of requirements`, async () => {
-    props.selectedPhotos = 0;
-    const { rerender } = render(<SelectionView {...props} />);
+    user.click(confirmBtn)
 
-    const confirmBtn = screen.getByText(/confirm 0 selections/);
+    expect(await screen.findByText('Confirm selections')).toBeInTheDocument()
+  })
 
-    user.click(confirmBtn);
+  describe('when selected photos are not in allowed range', () => {
+    test('confirm button calls confimation forbidden dialog', async () => {
+      props.selectedPhotos = 0
+      render(<SelectionView {...props} />, { initialState: mockStore })
 
-    await screen.findByText('Please adjust your selections!');
+      const confirmBtn = screen.getByText(/confirm 0 selections/)
 
-    props.selectedPhotos = 3;
+      user.click(confirmBtn)
 
-    rerender(<SelectionView {...props} />);
+      expect(await screen.findByText('Please adjust your selections!')).toBeInTheDocument()
+    })
 
-    await screen.findByText('Please adjust your selections!');
-  });
-});
+    test('confirm button calls confimation forbidden dialog', async () => {
+      props.selectedPhotos = 3
+      render(<SelectionView {...props} />, { initialState: mockStore })
 
-describe('<SelectionView/> lightbox open', () => {
-  beforeAll(() => {
-    props.lightboxOpen = true;
-  });
-  afterAll(() => {
-    props.lightboxOpen = false;
-  });
-  test('select and comment buttons are visible', () => {
-    render(<SelectionView {...props} />);
+      const confirmBtn = screen.getByText(/confirm 3 selections/)
 
-    const selectBtns = screen.getAllByRole('button', {
-      hidden: true,
-      name: 'selectLighbox',
-    });
+      user.click(confirmBtn)
 
-    const commentBtns = screen.getAllByRole('button', {
-      hidden: true,
-      name: 'commentLightbox',
-    });
+      expect(await screen.findByText('Please adjust your selections!')).toBeInTheDocument()
+    })
+  })
 
-    expect(selectBtns).toHaveLength(1);
-    expect(commentBtns).toHaveLength(1);
-  });
+  describe('when lightbox is open', () => {
+    beforeAll(() => {
+      props.lightboxOpen = true
+    })
+    afterAll(() => {
+      props.lightboxOpen = false
+    })
+    test('select and comment buttons are visible', () => {
+      render(<SelectionView {...props} />, { initialState: mockStore })
 
-  test(`select button click calls
-  updatePhotoSelection with correct args`, () => {
-    render(<SelectionView {...props} />);
+      const selectBtns = screen.getAllByRole('button', {
+        hidden: true,
+        name: 'selectLighbox',
+      })
 
-    const selectBtn = screen.getByRole('button', {
-      hidden: true,
-      name: 'selectLighbox',
-    });
+      const commentBtns = screen.getAllByRole('button', {
+        hidden: true,
+        name: 'commentLightbox',
+      })
 
-    user.click(selectBtn);
+      expect(selectBtns).toHaveLength(1)
+      expect(commentBtns).toHaveLength(1)
+    })
 
-    expect(updatePhotoSelection).toHaveBeenCalledWith(
-      'collectionId',
-      'photoId1',
-      true
-    );
-  });
+    test(`select button click calls
+    updatePhotoSelection with correct args`, () => {
+      render(<SelectionView {...props} />, { initialState: mockStore })
 
-  test(`comment button click calls
-  openCommentModal once`, async () => {
-    render(<SelectionView {...props} />);
+      const selectBtn = screen.getByRole('button', {
+        hidden: true,
+        name: 'selectLighbox',
+      })
 
-    const selectBtn = screen.getByRole('button', {
-      hidden: true,
-      name: 'commentLightbox',
-    });
+      user.click(selectBtn)
 
-    user.click(selectBtn);
+      expect(updatePhotoSelection).toHaveBeenCalledWith('collectionId', 'photoId1', true)
+    })
 
-    expect(props.openCommentModal).toHaveBeenCalledTimes(1);
-  });
-});
+    test(`comment button click calls
+    openCommentModal once`, async () => {
+      render(<SelectionView {...props} />, { initialState: mockStore })
 
-describe('<SelectionView/> comment open', () => {
-  beforeAll(() => {
-    props.commentOpen = true;
-  });
-  afterAll(() => {
-    props.commentOpen = false;
-  });
-  test(`saving comment calls savePhotoComment
-   with correct args`, async () => {
-    render(<SelectionView {...props} />);
+      const selectBtn = screen.getByRole('button', {
+        hidden: true,
+        name: 'commentLightbox',
+      })
 
-    const saveBtn = await screen.findByText('Save');
+      user.click(selectBtn)
 
-    user.click(saveBtn);
+      expect(props.openCommentModal).toHaveBeenCalledTimes(1)
+    })
+  })
 
-    expect(updatePhotoComment).toHaveBeenCalledWith(
-      'collectionId',
-      'photoId1',
-      'test comment'
-    );
-  });
-});
+  describe('when comment is open', () => {
+    beforeAll(() => {
+      props.commentOpen = true
+    })
+    afterAll(() => {
+      props.commentOpen = false
+    })
+    test(`saving comment calls savePhotoComment with correct args`, async () => {
+      render(<SelectionView {...props} />, { initialState: mockStore })
+
+      const saveBtn = await screen.findByText('Save')
+
+      user.click(saveBtn)
+
+      expect(updatePhotoComment).toHaveBeenCalledWith('collectionId', 'photoId1', 'test comment')
+    })
+  })
+})

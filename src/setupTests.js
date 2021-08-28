@@ -1,2 +1,3 @@
-import '@testing-library/jest-dom/extend-expect';
-import 'jest-axe/extend-expect';
+/* eslint-disable import/no-extraneous-dependencies */
+import '@testing-library/jest-dom/extend-expect'
+import 'jest-axe/extend-expect'

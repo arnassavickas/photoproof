@@ -1,54 +1,51 @@
-import React from 'react';
-import styles from './styles.module.scss';
-import { PhotoGridProps } from '../../../types';
-import { IconButton } from '@material-ui/core';
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { IconButton } from '@material-ui/core'
 
-import { updatePhotoSelection } from '../../../firebase';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
+import FavoriteIcon from '@material-ui/icons/Favorite'
+import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline'
+import ChatBubbleIcon from '@material-ui/icons/ChatBubble'
 
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
-import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
+import Masonry from 'react-masonry-css'
 
-import Masonry from 'react-masonry-css';
+import { useSnackbar } from 'notistack'
 
-import { useSnackbar } from 'notistack';
+import { updatePhotoSelection } from '../../../firebase'
+import { PhotoGridProps } from '../../../types'
+import styles from './styles.module.scss'
+import { RootState } from '../../../store'
+import { setCollection } from '../../../reducers/collectionSlice'
 
-const PhotoGrid: React.FC<PhotoGridProps> = ({
-  collectionId,
-  collection,
-  setCollection,
-  filteredPhotos,
-  openLightbox,
-  openCommentModal,
-}) => {
-  const { enqueueSnackbar } = useSnackbar();
+const PhotoGrid: React.FC<PhotoGridProps> = ({ openLightbox, openCommentModal }) => {
+  const { enqueueSnackbar } = useSnackbar()
 
-  const selectPhoto = (photoId: string) => async (event: any) => {
+  const dispatch = useDispatch()
+  const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
+  const collection = useSelector((state: RootState) => state.collection.data)
+
+  const selectPhoto = (photoId: string) => async () => {
     try {
-      const clickedPhoto = collection?.photos.find(
-        (photo) => photo.id === photoId
-      );
-      if (clickedPhoto && collection && setCollection && collectionId) {
-        await updatePhotoSelection(
-          collectionId,
-          photoId,
-          !clickedPhoto.selected
-        );
-        clickedPhoto.selected = !clickedPhoto?.selected;
-        setCollection({
-          ...collection,
-          photos: collection.photos.map((photo) =>
-            photo.id === photoId ? clickedPhoto : photo
-          ),
-        });
+      const clickedPhoto = collection.photos.find(photo => photo.id === photoId)
+
+      if (clickedPhoto) {
+        await updatePhotoSelection(collection.id, photoId, !clickedPhoto.selected)
+
+        dispatch(
+          setCollection({
+            ...collection,
+            photos: collection.photos.map(photo =>
+              photo.id === photoId ? { ...photo, selected: !clickedPhoto.selected } : photo,
+            ),
+          }),
+        )
       }
     } catch (err) {
       enqueueSnackbar('ERROR: Photo selection failed', {
         variant: 'error',
-      });
+      })
     }
-  };
+  }
 
   const breakpointColumns = {
     default: 5,
@@ -56,7 +53,7 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
     1100: 3,
     700: 2,
     430: 1,
-  };
+  }
 
   return (
     <Masonry
@@ -69,7 +66,7 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
           <div className={styles.photoThumbnailGrid} key={photo.id}>
             <div className={styles.imgBorder}>
               <picture>
-                <source srcSet={photo.thumbnailWebp} type='image/webp' />
+                <source srcSet={photo.thumbnailWebp} type="image/webp" />
                 <img
                   src={photo.thumbnail}
                   alt={collection.title}
@@ -81,26 +78,18 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
                 <div>
                   {collection.allowComments ? (
                     <IconButton
-                      aria-label='comment'
+                      aria-label="comment"
                       className={
-                        photo.comment.length > 0
-                          ? styles.commentBtnFilled
-                          : styles.commentBtn
+                        photo.comment.length > 0 ? styles.commentBtnFilled : styles.commentBtn
                       }
                       onClick={() => openCommentModal(index)}
                     >
-                      {photo.comment.length > 0 ? (
-                        <ChatBubbleIcon />
-                      ) : (
-                        <ChatBubbleOutlineIcon />
-                      )}
+                      {photo.comment.length > 0 ? <ChatBubbleIcon /> : <ChatBubbleOutlineIcon />}
                     </IconButton>
                   ) : null}
                   <IconButton
-                    aria-label='select'
-                    className={
-                      photo.selected ? styles.heartBtnSelected : styles.heartBtn
-                    }
+                    data-testid="select-btn"
+                    className={photo.selected ? styles.heartBtnSelected : styles.heartBtn}
                     onClick={selectPhoto(photo.id)}
                   >
                     {photo.selected ? <FavoriteIcon /> : <FavoriteBorderIcon />}
@@ -110,7 +99,7 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
                 <div>
                   {photo.comment.length > 0 && collection.allowComments ? (
                     <IconButton
-                      aria-label='comment'
+                      aria-label="comment"
                       className={styles.commentBtnFilled}
                       onClick={() => openCommentModal(index)}
                     >
@@ -119,7 +108,7 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
                   ) : null}
                   {photo.selected ? (
                     <IconButton
-                      aria-label='select'
+                      data-testid="select-btn"
                       className={styles.heartBtnSelected}
                       disabled
                     >
@@ -130,10 +119,10 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
               )}
             </div>
           </div>
-        );
+        )
       })}
     </Masonry>
-  );
-};
+  )
+}
 
-export default PhotoGrid;
+export default PhotoGrid

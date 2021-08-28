@@ -1,81 +1,71 @@
-import React from 'react';
+import React from 'react'
 
-import { render, screen } from '../../utils/customTestRenderer';
-import { FilterButtonsProps } from '../../types';
-import user from '@testing-library/user-event';
-import FilterButtons from './FilterButtons';
-import { collection } from '../../utils/testUtils';
+import user from '@testing-library/user-event'
+
+import { render, screen } from '../../utils/customTestRenderer'
+import { FilterButtonsProps } from '../../types'
+import FilterButtons from './FilterButtons'
+import { collection, filteredPhotos } from '../../utils/testUtils'
+import * as collectionSlice from '../../reducers/collectionSlice'
 
 const props: FilterButtonsProps = {
-  collection,
-  setFilteredPhotos: jest.fn(),
-};
-
-const propsModifyLightbox: FilterButtonsProps = {
-  collection,
-  setFilteredPhotos: jest.fn(),
   modifyLightbox: true,
   setLightboxOpen: jest.fn(),
   photoIndex: 1,
   setPhotoIndex: jest.fn(),
-};
+}
+
+const setPhotoFilter = jest.spyOn(collectionSlice, 'setPhotoFilter')
 
 describe('<FilterButtons/>', () => {
-  test('selected button', async () => {
-    render(<FilterButtons {...props} />);
+  let mockStore = { collection: { data: collection, filteredPhotos } }
 
-    const selectedBtn = screen.getByRole('button', { name: /^selected/i });
-    const allBtn = screen.getByRole('button', { name: /^all/i });
+  beforeEach(() => {
+    setPhotoFilter.mockReturnValue({ type: '', payload: 'selected' })
 
-    user.click(selectedBtn);
+    mockStore = { collection: { data: collection, filteredPhotos } }
+  })
 
-    expect(props.setFilteredPhotos).toHaveBeenLastCalledWith([
-      collection.photos[1],
-    ]);
+  test('button clicks call action creator with correct args', async () => {
+    render(<FilterButtons />, { initialState: mockStore })
 
-    user.click(allBtn);
+    user.click(screen.getByRole('button', { name: /^selected/i }))
 
-    expect(props.setFilteredPhotos).toHaveBeenLastCalledWith(collection.photos);
-  });
+    expect(setPhotoFilter).toHaveBeenLastCalledWith('selected')
 
-  test('not selected button', () => {
-    render(<FilterButtons {...props} />);
+    user.click(screen.getByRole('button', { name: /^all/i }))
 
-    const notSelectedBtn = screen.getByRole('button', {
-      name: /^not selected/i,
-    });
-    const allBtn = screen.getByRole('button', { name: /^all/i });
+    expect(setPhotoFilter).toHaveBeenLastCalledWith('all')
 
-    user.click(notSelectedBtn);
+    user.click(
+      screen.getByRole('button', {
+        name: /^not selected/i,
+      }),
+    )
 
-    expect(props.setFilteredPhotos).toHaveBeenLastCalledWith([
-      collection.photos[0],
-    ]);
+    expect(setPhotoFilter).toHaveBeenLastCalledWith('unselected')
+  })
 
-    user.click(allBtn);
+  describe('when props are provided', () => {
+    test('calls photo index callback if filtered photos quantity is less than photo index', () => {
+      mockStore.collection.filteredPhotos = [filteredPhotos[0]]
+      render(<FilterButtons {...props} />, { initialState: mockStore })
 
-    expect(props.setFilteredPhotos).toHaveBeenLastCalledWith(collection.photos);
-  });
-});
+      const selectedBtn = screen.getByRole('button', { name: /^selected/i })
 
-describe('<FilterButtons modifyLightbox/>', () => {
-  test('photoIndex is higher or equal to filtered photos length', () => {
-    render(<FilterButtons {...propsModifyLightbox} />);
+      user.click(selectedBtn)
 
-    const selectedBtn = screen.getByRole('button', { name: /^selected/i });
+      expect(props.setPhotoIndex).toHaveBeenCalledWith(0)
+    })
+    test('calls lightbox callback if filtered photos are empty', () => {
+      mockStore.collection.filteredPhotos = []
+      render(<FilterButtons {...props} />, { initialState: mockStore })
 
-    user.click(selectedBtn);
+      const selectedBtn = screen.getByRole('button', { name: /^selected/i })
 
-    expect(propsModifyLightbox.setPhotoIndex).toHaveBeenCalledWith(0);
-  });
-  test('filtered photos become zero', () => {
-    propsModifyLightbox.collection.photos[1].selected = false;
-    render(<FilterButtons {...propsModifyLightbox} />);
+      user.click(selectedBtn)
 
-    const selectedBtn = screen.getByRole('button', { name: /^selected/i });
-
-    user.click(selectedBtn);
-
-    expect(propsModifyLightbox.setLightboxOpen).toHaveBeenCalledWith(false);
-  });
-});
+      expect(props.setLightboxOpen).toHaveBeenCalledWith(false)
+    })
+  })
+})

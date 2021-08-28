@@ -1,20 +1,21 @@
-import React from 'react';
-import styles from './styles.module.scss';
-import { LockedViewProps } from '../../../types';
-import { IconButton } from '@material-ui/core';
+import React from 'react'
+import { useSelector } from 'react-redux'
+import { IconButton } from '@material-ui/core'
 
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
-import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
+import FavoriteIcon from '@material-ui/icons/Favorite'
+import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline'
+import ChatBubbleIcon from '@material-ui/icons/ChatBubble'
 
-import Lightbox from '../../Lightbox/Lightbox';
-import CommentDialog from '../../CommentDialog/CommentDialog';
-import PhotoGrid from '../PhotoGrid/PhotoGrid';
+import { LockedViewProps } from '../../../types'
+import styles from './styles.module.scss'
+
+import Lightbox from '../../Lightbox/Lightbox'
+import CommentDialog from '../../CommentDialog/CommentDialog'
+import PhotoGrid from '../PhotoGrid/PhotoGrid'
+import { RootState } from '../../../store'
 
 const LockedView: React.FC<LockedViewProps> = ({
-  collection,
-  filteredPhotos,
   lightboxOpen,
   setLightboxOpen,
   openLightbox,
@@ -25,23 +26,20 @@ const LockedView: React.FC<LockedViewProps> = ({
   setCommentOpen,
   commentTextarea,
 }) => {
+  const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
+  const collection = useSelector((state: RootState) => state.collection.data)
+
   return (
     <div>
-      <PhotoGrid
-        collection={collection}
-        filteredPhotos={filteredPhotos}
-        openLightbox={openLightbox}
-        openCommentModal={openCommentModal}
-      />
+      <PhotoGrid openLightbox={openLightbox} openCommentModal={openCommentModal} />
       {filteredPhotos.length > 0 && (
         <Lightbox
-          filteredPhotos={filteredPhotos}
           lightboxOpen={lightboxOpen}
           setLightboxOpen={setLightboxOpen}
           lightboxIndex={photoIndex}
           setLightboxIndex={setPhotoIndex}
           toolbarButtons={[
-            <IconButton aria-label='selectLighbox' disabled>
+            <IconButton aria-label="selectLighbox" disabled>
               {filteredPhotos[photoIndex].selected ? (
                 <FavoriteIcon className={styles.toolbarIcon} />
               ) : (
@@ -49,10 +47,7 @@ const LockedView: React.FC<LockedViewProps> = ({
               )}
             </IconButton>,
             collection.allowComments ? (
-              <IconButton
-                aria-label='commentLightbox'
-                onClick={() => openCommentModal()}
-              >
+              <IconButton aria-label="commentLightbox" onClick={() => openCommentModal()}>
                 {filteredPhotos[photoIndex].comment.length > 0 ? (
                   <ChatBubbleIcon className={styles.toolbarIcon} />
                 ) : (
@@ -67,10 +62,10 @@ const LockedView: React.FC<LockedViewProps> = ({
         commentOpen={commentOpen}
         setCommentOpen={setCommentOpen}
         commentTextarea={commentTextarea}
-        disabled={true}
+        disabled
       />
     </div>
-  );
-};
+  )
+}
 
-export default LockedView;
+export default LockedView

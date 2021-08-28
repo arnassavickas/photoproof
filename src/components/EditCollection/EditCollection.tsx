@@ -1,89 +1,84 @@
-import React, { useEffect, useState } from 'react';
-import styles from './styles.module.scss';
-import { useParams } from 'react-router-dom';
-import { Collection, Photo } from '../../types';
-import { getSingleCollection } from '../../firebase';
-import { IconButton, Backdrop, CircularProgress } from '@material-ui/core';
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { IconButton } from '@material-ui/core'
+import { useDispatch, useSelector } from 'react-redux'
+import { noop } from 'lodash'
 
-import StarBorderIcon from '@material-ui/icons/StarBorder';
-import MessageIcon from '@material-ui/icons/Message';
+import StarBorderIcon from '@material-ui/icons/StarBorder'
 
-import ConfirmationDialog from '../ConfirmationDialog/ConfirmationDialog';
+import MessageIcon from '@material-ui/icons/Message'
 
-import CollectionDetails from './CollectionDetails/CollectionDetails';
-import PhotoTableToolbar from './PhotoTableToolbar/PhotoTableToolbar';
-import PhotoTable from './PhotoTable/PhotoTable';
-import AddPhotosDialog from './AddPhotosDialog/AddPhotosDialog';
-import Lightbox from '../Lightbox/Lightbox';
-import CommentDialog from '../CommentDialog/CommentDialog';
+import { useSnackbar } from 'notistack'
 
-import { useSnackbar } from 'notistack';
+import styles from './styles.module.scss'
+import { UiState } from '../../types'
+import { getSingleCollection } from '../../firebase'
+
+import ConfirmationDialog from '../ConfirmationDialog/ConfirmationDialog'
+
+import CollectionDetails from './CollectionDetails/CollectionDetails'
+import PhotoTableToolbar from './PhotoTableToolbar/PhotoTableToolbar'
+import PhotoTable from './PhotoTable/PhotoTable'
+import AddPhotosDialog from './AddPhotosDialog/AddPhotosDialog'
+import Lightbox from '../Lightbox/Lightbox'
+import CommentDialog from '../CommentDialog/CommentDialog'
+import { setCollection } from '../../reducers/collectionSlice'
+import { setUiState } from '../../reducers/uiStateSlice'
+import { RootState } from '../../store'
 
 const EditCollection: React.FC = () => {
-  const { id: collectionId } = useParams<{ id: string }>();
+  const { id: collectionId } = useParams<{ id: string }>()
 
-  const [collection, setCollection] = useState<Collection | null>(null);
-  const [filteredPhotos, setFilteredPhotos] = useState<Photo[]>([]);
-  const [photoIndex, setPhotoIndex] = useState(0);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [selected, setSelected] = useState<string[]>([]);
-  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
-  const [confirmationDialogTitle, setConfirmationDialogTitle] = useState('');
-  const [
-    confirmationDialogContentText,
-    setConfirmationDialogContentText,
-  ] = useState('');
-  const [confirmationDialogAgree, setConfirmationDialogAgree] = useState<
-    (value: any) => void
-  >(() => {});
-  const [progress, setProgress] = useState(0);
-  const [addPhotosDialogOpen, setAddPhotosDialogOpen] = useState(false);
-  const [commentOpen, setCommentOpen] = useState(false);
-  const [commentTextarea, setCommentTextarea] = useState('');
+  const dispatch = useDispatch()
+  const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
+  const collection = useSelector((state: RootState) => state.collection.data)
 
-  const { enqueueSnackbar } = useSnackbar();
+  const [photoIndex, setPhotoIndex] = useState(0)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [selected, setSelected] = useState<string[]>([])
+  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
+  const [confirmationDialogTitle, setConfirmationDialogTitle] = useState('')
+  const [confirmationDialogContentText, setConfirmationDialogContentText] = useState('')
+  const [confirmationDialogAgree, setConfirmationDialogAgree] = useState<(value: any) => void>(noop)
+  const [progress, setProgress] = useState(0)
+  const [addPhotosDialogOpen, setAddPhotosDialogOpen] = useState(false)
+  const [commentOpen, setCommentOpen] = useState(false)
+  const [commentTextarea, setCommentTextarea] = useState('')
+
+  const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
-    getSingleCollection(collectionId)
-      .then((collection) => {
-        setCollection(collection);
-        setFilteredPhotos(collection.photos);
-      })
-      .catch((err) => {
-        enqueueSnackbar('ERROR: Getting collection failed', {
-          variant: 'error',
-        });
-      });
-  }, [collectionId, enqueueSnackbar]);
+    if (collection.id !== collectionId) {
+      getSingleCollection(collectionId)
+        .then(collection => {
+          dispatch(setCollection(collection))
+          dispatch(setUiState(UiState.Success))
+        })
+        .catch(() => {
+          enqueueSnackbar('ERROR: Getting collection failed', {
+            variant: 'error',
+          })
+          dispatch(setUiState(UiState.Idle))
+        })
+    }
+  }, [collection.id, collectionId, dispatch, enqueueSnackbar])
 
   const openCommentModal = (index?: number) => {
-    setCommentOpen(true);
+    setCommentOpen(true)
     if (filteredPhotos) {
       if (index) {
-        setPhotoIndex(index);
-        setCommentTextarea(filteredPhotos[index].comment);
+        setPhotoIndex(index)
+        setCommentTextarea(filteredPhotos[index].comment)
       } else {
-        setCommentTextarea(filteredPhotos[photoIndex].comment);
+        setCommentTextarea(filteredPhotos[photoIndex].comment)
       }
     }
-  };
-
-
-
-  if (collection === null || filteredPhotos === null) {
-    return (
-      <Backdrop open={true}>
-        <CircularProgress color='inherit' />
-      </Backdrop>
-    );
   }
 
   return (
     <div>
       <CollectionDetails
         collectionId={collectionId}
-        collection={collection}
-        setCollection={setCollection}
         setConfirmationDialogOpen={setConfirmationDialogOpen}
         setConfirmationDialogTitle={setConfirmationDialogTitle}
         setConfirmationDialogContentText={setConfirmationDialogContentText}
@@ -92,10 +87,6 @@ const EditCollection: React.FC = () => {
       />
       <PhotoTableToolbar
         collectionId={collectionId}
-        collection={collection}
-        setCollection={setCollection}
-        filteredPhotos={filteredPhotos}
-        setFilteredPhotos={setFilteredPhotos}
         setConfirmationDialogOpen={setConfirmationDialogOpen}
         setConfirmationDialogTitle={setConfirmationDialogTitle}
         setConfirmationDialogContentText={setConfirmationDialogContentText}
@@ -106,8 +97,6 @@ const EditCollection: React.FC = () => {
         setAddPhotosDialogOpen={setAddPhotosDialogOpen}
       />
       <PhotoTable
-        collection={collection}
-        filteredPhotos={filteredPhotos}
         selected={selected}
         setSelected={setSelected}
         setPhotoIndex={setPhotoIndex}
@@ -115,28 +104,24 @@ const EditCollection: React.FC = () => {
       />
       {filteredPhotos.length > 0 && (
         <Lightbox
-          filteredPhotos={filteredPhotos}
           lightboxOpen={lightboxOpen}
           setLightboxOpen={setLightboxOpen}
           lightboxIndex={photoIndex}
           setLightboxIndex={setPhotoIndex}
           toolbarButtons={[
             filteredPhotos[photoIndex].comment.length > 0 ? (
-              <IconButton
-                className={styles.toolbarIcon}
-                onClick={() => openCommentModal()}
-              >
+              <IconButton className={styles.toolbarIcon} onClick={() => openCommentModal()}>
                 <MessageIcon />
               </IconButton>
             ) : (
-              <div className={styles.toolbarIcon}></div>
+              <div className={styles.toolbarIcon} />
             ),
             filteredPhotos[photoIndex].selected ? (
               <IconButton className={styles.toolbarIcon} disabled>
                 <StarBorderIcon />
               </IconButton>
             ) : (
-              <div className={styles.toolbarIcon}></div>
+              <div className={styles.toolbarIcon} />
             ),
           ]}
         />
@@ -151,7 +136,6 @@ const EditCollection: React.FC = () => {
       />
       <AddPhotosDialog
         collectionId={collectionId}
-        setCollection={setCollection}
         setProgress={setProgress}
         addPhotosDialogOpen={addPhotosDialogOpen}
         setAddPhotosDialogOpen={setAddPhotosDialogOpen}
@@ -161,10 +145,10 @@ const EditCollection: React.FC = () => {
         commentOpen={commentOpen}
         setCommentOpen={setCommentOpen}
         commentTextarea={commentTextarea}
-        disabled={true}
+        disabled
       />
     </div>
-  );
-};
+  )
+}
 
-export default EditCollection;
+export default EditCollection

@@ -1,81 +1,76 @@
-import React, { useEffect, useState } from 'react';
-import styles from './styles.module.scss';
-import { FilterButtonsProps, Photo } from '../../types';
-import { Button, ButtonGroup } from '@material-ui/core';
+import React, { useState } from 'react'
+import { Button, ButtonGroup } from '@material-ui/core'
+import { useDispatch, useSelector } from 'react-redux'
+
+import styles from './styles.module.scss'
+import { FilterButtonsProps } from '../../types'
+import { setPhotoFilter } from '../../reducers/collectionSlice'
+import { RootState } from '../../store'
 
 const FilterButtons: React.FC<FilterButtonsProps> = ({
-  collection,
-  setFilteredPhotos,
   setLightboxOpen,
   photoIndex,
   setPhotoIndex,
 }) => {
-  const [filter, setFilter] = useState('all');
+  const [filter, setFilter] = useState('all')
 
-  const modifyLightbox = (photos: Photo[]) => {
+  const dispatch = useDispatch()
+  const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
+  const collection = useSelector((state: RootState) => state.collection.data)
+
+  const modifyLightbox = () => {
     if (setLightboxOpen && photoIndex && setPhotoIndex) {
-      if (photos.length === 0) {
-        setLightboxOpen(false);
-      } else if (photos.length <= photoIndex) {
-        setPhotoIndex(photos.length - 1);
+      if (filteredPhotos.length === 0) {
+        setLightboxOpen(false)
+      } else if (filteredPhotos.length <= photoIndex) {
+        setPhotoIndex(filteredPhotos.length - 1)
       }
     }
-  };
+  }
 
   const photosCount = (() => {
-    const all = collection.photos.length;
-    const selected = collection.photos.filter((photo) => photo.selected).length;
-    const notSelected = all - selected;
-    return { all, selected, notSelected };
-  })();
+    const all = collection.photos.length
+    const selected = collection.photos.filter(photo => photo.selected).length
+    const notSelected = all - selected
+    return { all, selected, notSelected }
+  })()
 
-  useEffect(() => {
-    if (collection) {
-      switch (filter) {
-        case 'all':
-          return setFilteredPhotos(collection.photos);
-        case 'selected':
-          const selectedPhotos = collection.photos.filter(
-            (photo) => photo.selected
-          );
-          modifyLightbox(selectedPhotos);
-          return setFilteredPhotos(selectedPhotos);
-        case 'unselected':
-          const unselectedPhotos = collection.photos.filter(
-            (photo) => !photo.selected
-          );
-          modifyLightbox(unselectedPhotos);
-          return setFilteredPhotos(unselectedPhotos);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filter, collection]);
+  const handleAllClick = () => {
+    dispatch(setPhotoFilter('all'))
+    setFilter('all')
+  }
+
+  const handleSelectedClick = () => {
+    dispatch(setPhotoFilter('selected'))
+    setFilter('selected')
+    modifyLightbox()
+  }
+
+  const handleUnselectedClick = () => {
+    dispatch(setPhotoFilter('unselected'))
+    setFilter('unselected')
+    modifyLightbox()
+  }
 
   return (
-    <ButtonGroup
-      className={styles.filterBtns}
-      aria-label='outlined primary button group'
-    >
+    <ButtonGroup className={styles.filterBtns} aria-label="outlined primary button group">
       <Button
         variant={filter === 'selected' ? 'contained' : undefined}
-        onClick={() => setFilter('selected')}
+        onClick={handleSelectedClick}
       >
         Selected &nbsp;&nbsp;{photosCount.selected}
       </Button>
-      <Button
-        variant={filter === 'all' ? 'contained' : undefined}
-        onClick={() => setFilter('all')}
-      >
+      <Button variant={filter === 'all' ? 'contained' : undefined} onClick={handleAllClick}>
         All &nbsp;&nbsp;{photosCount.all}
       </Button>
       <Button
         variant={filter === 'unselected' ? 'contained' : undefined}
-        onClick={() => setFilter('unselected')}
+        onClick={handleUnselectedClick}
       >
         Not Selected &nbsp;&nbsp;{photosCount.notSelected}
       </Button>
     </ButtonGroup>
-  );
-};
+  )
+}
 
-export default FilterButtons;
+export default FilterButtons

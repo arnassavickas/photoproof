@@ -1,114 +1,108 @@
-import React from 'react';
-import { render, screen } from '../../utils/customTestRenderer';
-import user from '@testing-library/user-event';
-import CollectionPage from './CollectionPage';
-import { collection } from '../../utils/testUtils';
-import { getSingleCollection } from '../../firebase';
-import { Route, Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import React from 'react'
+import { Route, Router } from 'react-router-dom'
 
-jest.mock('../../firebase');
-const mockedGetSingleCollection = getSingleCollection as any;
+import { createMemoryHistory } from 'history'
+
+import { render, screen } from '../../utils/customTestRenderer'
+import CollectionPage from './CollectionPage'
+import { collection, filteredPhotos } from '../../utils/testUtils'
+import * as firebase from '../../firebase'
+
+jest.mock('../../firebase')
+const getSingleCollection = jest.spyOn(firebase, 'getSingleCollection')
 
 describe('<CollectionPage/>', () => {
+  let mockStore = { collection: { data: collection, filteredPhotos } }
+
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-  });
+    getSingleCollection.mockResolvedValue(collection)
+
+    mockStore = { collection: { data: collection, filteredPhotos } }
+  })
 
   test('getSingleCollection is called with correct id', async () => {
-    mockedGetSingleCollection.mockResolvedValueOnce(collection);
     const history = createMemoryHistory({
       initialEntries: ['/collectionId'],
-    });
+    })
     render(
       <Router history={history}>
-        <Route path='/:id'>
+        <Route path="/:id">
           <CollectionPage />
         </Route>
-      </Router>
-    );
+      </Router>,
+      { initialState: mockStore },
+    )
 
-    expect(getSingleCollection).toHaveBeenCalledWith('collectionId');
-  });
-  test('correct details is rendered', async () => {
-    mockedGetSingleCollection.mockResolvedValueOnce(collection);
+    expect(getSingleCollection).toHaveBeenCalledWith('collectionId')
+  })
+
+  test('correct details are rendered (min: yes, max: yes)', async () => {
     const history = createMemoryHistory({
       initialEntries: ['/collectionId'],
-    });
-    const { rerender } = render(
-      <Router history={history}>
-        <Route path='/:id'>
-          <CollectionPage />
-        </Route>
-      </Router>
-    );
-
-    await screen.findByText('collection title');
-    await screen.findByText(/^selected 1/i);
-    await screen.findByText(/you must select from 1 to 2 photos/i);
-
-    collection.minSelect.required = false;
-
-    rerender(
-      <Router history={history}>
-        <Route path='/:id'>
-          <CollectionPage />
-        </Route>
-      </Router>
-    );
-
-    await screen.findByText(/you must select a maximum of 2 photos/i);
-
-    collection.minSelect.required = true;
-    collection.maxSelect.required = false;
-
-    rerender(
-      <Router history={history}>
-        <Route path='/:id'>
-          <CollectionPage />
-        </Route>
-      </Router>
-    );
-
-    await screen.findByText(/you must select at least 1 photos/i);
-  });
-
-  test('changing filter where no photos exist, shows text', async () => {
-    collection.photos[1].selected = false;
-    mockedGetSingleCollection.mockResolvedValueOnce(collection);
-    const history = createMemoryHistory({
-      initialEntries: ['/collectionId'],
-    });
+    })
     render(
       <Router history={history}>
-        <Route path='/:id'>
+        <Route path="/:id">
           <CollectionPage />
         </Route>
-      </Router>
-    );
+      </Router>,
+      { initialState: mockStore },
+    )
 
-    await screen.findByText(/^selected 0/i);
+    expect(await screen.findByText('collection title')).toBeInTheDocument()
+    expect(await screen.findByText(/^selected 1/i)).toBeInTheDocument()
+    expect(await screen.findByText(/you must select from 1 to 2 photos/i)).toBeInTheDocument()
+  })
 
-    const selectedBtn = screen.getByText(/^selected/i);
-    user.click(selectedBtn);
+  test('correct details are rendered (min: no, max: yes)', async () => {
+    mockStore = {
+      ...mockStore,
+      collection: {
+        filteredPhotos,
+        data: { ...collection, minSelect: { required: false, goal: 0 } },
+      },
+    }
 
-    await screen.findByText(/no photos in this filter/i);
-  });
-
-  test('collection without photos shows text', async () => {
-    collection.photos = [];
-    mockedGetSingleCollection.mockResolvedValueOnce(collection);
     const history = createMemoryHistory({
       initialEntries: ['/collectionId'],
-    });
+    })
     render(
       <Router history={history}>
-        <Route path='/:id'>
+        <Route path="/:id">
           <CollectionPage />
         </Route>
-      </Router>
-    );
+      </Router>,
+      { initialState: mockStore },
+    )
 
-    await screen.findByText(/no photos in collection/i);
-  });
-});
+    expect(await screen.findByText(/you must select a maximum of 2 photos/i)).toBeInTheDocument()
+  })
+
+  test('correct details are rendered (min: yes, max: no)', async () => {
+    mockStore = {
+      ...mockStore,
+      collection: {
+        filteredPhotos,
+        data: {
+          ...collection,
+          minSelect: { required: true, goal: 1 },
+          maxSelect: { required: false, goal: 0 },
+        },
+      },
+    }
+
+    const history = createMemoryHistory({
+      initialEntries: ['/collectionId'],
+    })
+    render(
+      <Router history={history}>
+        <Route path="/:id">
+          <CollectionPage />
+        </Route>
+      </Router>,
+      { initialState: mockStore },
+    )
+
+    expect(await screen.findByText(/you must select at least 1 photos/i)).toBeInTheDocument()
+  })
+})

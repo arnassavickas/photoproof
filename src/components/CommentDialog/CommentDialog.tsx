@@ -1,5 +1,4 @@
-import React from 'react';
-import styles from './styles.module.scss';
+import React from 'react'
 import {
   Dialog,
   DialogContent,
@@ -7,9 +6,11 @@ import {
   TextField,
   DialogActions,
   IconButton,
-} from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import { CommentDialogProps } from '../../types';
+} from '@material-ui/core'
+import CloseIcon from '@material-ui/icons/Close'
+
+import styles from './styles.module.scss'
+import { CommentDialogProps } from '../../types'
 
 const CommentDialog: React.FC<CommentDialogProps> = ({
   commentOpen,
@@ -19,26 +20,23 @@ const CommentDialog: React.FC<CommentDialogProps> = ({
   actionButtons,
   disabled,
 }) => {
-  const handleCommentTextarea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    e.preventDefault();
-    if (setCommentTextarea) setCommentTextarea(e.target.value);
-  };
+  const handleCommentTextarea = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    event.preventDefault()
+    if (setCommentTextarea) setCommentTextarea(event.target.value)
+  }
 
   return (
     <Dialog open={commentOpen} onClose={() => setCommentOpen(false)}>
-      <IconButton
-        onClick={() => setCommentOpen(false)}
-        className={styles.exitBtn}
-      >
+      <IconButton onClick={() => setCommentOpen(false)} className={styles.exitBtn}>
         <CloseIcon />
       </IconButton>
-      <DialogTitle id='alert-dialog-title'>Comment</DialogTitle>
+      <DialogTitle id="alert-dialog-title">Comment</DialogTitle>
       <DialogContent>
         <TextField
           classes={disabled ? { root: styles.disabledTextarea } : undefined}
           multiline
           rows={4}
-          variant='outlined'
+          variant="outlined"
           value={commentTextarea}
           onChange={handleCommentTextarea}
           disabled={disabled}
@@ -46,7 +44,7 @@ const CommentDialog: React.FC<CommentDialogProps> = ({
       </DialogContent>
       <DialogActions>{actionButtons}</DialogActions>
     </Dialog>
-  );
-};
+  )
+}
 
-export default CommentDialog;
+export default CommentDialog

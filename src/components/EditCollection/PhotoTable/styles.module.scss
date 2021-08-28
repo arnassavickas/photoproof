@@ -1,7 +1,9 @@
 .thumbnail {
-  width: 150px;
   vertical-align: bottom;
   margin: 3px 0;
+  aspect-ratio: 3/2;
+  object-fit: contain;
+  height: 100px;
 }
 
 .thumbnail:hover {

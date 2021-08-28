@@ -35,3 +35,4 @@ yarn-error.log*
 .VSCodeCounter/2021-02-28_15-18-00/results.csv
 .VSCodeCounter/2021-02-28_15-18-00/results.md
 .VSCodeCounter/2021-02-28_15-18-00/results.txt
+.eslintcache

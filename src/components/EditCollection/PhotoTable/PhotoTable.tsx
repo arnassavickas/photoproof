@@ -1,6 +1,5 @@
-import React from 'react';
-import styles from './styles.module.scss';
-import { PhotoTableProps } from '../../../types';
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   Checkbox,
   Table,
@@ -9,101 +8,130 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@material-ui/core';
+} from '@material-ui/core'
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
+import { useSnackbar } from 'notistack'
 
-import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
+import styles from './styles.module.scss'
+import { PhotoTableProps } from '../../../types'
 
-import ImageLoader from '../../ImageLoader/ImageLoader';
+import ImageLoader from '../../ImageLoader/ImageLoader'
+import DraggableComponent from './DraggableComponent/DraggableComponent'
+import DroppableComponent from './DroppableComponent/DroppableComponent'
+import { RootState } from '../../../store'
+import { changeOrder } from '../../../reducers/collectionSlice'
 
 const PhotoTable: React.FC<PhotoTableProps> = ({
-  collection,
-  filteredPhotos,
   selected,
   setSelected,
   setPhotoIndex,
   setLightboxOpen,
 }) => {
-  const openLightbox = (index: number) => (event: any) => {
-    setPhotoIndex(index);
-    setLightboxOpen(true);
-  };
+  const dispatch = useDispatch()
+  const collection = useSelector((state: RootState) => state.collection.data)
+  const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
+  const filter = useSelector((state: RootState) => state.collection.filter)
+
+  const { enqueueSnackbar } = useSnackbar()
+
+  const openLightbox = (index: number) => () => {
+    setPhotoIndex(index)
+    setLightboxOpen(true)
+  }
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked && filteredPhotos) {
-      const newSelecteds = filteredPhotos.map((n) => n.id);
-      setSelected(newSelecteds);
-      return;
+      const newSelecteds = filteredPhotos.map(photo => photo.id)
+      setSelected(newSelecteds)
+      return
     }
-    setSelected([]);
-  };
+    setSelected([])
+  }
 
   const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected: string[] = [];
+    const selectedIndex = selected.indexOf(id)
+    let newSelected: string[] = []
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
+      newSelected = newSelected.concat(selected, id)
     } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
+      newSelected = newSelected.concat(selected.slice(1))
     } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
+      newSelected = newSelected.concat(selected.slice(0, -1))
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
+        selected.slice(selectedIndex + 1),
+      )
     }
-    setSelected(newSelected);
-  };
+    setSelected(newSelected)
+  }
 
-  const isSelected = (id: string) => selected.indexOf(id) !== -1;
+  const isSelected = (id: string) => selected.indexOf(id) !== -1
+
+  const onDragEnd = (result: { destination: { index: number }; source: { index: number } }) => {
+    if (!result.destination) {
+      return
+    }
+
+    if (filter !== 'all') {
+      enqueueSnackbar('Reordering is only allowed when filter is "ALL"', {
+        variant: 'warning',
+      })
+    } else {
+      dispatch(
+        changeOrder({
+          source: result.source.index,
+          destination: result.destination.index,
+        }),
+      )
+    }
+  }
 
   return (
     <TableContainer>
-      <Table size='small'>
+      <Table size="small">
         <TableHead>
           <TableRow>
             {collection.status === 'editing' ? (
-              <TableCell padding='checkbox' size='medium'>
+              <TableCell padding="checkbox" size="medium">
                 <Checkbox
-                  indeterminate={
-                    selected.length > 0 &&
-                    selected.length < filteredPhotos.length
-                  }
-                  checked={
-                    filteredPhotos.length > 0 &&
-                    selected.length === filteredPhotos.length
-                  }
+                  indeterminate={selected.length > 0 && selected.length < filteredPhotos.length}
+                  checked={filteredPhotos.length > 0 && selected.length === filteredPhotos.length}
                   onChange={handleSelectAllClick}
                 />
               </TableCell>
             ) : null}
-            <TableCell width='5%' size='medium'>
+            <TableCell width="5%" size="medium">
               no.
             </TableCell>
-            <TableCell width='10%'>thumbnail</TableCell>
-            <TableCell width='30%'>filename</TableCell>
-            <TableCell padding='checkbox'></TableCell>
+            <TableCell width="10%">thumbnail</TableCell>
+            <TableCell width="30%">filename</TableCell>
+            <TableCell padding="checkbox" />
             <TableCell>comment</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody component={DroppableComponent(onDragEnd, collection.status !== 'editing')}>
           {filteredPhotos.map((photo, index) => (
-            <TableRow key={photo.id} selected={isSelected(photo.id)}>
+            <TableRow
+              key={photo.id}
+              selected={isSelected(photo.id)}
+              component={DraggableComponent(photo.id, index, collection.status !== 'editing')}
+            >
               {collection.status === 'editing' ? (
                 <TableCell
-                  data-testid='checkbox'
-                  padding='checkbox'
-                  onClick={(event) => handleClick(event, photo.id)}
+                  data-testid="checkbox"
+                  padding="checkbox"
+                  onClick={event => handleClick(event, photo.id)}
                 >
                   <Checkbox checked={isSelected(photo.id)} />
                 </TableCell>
               ) : null}
               <TableCell>{photo.index}.</TableCell>
-              <TableCell padding='none'>
-                <ImageLoader photo={photo} width={150} height={100}>
+              <TableCell padding="none">
+                <ImageLoader collectionId={collection.id} photo={photo} width={150} height={100}>
                   <picture>
-                    <source srcSet={photo.thumbnailWebp} type='image/webp' />
+                    <source srcSet={photo.thumbnailWebp} type="image/webp" />
                     <img
                       src={photo.thumbnail}
                       alt={collection.title}
@@ -114,18 +142,16 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
                 </ImageLoader>
               </TableCell>
               <TableCell>{photo.filename}</TableCell>
-              <TableCell padding='checkbox'>
-                {photo.selected ? (
-                  <FavoriteBorder data-testid='selected' />
-                ) : null}
+              <TableCell padding="checkbox">
+                {photo.selected ? <FavoriteBorder data-testid="selected" /> : null}
               </TableCell>
-              <TableCell data-testid='comment'>{photo.comment}</TableCell>
+              <TableCell data-testid="comment">{photo.comment}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
-  );
-};
+  )
+}
 
-export default PhotoTable;
+export default PhotoTable

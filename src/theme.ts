@@ -1,4 +1,4 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles'
 
 export const theme = createMuiTheme({
   palette: {
@@ -15,7 +15,7 @@ export const theme = createMuiTheme({
     },
     secondary: {
       light: 'rgba(138, 35, 70, 1)',
-      main: 'rgba(103, 9, 42, 1)',
+      main: 'rgba(191, 60, 106)',
       dark: 'rgba(152, 14, 63, 1)',
       contrastText: 'rgba(255, 255, 255, 1)',
     },
@@ -33,13 +33,7 @@ export const theme = createMuiTheme({
     },
   },
   typography: {
-    fontFamily: [
-      'Nunito',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-    ].join(','),
+    fontFamily: ['Nunito', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif'].join(','),
   },
   overrides: {
     MuiButton: {
@@ -67,10 +61,21 @@ export const theme = createMuiTheme({
         backgroundColor: 'rgba(255,255,255,0.1)',
       },
     },
+    MuiFormLabel: {
+      root: {
+        '&.Mui-focused': {
+          color: '#eee',
+          fontWeight: 600,
+        },
+      },
+    },
     MuiOutlinedInput: {
       root: {
         '&$disabled': {
           color: '#eee',
+        },
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+          borderColor: '#eee',
         },
       },
       notchedOutline: {
@@ -94,11 +99,25 @@ export const theme = createMuiTheme({
         },
       },
     },
-    MuiDialogTitle: {
+    MuiIconButton: {
       root: {
-        paddingRight: '3rem',
+        color: '#fff',
+      },
+    },
+    MuiBackdrop: {
+      root: {
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 2,
+        backdropFilter: 'blur(4px)',
+      },
+    },
+    MuiDialog: {
+      root: {
+        '& .MuiBackdrop-root': {
+          zIndex: -1,
+        },
       },
     },
   },
-});
-export default theme;
+})
+export default theme
