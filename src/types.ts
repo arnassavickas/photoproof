@@ -106,7 +106,6 @@ export interface PhotoGridProps {
 }
 
 export interface SelectionConfirmationDialogProps {
-  collectionId: string
   selectedPhotos: number | undefined
   confirmDialogOpen: boolean
   setConfirmDialogOpen: React.Dispatch<React.SetStateAction<boolean>>

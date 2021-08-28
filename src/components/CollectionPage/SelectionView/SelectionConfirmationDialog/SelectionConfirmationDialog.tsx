@@ -24,7 +24,6 @@ import { RootState } from '../../../../store'
 import { setCollection } from '../../../../reducers/collectionSlice'
 
 const SelectionConfirmationDialog: React.FC<SelectionConfirmationDialogProps> = ({
-  collectionId,
   selectedPhotos,
   confirmDialogOpen,
   setConfirmDialogOpen,
@@ -40,10 +39,10 @@ const SelectionConfirmationDialog: React.FC<SelectionConfirmationDialogProps> = 
   const confirmSelections = async (data: { finalComment: string }) => {
     try {
       await confirmCollection(
-        collectionId,
+        collection.id,
         collection.title,
         // TODO make subfolder Context or .env
-        `${window.location.origin.toString()}/photoproof/edit/${collectionId}`,
+        `${window.location.origin.toString()}/photoproof/edit/${collection.id}`,
         selectedPhotos,
         data.finalComment,
       )

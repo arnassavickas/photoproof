@@ -20,167 +20,178 @@ const props: CollectionDetailsProps = {
   setProgress: jest.fn(),
 }
 
-describe('<PhotoTableToolbar/> selecting', () => {
+describe('<CollectionDetails/>', () => {
+  let mockStore = { collection: { data: collection, reorderPending: false } }
+
   beforeEach(() => {
-    // jest.spyOn(console, 'error').mockImplementation(noop)
+    mockStore = { collection: { data: collection, reorderPending: false } }
   })
 
-  test('clicking "edit" button calls changeCollectionStatus one time', async () => {
-    render(
-      <Router>
-        <CollectionDetails {...props} />
-      </Router>,
-    )
+  describe('when collection stattus is selecting', () => {
+    test('clicking "edit" button calls changeCollectionStatus one time', async () => {
+      render(
+        <Router>
+          <CollectionDetails {...props} />
+        </Router>,
+        { initialState: mockStore },
+      )
 
-    const editButton = screen.getByText('Edit')
-    user.click(editButton)
-    await waitFor(() => {
-      expect(changeCollectionStatus).toHaveBeenCalledTimes(1)
+      const editButton = screen.getByText('Edit')
+      user.click(editButton)
+      await waitFor(() => {
+        expect(changeCollectionStatus).toHaveBeenCalledTimes(1)
+      })
+    })
+
+    test('clicking "copy selections" calls copySelections one time', async () => {
+      render(
+        <Router>
+          <CollectionDetails {...props} />
+        </Router>,
+        { initialState: mockStore },
+      )
+      const copyButton = screen.getByText(/copy selections/i)
+      user.click(copyButton)
+
+      await waitFor(() => {
+        expect(props.setConfirmationDialogAgree).toHaveBeenCalledTimes(1)
+      })
     })
   })
 
-  test('clicking "copy selections" calls copySelections one time', async () => {
-    render(
-      <Router>
-        <CollectionDetails {...props} />
-      </Router>,
-    )
-    const copyButton = screen.getByText(/copy selections/i)
-    user.click(copyButton)
-
-    await waitFor(() => {
-      expect(props.setConfirmationDialogAgree).toHaveBeenCalledTimes(1)
+  describe('when collection status is confirmed', () => {
+    beforeEach(() => {
+      // jest.spyOn(console, 'error').mockImplementation(noop)
     })
-  })
-})
-
-describe('<PhotoTableToolbar/> confirmed', () => {
-  beforeEach(() => {
-    // jest.spyOn(console, 'error').mockImplementation(noop)
-  })
-  beforeAll(() => {
-    props.collection.status = 'confirmed'
-  })
-
-  test('clicking "edit" button calls setConfirmationDialogAgree one time', async () => {
-    render(
-      <Router>
-        <CollectionDetails {...props} />
-      </Router>,
-    )
-
-    const editButton = screen.getByText('Edit')
-    user.click(editButton)
-
-    await waitFor(() => {
-      expect(props.setConfirmationDialogAgree).toHaveBeenCalledTimes(1)
+    beforeAll(() => {
+      mockStore.collection.data.status = 'confirmed'
     })
-  })
 
-  test('clicking "copy selections" calls navigator.clipboard.writeText one time', async () => {
-    Object.assign(navigator, {
-      clipboard: {
-        writeText: noop,
-      },
+    test('clicking "edit" button calls setConfirmationDialogAgree one time', async () => {
+      render(
+        <Router>
+          <CollectionDetails {...props} />
+        </Router>,
+        { initialState: mockStore },
+      )
+
+      const editButton = screen.getByText('Edit')
+      user.click(editButton)
+
+      await waitFor(() => {
+        expect(props.setConfirmationDialogAgree).toHaveBeenCalledTimes(1)
+      })
     })
-    jest.spyOn(navigator.clipboard, 'writeText')
 
-    render(
-      <Router>
-        <CollectionDetails {...props} />
-      </Router>,
-    )
-
-    const copyButton = screen.getByText(/copy selections/i)
-    user.click(copyButton)
-
-    await waitFor(() => {
-      expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(1)
-    })
-  })
-})
-
-describe('<PhotoTableToolbar/> editing', () => {
-  beforeEach(() => {
-    // jest.spyOn(console, 'error').mockImplementation(noop)
-  })
-  beforeAll(() => {
-    props.collection.status = 'editing'
-  })
-
-  test('saving empty title renders error', async () => {
-    const { baseElement } = render(
-      <Router>
-        <CollectionDetails {...props} />
-      </Router>,
-    )
-
-    const title = screen.getByLabelText('Title')
-    user.clear(title)
-
-    const saveButton = screen.getByText('Save')
-    user.click(saveButton)
-
-    await waitFor(() => {
-      expect(baseElement).toHaveTextContent('Title is required')
-    })
-  })
-
-  test('entering valid data calls updateSettings one time with correct args', async () => {
-    render(
-      <Router>
-        <CollectionDetails {...props} />
-      </Router>,
-    )
-
-    const title = screen.getByLabelText('Title')
-    user.clear(title)
-    user.type(title, 'new title')
-
-    const allowComments = screen.getByLabelText('Allow comments')
-    user.click(allowComments)
-
-    const minSelectRequired = screen.getByLabelText(/minimum/i)
-    user.click(minSelectRequired)
-    const maxSelectGoal = screen.getByTestId('maxSelectGoal')
-    user.clear(maxSelectGoal)
-    user.type(maxSelectGoal, '4')
-
-    const saveButton = screen.getByText('Save')
-    user.click(saveButton)
-
-    await waitFor(() => {
-      expect(updateSettings).toHaveBeenCalledTimes(1)
-    })
-    expect(updateSettings).toHaveBeenCalledWith(
-      {
-        title: 'new title',
-        minSelect: {
-          required: false,
-          goal: 1,
+    test('clicking "copy selections" calls navigator.clipboard.writeText one time', async () => {
+      Object.assign(navigator, {
+        clipboard: {
+          writeText: noop,
         },
-        maxSelect: {
-          required: true,
-          goal: 4,
-        },
-        allowComments: false,
-      },
-      'collectionId',
-    )
+      })
+      jest.spyOn(navigator.clipboard, 'writeText')
+
+      render(
+        <Router>
+          <CollectionDetails {...props} />
+        </Router>,
+        { initialState: mockStore },
+      )
+
+      const copyButton = screen.getByText(/copy selections/i)
+      user.click(copyButton)
+
+      await waitFor(() => {
+        expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(1)
+      })
+    })
   })
 
-  test('clicking "copy selections" calls navigator.clipboard.writeText one time', async () => {
-    render(
-      <Router>
-        <CollectionDetails {...props} />
-      </Router>,
-    )
+  describe('when collection stattus is editing', () => {
+    beforeEach(() => {
+      // jest.spyOn(console, 'error').mockImplementation(noop)
+    })
+    beforeEach(() => {
+      mockStore.collection.data.status = 'editing'
+    })
 
-    const copyButton = screen.getByText(/copy selections/i)
-    user.click(copyButton)
+    test('saving empty title renders error', async () => {
+      const { baseElement } = render(
+        <Router>
+          <CollectionDetails {...props} />
+        </Router>,
+        { initialState: mockStore },
+      )
 
-    await waitFor(() => {
-      expect(props.setConfirmationDialogAgree).toHaveBeenCalledTimes(1)
+      const title = screen.getByLabelText('Title')
+      user.clear(title)
+
+      const saveButton = screen.getByText('Save')
+      user.click(saveButton)
+
+      await waitFor(() => {
+        expect(baseElement).toHaveTextContent('Title is required')
+      })
+    })
+
+    test('entering valid data calls updateSettings one time with correct args', async () => {
+      render(
+        <Router>
+          <CollectionDetails {...props} />
+        </Router>,
+        { initialState: mockStore },
+      )
+
+      const title = screen.getByLabelText('Title')
+      user.clear(title)
+      user.type(title, 'new title')
+
+      const allowComments = screen.getByLabelText('Allow comments')
+      user.click(allowComments)
+
+      const minSelectRequired = screen.getByLabelText(/minimum/i)
+      user.click(minSelectRequired)
+      const maxSelectGoal = screen.getByTestId('maxSelectGoal')
+      user.clear(maxSelectGoal)
+      user.type(maxSelectGoal, '4')
+
+      const saveButton = screen.getByText('Save')
+      user.click(saveButton)
+
+      await waitFor(() => {
+        expect(updateSettings).toHaveBeenCalledTimes(1)
+      })
+      expect(updateSettings).toHaveBeenCalledWith(
+        {
+          title: 'new title',
+          minSelect: {
+            required: false,
+            goal: 1,
+          },
+          maxSelect: {
+            required: true,
+            goal: 4,
+          },
+          allowComments: false,
+        },
+        'collectionId',
+      )
+    })
+
+    test('clicking "copy selections" calls navigator.clipboard.writeText one time', async () => {
+      render(
+        <Router>
+          <CollectionDetails {...props} />
+        </Router>,
+        { initialState: mockStore },
+      )
+
+      const copyButton = screen.getByText(/copy selections/i)
+      user.click(copyButton)
+
+      await waitFor(() => {
+        expect(props.setConfirmationDialogAgree).toHaveBeenCalledTimes(1)
+      })
     })
   })
 })

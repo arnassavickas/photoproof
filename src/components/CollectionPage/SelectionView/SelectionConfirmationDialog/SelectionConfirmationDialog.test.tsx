@@ -10,17 +10,20 @@ import { confirmCollection } from '../../../../firebase'
 jest.mock('../../../../firebase')
 
 const props: SelectionConfirmationDialogProps = {
-  collection,
-  setCollection: jest.fn(),
-  collectionId: collection.id,
   selectedPhotos: 1,
   confirmDialogOpen: true,
   setConfirmDialogOpen: jest.fn(),
 }
 
 describe('<SelectionConfirmationDialog/>', () => {
+  let mockStore = { collection: { data: collection } }
+
+  beforeEach(() => {
+    mockStore = { collection: { data: collection } }
+  })
+
   test('renders content', async () => {
-    render(<SelectionConfirmationDialog {...props} />)
+    render(<SelectionConfirmationDialog {...props} />, { initialState: mockStore })
 
     expect(screen.getByText(/You have selected/)).toHaveTextContent('You have selected 1 photos')
     expect(
@@ -29,7 +32,7 @@ describe('<SelectionConfirmationDialog/>', () => {
   })
 
   test('allows to submit without final comment', async () => {
-    render(<SelectionConfirmationDialog {...props} />)
+    render(<SelectionConfirmationDialog {...props} />, { initialState: mockStore })
 
     const confirmBtn = screen.getByRole('button', { name: 'Confirm' })
 
@@ -37,8 +40,8 @@ describe('<SelectionConfirmationDialog/>', () => {
 
     await waitFor(() => {
       expect(confirmCollection).toHaveBeenCalledWith(
-        props.collectionId,
-        props.collection.title,
+        mockStore.collection.data.id,
+        mockStore.collection.data.title,
         expect.anything(),
         1,
         '',
@@ -47,7 +50,7 @@ describe('<SelectionConfirmationDialog/>', () => {
   })
 
   test('submitting calls confirmCollection with comment included', async () => {
-    render(<SelectionConfirmationDialog {...props} />)
+    render(<SelectionConfirmationDialog {...props} />, { initialState: mockStore })
 
     const textbox = screen.getByRole('textbox')
     const confirmBtn = screen.getByRole('button', { name: 'Confirm' })
@@ -57,8 +60,8 @@ describe('<SelectionConfirmationDialog/>', () => {
 
     await waitFor(() => {
       expect(confirmCollection).toHaveBeenCalledWith(
-        props.collectionId,
-        props.collection.title,
+        mockStore.collection.data.id,
+        mockStore.collection.data.title,
         expect.anything(),
         1,
         'some final comment',
