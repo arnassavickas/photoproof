@@ -21,7 +21,6 @@ import { RootState } from '../../../store'
 import { setCollection } from '../../../reducers/collectionSlice'
 
 const SelectionView: React.FC<SelectionViewProps> = ({
-  collectionId,
   lightboxOpen,
   setLightboxOpen,
   openLightbox,
@@ -47,7 +46,7 @@ const SelectionView: React.FC<SelectionViewProps> = ({
       try {
         const clickedPhoto = filteredPhotos[photoIndex]
         if (clickedPhoto && collection) {
-          await updatePhotoSelection(collectionId, clickedPhoto.id, !clickedPhoto.selected)
+          await updatePhotoSelection(collection.id, clickedPhoto.id, !clickedPhoto.selected)
           clickedPhoto.selected = !clickedPhoto?.selected
           dispatch(
             setCollection({
@@ -97,7 +96,7 @@ const SelectionView: React.FC<SelectionViewProps> = ({
       try {
         const clickedPhoto = filteredPhotos[photoIndex]
         if (clickedPhoto && collection) {
-          await updatePhotoComment(collectionId, clickedPhoto.id, commentTextarea)
+          await updatePhotoComment(collection.id, clickedPhoto.id, commentTextarea)
           clickedPhoto.comment = commentTextarea
           setCollection({
             ...collection,
@@ -116,11 +115,7 @@ const SelectionView: React.FC<SelectionViewProps> = ({
 
   return (
     <div>
-      <PhotoGrid
-        collectionId={collectionId}
-        openLightbox={openLightbox}
-        openCommentModal={openCommentModal}
-      />
+      <PhotoGrid openLightbox={openLightbox} openCommentModal={openCommentModal} />
       {filteredPhotos.length > 0 && (
         <Lightbox
           lightboxOpen={lightboxOpen}
@@ -190,7 +185,6 @@ const SelectionView: React.FC<SelectionViewProps> = ({
       />
 
       <SelectionConfirmationDialog
-        collectionId={collectionId}
         selectedPhotos={selectedPhotos}
         confirmDialogOpen={confirmDialogOpen}
         setConfirmDialogOpen={setConfirmDialogOpen}

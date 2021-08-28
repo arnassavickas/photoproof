@@ -17,7 +17,7 @@ import styles from './styles.module.scss'
 import { RootState } from '../../../store'
 import { setCollection } from '../../../reducers/collectionSlice'
 
-const PhotoGrid: React.FC<PhotoGridProps> = ({ collectionId, openLightbox, openCommentModal }) => {
+const PhotoGrid: React.FC<PhotoGridProps> = ({ openLightbox, openCommentModal }) => {
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
@@ -26,9 +26,9 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({ collectionId, openLightbox, openC
 
   const selectPhoto = (photoId: string) => async () => {
     try {
-      const clickedPhoto = collection?.photos.find(photo => photo.id === photoId)
-      if (clickedPhoto && collection && setCollection && collectionId) {
-        await updatePhotoSelection(collectionId, photoId, !clickedPhoto.selected)
+      const clickedPhoto = collection.photos.find(photo => photo.id === photoId)
+      if (clickedPhoto && setCollection) {
+        await updatePhotoSelection(collection.id, photoId, !clickedPhoto.selected)
         clickedPhoto.selected = !clickedPhoto?.selected
         dispatch(
           setCollection({

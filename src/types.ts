@@ -53,7 +53,6 @@ export interface LockedViewProps {
 }
 
 export interface SelectionViewProps extends LockedViewProps {
-  collectionId: string
   setCommentTextarea: React.Dispatch<React.SetStateAction<string>>
   selectedPhotos: number | undefined
 }

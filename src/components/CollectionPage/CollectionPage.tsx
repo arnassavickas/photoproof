@@ -112,7 +112,6 @@ const CollectionPage: React.FC = () => {
       {renderWarningMessage()}
       {collection.status === 'selecting' ? (
         <SelectionView
-          collectionId={collectionId}
           lightboxOpen={lightboxOpen}
           setLightboxOpen={setLightboxOpen}
           openLightbox={openLightbox}
