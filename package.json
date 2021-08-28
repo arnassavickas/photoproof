@@ -19,6 +19,7 @@
     "exifr": "^6.0.0",
     "firebase": "^8.2.4",
     "history": "^5.0.1",
+    "lodash": "^4.17.21",
     "material-ui-dropzone": "^3.5.0",
     "notistack": "^1.0.10",
     "react": "^17.0.1",
@@ -72,6 +73,7 @@
   },
   "devDependencies": {
     "@types/jest-axe": "^3.5.1",
+    "@types/lodash": "^4.14.172",
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-router-dom": "^5.1.7",
     "@types/uuid": "^8.3.0",

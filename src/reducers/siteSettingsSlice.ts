@@ -14,7 +14,7 @@ const initialState: SiteSettingsState = {
 }
 
 export const siteSettingsSlice = createSlice({
-  name: 'uiState',
+  name: 'siteSettings',
   initialState,
   reducers: {
     setSiteSettings: (state, action: PayloadAction<SiteSettingsState>) => {

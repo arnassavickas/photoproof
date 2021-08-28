@@ -3,7 +3,7 @@ import React from 'react'
 import { Toolbar, IconButton, Typography, Tooltip, Button } from '@material-ui/core'
 import { useSnackbar } from 'notistack'
 import { useDispatch, useSelector } from 'react-redux'
-
+import { noop } from 'lodash'
 import DeleteIcon from '@material-ui/icons/Delete'
 
 import styles from './styles.module.scss'
@@ -34,9 +34,7 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
     setConfirmationDialogOpen(false)
     setConfirmationDialogTitle('')
     setConfirmationDialogContentText('')
-    setConfirmationDialogAgree(() => {
-      //
-    })
+    setConfirmationDialogAgree(noop)
     setProgress(0)
   }
 

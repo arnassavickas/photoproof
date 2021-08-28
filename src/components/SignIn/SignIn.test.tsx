@@ -2,6 +2,7 @@ import React from 'react'
 import user from '@testing-library/user-event'
 import { axe } from 'jest-axe'
 import firebase from 'firebase'
+import { noop } from 'lodash'
 
 import { render, waitFor, screen } from '../../utils/customTestRenderer'
 import SignIn from './SignIn'
@@ -9,9 +10,7 @@ import { auth } from '../../firebase'
 
 describe('<SignIn/>', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {
-      //
-    })
+    jest.spyOn(console, 'error').mockImplementation(noop)
   })
 
   test('has no violations', async () => {

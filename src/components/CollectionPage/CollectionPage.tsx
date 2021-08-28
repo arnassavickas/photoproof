@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Backdrop, CircularProgress, Typography } from '@material-ui/core'
+import { Typography } from '@material-ui/core'
 
 import LockIcon from '@material-ui/icons/Lock'
 
@@ -58,14 +58,6 @@ const CollectionPage: React.FC = () => {
   }
 
   const selectedPhotos = collection?.photos.filter(photo => photo.selected).length
-
-  if (collection === null) {
-    return (
-      <Backdrop open>
-        <CircularProgress color="inherit" />.
-      </Backdrop>
-    )
-  }
 
   const renderMustMessage = () => {
     if (collection.minSelect.required && collection.maxSelect.required) {

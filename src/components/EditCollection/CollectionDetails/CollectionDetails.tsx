@@ -11,6 +11,7 @@ import {
   Box,
 } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
+import { noop } from 'lodash'
 
 import { useForm, Controller } from 'react-hook-form'
 
@@ -82,9 +83,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
     setConfirmationDialogOpen(false)
     setConfirmationDialogTitle('')
     setConfirmationDialogContentText('')
-    setConfirmationDialogAgree(() => {
-      //
-    })
+    setConfirmationDialogAgree(noop)
     setProgress(0)
   }
 

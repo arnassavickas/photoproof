@@ -1,6 +1,6 @@
 import React from 'react'
-
 import user from '@testing-library/user-event'
+import { noop } from 'lodash'
 
 import { render, screen, waitFor } from '../../../utils/customTestRenderer'
 import PhotoGrid from './PhotoGrid'
@@ -9,14 +9,10 @@ import { updatePhotoSelection as mockUpdatePhotoSelection } from '../../../fireb
 import { collection, filteredPhotos } from '../../../utils/testUtils'
 
 const openCommentModal = jest.fn()
-const setCollection = jest.fn()
 const openLightbox = jest.fn()
 
 const props: PhotoGridProps = {
   collectionId: 'collectionId',
-  collection,
-  setCollection,
-  filteredPhotos,
   openLightbox,
   openCommentModal,
 }
@@ -25,9 +21,7 @@ jest.mock('../../../firebase')
 
 describe('<PhotoGrid/> collection.status="selecting"', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {
-      //
-    })
+    jest.spyOn(console, 'error').mockImplementation(noop)
   })
 
   test('renders one photo', async () => {

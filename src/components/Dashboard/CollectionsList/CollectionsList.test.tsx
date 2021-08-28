@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { noop } from 'lodash'
 import user from '@testing-library/user-event'
 
 import { render, screen } from '../../../utils/customTestRenderer'
@@ -19,9 +19,7 @@ describe('<CollectionList/>', () => {
   beforeEach(() => {
     // @ts-ignore allow mocking value
     getCollections.mockResolvedValueOnce(collectionList)
-    jest.spyOn(console, 'error').mockImplementation(() => {
-      //
-    })
+    jest.spyOn(console, 'error').mockImplementation(noop)
   })
 
   test('renders two rows of collections', async () => {

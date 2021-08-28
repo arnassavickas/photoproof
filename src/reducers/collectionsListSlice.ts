@@ -13,19 +13,6 @@ const initialState: CollectionsListState = {
   currentRequestId: '',
 }
 
-// TODO finidh with thunks
-// export const fetchCollectionsList = createAsyncThunk<Collection[], void, { state: RootState }>(
-//   'collectionsList/fetchList',
-//   async (_, { getState, rejectWithValue }) => {
-//     try {
-//       const collections = await getCollections()
-//       return collections
-//     } catch (error) {
-//       return rejectWithValue(error)
-//     }
-//   },
-// )
-
 export const collectionsListSlice = createSlice({
   name: 'collection',
   initialState,
@@ -39,15 +26,6 @@ export const collectionsListSlice = createSlice({
       )
     },
   },
-  // TODO finish with thunks
-  // extraReducers: builder => {
-  //   builder.addCase(fetchCollectionsList.pending, (state, action) => {
-  //     console.log('pending')
-  //   })
-  //   builder.addCase(fetchCollectionsList.fulfilled, (state, action) => {
-  //     console.log('fulfilled')
-  //   })
-  // },
 })
 
 export const { setCollectionsList, deleteCollectionState } = collectionsListSlice.actions

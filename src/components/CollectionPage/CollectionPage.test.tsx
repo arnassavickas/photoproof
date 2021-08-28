@@ -1,6 +1,7 @@
 import React from 'react'
 import user from '@testing-library/user-event'
 import { Route, Router } from 'react-router-dom'
+import { noop } from 'lodash'
 
 import { createMemoryHistory } from 'history'
 
@@ -14,9 +15,7 @@ const mockedGetSingleCollection = getSingleCollection as any
 
 describe('<CollectionPage/>', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {
-      //
-    })
+    jest.spyOn(console, 'error').mockImplementation(noop)
   })
 
   test('getSingleCollection is called with correct id', async () => {

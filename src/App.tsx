@@ -18,10 +18,11 @@ import ErrorPage from './components/ErrorPage/ErrorPage'
 import { auth, getSiteSettings } from './firebase'
 import { RootState } from './store'
 import { setSiteSettings } from './reducers/siteSettingsSlice'
+import { UiState } from './types'
 
 function App() {
   const [user, setUser] = useState<null | string>(null)
-  const [loading, setLoading] = useState(true)
+  const uiState = useSelector((state: RootState) => state.uiState.value)
 
   const dispatch = useDispatch()
   const { logoUrl, logoWidth } = useSelector((state: RootState) => state.siteSettings)
@@ -35,7 +36,6 @@ function App() {
       } else {
         setUser(null)
       }
-      setLoading(false)
     })
   }, [])
 
@@ -60,16 +60,14 @@ function App() {
       })
   }, [dispatch, enqueueSnackbar])
 
-  if (loading) {
-    return (
-      <Backdrop open>
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    )
-  }
-
   return (
     <Container maxWidth="xl">
+      <Backdrop
+        open={uiState === UiState.Pending}
+        transitionDuration={{ appear: 500, enter: 0, exit: 500 }}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <Box ml={2} mr={2}>
         {logoUrl && (
           <a href={window.location.origin.toString()}>

@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { noop } from 'lodash'
 import { BrowserRouter as Router } from 'react-router-dom'
 import user from '@testing-library/user-event'
 import { axe } from 'jest-axe'
@@ -12,9 +12,7 @@ jest.mock('../../firebase')
 
 describe('<NewCollection/>', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {
-      //
-    })
+    jest.spyOn(console, 'error').mockImplementation(noop)
   })
 
   test('has no violations', async () => {

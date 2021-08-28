@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { noop } from 'lodash'
 import user from '@testing-library/user-event'
 import { BrowserRouter as Router } from 'react-router-dom'
 
@@ -13,8 +13,6 @@ jest.mock('../../../firebase')
 
 const props: CollectionDetailsProps = {
   collectionId: 'collectionId',
-  collection,
-  setCollection: jest.fn(),
   setConfirmationDialogOpen: jest.fn(),
   setConfirmationDialogTitle: jest.fn(),
   setConfirmationDialogContentText: jest.fn(),
@@ -24,9 +22,7 @@ const props: CollectionDetailsProps = {
 
 describe('<PhotoTableToolbar/> selecting', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {
-      //
-    })
+    jest.spyOn(console, 'error').mockImplementation(noop)
   })
 
   test('clicking "edit" button calls changeCollectionStatus one time', async () => {
@@ -60,9 +56,7 @@ describe('<PhotoTableToolbar/> selecting', () => {
 
 describe('<PhotoTableToolbar/> confirmed', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {
-      //
-    })
+    jest.spyOn(console, 'error').mockImplementation(noop)
   })
   beforeAll(() => {
     props.collection.status = 'confirmed'
@@ -86,9 +80,7 @@ describe('<PhotoTableToolbar/> confirmed', () => {
   test('clicking "copy selections" calls navigator.clipboard.writeText one time', async () => {
     Object.assign(navigator, {
       clipboard: {
-        writeText: () => {
-          //
-        },
+        writeText: noop,
       },
     })
     jest.spyOn(navigator.clipboard, 'writeText')
@@ -110,9 +102,7 @@ describe('<PhotoTableToolbar/> confirmed', () => {
 
 describe('<PhotoTableToolbar/> editing', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {
-      //
-    })
+    jest.spyOn(console, 'error').mockImplementation(noop)
   })
   beforeAll(() => {
     props.collection.status = 'editing'

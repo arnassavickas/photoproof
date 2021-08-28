@@ -27,9 +27,7 @@ const props: PhotoTableToolbarProps = {
 
 describe('<PhotoTableToolbar/>', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {
-      //
-    })
+    jest.spyOn(console, 'error').mockImplementation(noop)
   })
 
   test('changing filter calls setFilteredPhotos', async () => {
@@ -45,9 +43,7 @@ describe('<PhotoTableToolbar/>', () => {
 describe('<PhotoTableToolbar/> editing', () => {
   props.collection.status = 'editing'
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {
-      //
-    })
+    jest.spyOn(console, 'error').mockImplementation(noop)
   })
 
   test('clicking "add photos" calls setAddPhotosDialogOpen', async () => {

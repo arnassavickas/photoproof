@@ -17,7 +17,6 @@ export const uiStateSlice = createSlice({
   },
 })
 
-// Action creators are generated for each case reducer function
 export const { setUiState } = uiStateSlice.actions
 
 export default uiStateSlice.reducer

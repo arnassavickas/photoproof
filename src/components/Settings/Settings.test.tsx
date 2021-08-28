@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { noop } from 'lodash'
 import { BrowserRouter as Router } from 'react-router-dom'
 import user from '@testing-library/user-event'
 
@@ -18,9 +18,7 @@ const props: SettingsProps = {
 
 describe('<Settings/>', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {
-      //
-    })
+    jest.spyOn(console, 'error').mockImplementation(noop)
   })
 
   test('clicking save calls changeSiteSettings with correct args', async () => {

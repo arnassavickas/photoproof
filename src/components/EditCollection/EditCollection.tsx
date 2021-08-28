@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Backdrop, CircularProgress, IconButton } from '@material-ui/core'
+import { IconButton } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
+import { noop } from 'lodash'
 
 import StarBorderIcon from '@material-ui/icons/StarBorder'
 
@@ -29,7 +30,6 @@ const EditCollection: React.FC = () => {
   const { id: collectionId } = useParams<{ id: string }>()
 
   const dispatch = useDispatch()
-  const uiState = useSelector((state: RootState) => state.uiState.value)
   const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
   const collection = useSelector((state: RootState) => state.collection.data)
 
@@ -39,11 +39,7 @@ const EditCollection: React.FC = () => {
   const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [confirmationDialogTitle, setConfirmationDialogTitle] = useState('')
   const [confirmationDialogContentText, setConfirmationDialogContentText] = useState('')
-  const [confirmationDialogAgree, setConfirmationDialogAgree] = useState<(value: any) => void>(
-    () => {
-      //
-    },
-  )
+  const [confirmationDialogAgree, setConfirmationDialogAgree] = useState<(value: any) => void>(noop)
   const [progress, setProgress] = useState(0)
   const [addPhotosDialogOpen, setAddPhotosDialogOpen] = useState(false)
   const [commentOpen, setCommentOpen] = useState(false)
@@ -77,14 +73,6 @@ const EditCollection: React.FC = () => {
         setCommentTextarea(filteredPhotos[photoIndex].comment)
       }
     }
-  }
-
-  if (uiState === UiState.Pending) {
-    return (
-      <Backdrop open>
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    )
   }
 
   return (

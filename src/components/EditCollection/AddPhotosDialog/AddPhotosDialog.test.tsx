@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { noop } from 'lodash'
 import user from '@testing-library/user-event'
 
 import { render, waitFor, screen } from '../../../utils/customTestRenderer'
@@ -11,7 +11,6 @@ jest.mock('../../../firebase')
 
 const props: AddPhotosDialogProps = {
   collectionId: 'collectionId',
-  setCollection: jest.fn(),
   setProgress: jest.fn(),
   addPhotosDialogOpen: true,
   setAddPhotosDialogOpen: jest.fn(),
@@ -20,9 +19,7 @@ const props: AddPhotosDialogProps = {
 
 describe('<AddPhotosDialog/>', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {
-      //
-    })
+    jest.spyOn(console, 'error').mockImplementation(noop)
   })
 
   test('adding no photos renders error', async () => {

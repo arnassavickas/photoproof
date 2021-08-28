@@ -7,8 +7,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Backdrop,
-  CircularProgress,
   IconButton,
   Tooltip,
 } from '@material-ui/core'
@@ -38,7 +36,6 @@ const CollectionList: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
-  const uiState = useSelector((state: RootState) => state.uiState.value)
   const { collectionsList } = useSelector((state: RootState) => state.collectionsList)
   const collection = useSelector((state: RootState) => state.collection.data)
 
@@ -89,14 +86,6 @@ const CollectionList: React.FC = () => {
       dispatch(setUiState(UiState.Pending))
     }
     history.push(`edit/${collectionId}`)
-  }
-
-  if (uiState === UiState.Pending) {
-    return (
-      <Backdrop open>
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    )
   }
 
   return (

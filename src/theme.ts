@@ -104,6 +104,12 @@ export const theme = createMuiTheme({
         color: '#fff',
       },
     },
+    MuiBackdrop: {
+      root: {
+        backgroundColor: '#111',
+        zIndex: 999,
+      },
+    },
   },
 })
 export default theme
