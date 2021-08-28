@@ -7,15 +7,20 @@ import { collection } from '../../../../utils/testUtils'
 import { ConfirmationForbiddenProps } from '../../../../types'
 
 const props: ConfirmationForbiddenProps = {
-  collection,
   selectedPhotos: 0,
   confirmForbidDialogOpen: true,
   setConfirmForbidDialogOpen: jest.fn(),
 }
 
 describe('<ConfirmationForbiddenDialog/>', () => {
+  let mockStore = { collection: { data: collection } }
+
+  beforeEach(() => {
+    mockStore = { collection: { data: collection } }
+  })
+
   test('renders correct min max requirement', async () => {
-    render(<ConfirmationForbiddenDialog {...props} />)
+    render(<ConfirmationForbiddenDialog {...props} />, { initialState: mockStore })
 
     expect(screen.getByText(/you must select/)).toHaveTextContent(
       'you must select from 1 to 2 photos.',
@@ -23,8 +28,8 @@ describe('<ConfirmationForbiddenDialog/>', () => {
   })
 
   test('renders correct max requirement', async () => {
-    props.collection.minSelect.required = false
-    render(<ConfirmationForbiddenDialog {...props} />)
+    mockStore.collection.data.minSelect.required = false
+    render(<ConfirmationForbiddenDialog {...props} />, { initialState: mockStore })
 
     expect(screen.getByText(/you must select/)).toHaveTextContent(
       'you must select a maximum of 2 photos.',
@@ -32,9 +37,9 @@ describe('<ConfirmationForbiddenDialog/>', () => {
   })
 
   test('renders correct min requirement', async () => {
-    props.collection.minSelect.required = true
-    props.collection.maxSelect.required = false
-    render(<ConfirmationForbiddenDialog {...props} />)
+    mockStore.collection.data.minSelect.required = true
+    mockStore.collection.data.maxSelect.required = false
+    render(<ConfirmationForbiddenDialog {...props} />, { initialState: mockStore })
 
     expect(screen.getByText(/you must select/)).toHaveTextContent(
       'you must select at least 1 photos.',
@@ -42,10 +47,9 @@ describe('<ConfirmationForbiddenDialog/>', () => {
   })
 
   test('cancel button calls the callback once', async () => {
-    render(<ConfirmationForbiddenDialog {...props} />)
+    render(<ConfirmationForbiddenDialog {...props} />, { initialState: mockStore })
 
-    const text = screen.getByText(/Cancel/)
-    user.click(text)
+    user.click(screen.getByText(/Cancel/))
 
     expect(props.setConfirmForbidDialogOpen).toHaveBeenCalledTimes(1)
   })
