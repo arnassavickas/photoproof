@@ -9,8 +9,6 @@ import { LockedViewProps } from '../../../types'
 jest.mock('../../../firebase')
 
 const props: LockedViewProps = {
-  collection,
-  filteredPhotos,
   lightboxOpen: true,
   setLightboxOpen: jest.fn(),
   openLightbox: jest.fn(),
@@ -23,8 +21,14 @@ const props: LockedViewProps = {
 }
 
 describe('<LockedView/>', () => {
+  let mockStore = { collection: { data: collection, filteredPhotos } }
+
+  beforeEach(() => {
+    mockStore = { collection: { data: collection, filteredPhotos } }
+  })
+
   test(`select and comment buttons are visible`, async () => {
-    render(<LockedView {...props} />)
+    render(<LockedView {...props} />, { initialState: mockStore })
 
     const selectBtns = screen.getAllByRole('button', {
       hidden: true,
@@ -41,7 +45,7 @@ describe('<LockedView/>', () => {
   })
 
   test(`clicking commentBtn in Lightbox calls openCommentModal once`, () => {
-    render(<LockedView {...props} />)
+    render(<LockedView {...props} />, { initialState: mockStore })
 
     const commentBtn = screen.getByRole('button', {
       hidden: true,
