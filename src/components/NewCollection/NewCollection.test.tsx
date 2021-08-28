@@ -12,7 +12,7 @@ jest.mock('../../firebase')
 
 describe('<NewCollection/>', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(noop)
+    // jest.spyOn(console, 'error').mockImplementation(noop)
   })
 
   test('has no violations', async () => {

@@ -22,7 +22,7 @@ const props: CollectionDetailsProps = {
 
 describe('<PhotoTableToolbar/> selecting', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(noop)
+    // jest.spyOn(console, 'error').mockImplementation(noop)
   })
 
   test('clicking "edit" button calls changeCollectionStatus one time', async () => {
@@ -56,7 +56,7 @@ describe('<PhotoTableToolbar/> selecting', () => {
 
 describe('<PhotoTableToolbar/> confirmed', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(noop)
+    // jest.spyOn(console, 'error').mockImplementation(noop)
   })
   beforeAll(() => {
     props.collection.status = 'confirmed'
@@ -102,7 +102,7 @@ describe('<PhotoTableToolbar/> confirmed', () => {
 
 describe('<PhotoTableToolbar/> editing', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(noop)
+    // jest.spyOn(console, 'error').mockImplementation(noop)
   })
   beforeAll(() => {
     props.collection.status = 'editing'

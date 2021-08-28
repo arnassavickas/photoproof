@@ -10,7 +10,7 @@ import { auth } from '../../firebase'
 
 describe('<SignIn/>', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(noop)
+    // jest.spyOn(console, 'error').mockImplementation(noop)
   })
 
   test('has no violations', async () => {
@@ -54,6 +54,7 @@ describe('<SignIn/>', () => {
         return Promise.resolve(null as unknown as firebase.auth.UserCredential)
       }
       const error = new Error('incorrect credentials')
+      // @ts-ignore adds special firestore modifier
       error.code = 'auth/wrong-password'
       throw error
     })

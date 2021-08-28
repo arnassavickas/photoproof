@@ -12,10 +12,6 @@ export const store = configureStore({
     uiState: uiStateReducer,
     siteSettings: siteSettingsReducer,
   },
-  middleware: getDefaultMiddleware =>
-    getDefaultMiddleware({
-      serializableCheck: false,
-    }),
 })
 
 export type RootState = ReturnType<typeof store.getState>

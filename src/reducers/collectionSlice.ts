@@ -15,7 +15,7 @@ export interface CollectionState {
 const initialState: CollectionState = {
   data: {
     id: '',
-    dateCreated: new Date(),
+    dateCreated: 0,
     title: '',
     minSelect: { required: false, goal: 0 },
     maxSelect: { required: false, goal: 0 },

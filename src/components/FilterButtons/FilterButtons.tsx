@@ -3,12 +3,11 @@ import { Button, ButtonGroup } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
 
 import styles from './styles.module.scss'
-import { FilterButtonsProps, Photo } from '../../types'
+import { FilterButtonsProps } from '../../types'
 import { setPhotoFilter } from '../../reducers/collectionSlice'
 import { RootState } from '../../store'
 
 const FilterButtons: React.FC<FilterButtonsProps> = ({
-  collection,
   setLightboxOpen,
   photoIndex,
   setPhotoIndex,
@@ -17,13 +16,14 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({
 
   const dispatch = useDispatch()
   const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
+  const collection = useSelector((state: RootState) => state.collection.data)
 
-  const modifyLightbox = (photos: Photo[]) => {
+  const modifyLightbox = () => {
     if (setLightboxOpen && photoIndex && setPhotoIndex) {
-      if (photos.length === 0) {
+      if (filteredPhotos.length === 0) {
         setLightboxOpen(false)
-      } else if (photos.length <= photoIndex) {
-        setPhotoIndex(photos.length - 1)
+      } else if (filteredPhotos.length <= photoIndex) {
+        setPhotoIndex(filteredPhotos.length - 1)
       }
     }
   }
@@ -43,47 +43,14 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({
   const handleSelectedClick = () => {
     dispatch(setPhotoFilter('selected'))
     setFilter('selected')
-    modifyLightbox(filteredPhotos)
+    modifyLightbox()
   }
 
   const handleUnselectedClick = () => {
     dispatch(setPhotoFilter('unselected'))
     setFilter('unselected')
-    modifyLightbox(filteredPhotos)
+    modifyLightbox()
   }
-
-  // const handleAllFilter = () => {
-  //   setFilteredPhotos(collection.photos)
-  // }
-
-  // const handleSelectedFiler = () => {
-  //   const selectedPhotos = collection.photos.filter(photo => photo.selected)
-  //   modifyLightbox(selectedPhotos)
-  //   setFilteredPhotos(selectedPhotos)
-  // }
-
-  // const handleUnselectedFilter = () => {
-  //   const unselectedPhotos = collection.photos.filter(photo => !photo.selected)
-  //   modifyLightbox(unselectedPhotos)
-  //   setFilteredPhotos(unselectedPhotos)
-  // }
-
-  // useEffect(() => {
-  //   switch (filter) {
-  //     case 'all':
-  //       handleAllFilter()
-  //       break
-  //     case 'selected':
-  //       handleSelectedFiler()
-  //       break
-  //     case 'unselected':
-  //       handleUnselectedFilter()
-  //       break
-  //     default:
-  //       break
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [filter, collection])
 
   return (
     <ButtonGroup className={styles.filterBtns} aria-label="outlined primary button group">

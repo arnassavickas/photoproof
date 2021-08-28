@@ -13,7 +13,7 @@ export const filteredPhotos: Photo[] = [
     resizeReady: true,
     selected: false,
     comment: '',
-    dateTaken: new Date(),
+    dateTaken: 999,
   },
   {
     index: 2,
@@ -27,13 +27,13 @@ export const filteredPhotos: Photo[] = [
     resizeReady: true,
     selected: true,
     comment: 'test comment',
-    dateTaken: new Date(),
+    dateTaken: 999,
   },
 ]
 
 export const collection: Collection = {
   id: 'collectionId',
-  dateCreated: new Date(),
+  dateCreated: 999,
   title: 'collection title',
   minSelect: { required: true, goal: 1 },
   maxSelect: { required: true, goal: 2 },
@@ -46,7 +46,7 @@ export const collection: Collection = {
 export const collectionList: Collection[] = [
   {
     id: 'collectionId1',
-    dateCreated: new Date(),
+    dateCreated: 999,
     title: 'collection title 1',
     minSelect: { required: true, goal: 1 },
     maxSelect: { required: true, goal: 2 },
@@ -57,7 +57,7 @@ export const collectionList: Collection[] = [
   },
   {
     id: 'collectionId2',
-    dateCreated: new Date(),
+    dateCreated: 999,
     title: 'collection title 2',
     minSelect: { required: true, goal: 1 },
     maxSelect: { required: true, goal: 2 },

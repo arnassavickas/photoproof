@@ -34,12 +34,15 @@ const Settings = () => {
 
   useEffect(() => {
     setValue('email', email)
-  }, [email, setValue])
+    setValue('logoWidth', logoWidth)
+  }, [email, logoWidth, setValue])
 
   const onSubmit = async (data: { logoFile: FileList; logoWidth: number; email: string }) => {
     try {
       setUploading(true)
+
       await changeSiteSettings(data.logoFile, data.logoWidth, data.email, setUploadProgress)
+
       setUploading(false)
       history.push('/')
     } catch {

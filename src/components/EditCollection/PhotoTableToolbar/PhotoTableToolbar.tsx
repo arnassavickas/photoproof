@@ -139,7 +139,7 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
           ) : null}
         </div>
       )}
-      <FilterButtons collection={collection} />
+      <FilterButtons />
     </Toolbar>
   )
 }

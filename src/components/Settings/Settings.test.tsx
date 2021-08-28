@@ -1,47 +1,44 @@
 import React from 'react'
-import { noop } from 'lodash'
 import { BrowserRouter as Router } from 'react-router-dom'
 import user from '@testing-library/user-event'
+import { noop } from 'lodash'
 
 import { render, waitFor, screen } from '../../utils/customTestRenderer'
 import Settings from './Settings'
-import { changeSiteSettings } from '../../firebase'
-import { SettingsProps } from '../../types'
+import * as firebase from '../../firebase'
+import * as siteSettingsSlice from '../../reducers/siteSettingsSlice'
 
-jest.mock('../../firebase')
-
-const props: SettingsProps = {
-  logoWidth: 100,
-  setLogoUrl: jest.fn(),
-  setLogoWidth: jest.fn(),
-}
+const changeSiteSettings = jest.spyOn(firebase, 'changeSiteSettings')
+jest.spyOn(siteSettingsSlice, 'setLogoWidth')
 
 describe('<Settings/>', () => {
+  let mockStore = { siteSettings: { logoWidth: 100, email: 'email' } }
+
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(noop)
+    mockStore = { siteSettings: { logoWidth: 100, email: 'email' } }
+    global.URL.createObjectURL = jest.fn()
+    changeSiteSettings.mockReturnValue(new Promise(noop))
   })
 
   test('clicking save calls changeSiteSettings with correct args', async () => {
     render(
       <Router>
-        <Settings {...props} />
+        <Settings />
       </Router>,
+      { initialState: mockStore },
     )
 
-    const saveBtn = screen.getByText(/save/i)
-
-    const filesToUplaod = [new File([new ArrayBuffer(1)], 'file1.png', { type: 'image/png' })]
-
-    global.URL.createObjectURL = jest.fn()
+    const filesToUplaod = [new File([], 'file1.png', { type: 'image/png' })]
 
     user.upload(screen.getByTestId('settings-file-upload'), filesToUplaod)
 
-    user.click(saveBtn)
+    user.click(screen.getByText(/save/i))
 
     await waitFor(() => {
       expect(changeSiteSettings).toHaveBeenCalledWith(
         expect.anything(),
-        props.logoWidth,
+        100,
+        'email',
         expect.anything(),
       )
     })

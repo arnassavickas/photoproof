@@ -21,7 +21,7 @@ jest.mock('../../../firebase')
 
 describe('<PhotoGrid/> collection.status="selecting"', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(noop)
+    // jest.spyOn(console, 'error').mockImplementation(noop)
   })
 
   test('renders one photo', async () => {

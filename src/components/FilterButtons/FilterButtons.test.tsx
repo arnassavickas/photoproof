@@ -5,74 +5,67 @@ import user from '@testing-library/user-event'
 import { render, screen } from '../../utils/customTestRenderer'
 import { FilterButtonsProps } from '../../types'
 import FilterButtons from './FilterButtons'
-import { collection } from '../../utils/testUtils'
+import { collection, filteredPhotos } from '../../utils/testUtils'
+import * as collectionSlice from '../../reducers/collectionSlice'
 
 const props: FilterButtonsProps = {
-  collection,
-  setFilteredPhotos: jest.fn(),
-}
-
-const propsModifyLightbox: FilterButtonsProps = {
-  collection,
-  setFilteredPhotos: jest.fn(),
   modifyLightbox: true,
   setLightboxOpen: jest.fn(),
   photoIndex: 1,
   setPhotoIndex: jest.fn(),
 }
 
+const setPhotoFilter = jest.spyOn(collectionSlice, 'setPhotoFilter')
+
 describe('<FilterButtons/>', () => {
-  test('selected button', async () => {
-    render(<FilterButtons {...props} />)
+  let mockStore = { collection: { data: collection, filteredPhotos } }
 
-    const selectedBtn = screen.getByRole('button', { name: /^selected/i })
-    const allBtn = screen.getByRole('button', { name: /^all/i })
+  beforeEach(() => {
+    setPhotoFilter.mockReturnValue({ type: '', payload: 'selected' })
 
-    user.click(selectedBtn)
-
-    expect(props.setFilteredPhotos).toHaveBeenLastCalledWith([collection.photos[1]])
-
-    user.click(allBtn)
-
-    expect(props.setFilteredPhotos).toHaveBeenLastCalledWith(collection.photos)
+    mockStore = { collection: { data: collection, filteredPhotos } }
   })
 
-  test('not selected button', () => {
-    render(<FilterButtons {...props} />)
+  test('button clicks call action creator with correct args', async () => {
+    render(<FilterButtons />, { initialState: mockStore })
 
-    const notSelectedBtn = screen.getByRole('button', {
-      name: /^not selected/i,
+    user.click(screen.getByRole('button', { name: /^selected/i }))
+
+    expect(setPhotoFilter).toHaveBeenLastCalledWith('selected')
+
+    user.click(screen.getByRole('button', { name: /^all/i }))
+
+    expect(setPhotoFilter).toHaveBeenLastCalledWith('all')
+
+    user.click(
+      screen.getByRole('button', {
+        name: /^not selected/i,
+      }),
+    )
+
+    expect(setPhotoFilter).toHaveBeenLastCalledWith('unselected')
+  })
+
+  describe('when props are provided', () => {
+    test('calls photo index callback if filtered photos quantity is less than photo index', () => {
+      mockStore.collection.filteredPhotos = [filteredPhotos[0]]
+      render(<FilterButtons {...props} />, { initialState: mockStore })
+
+      const selectedBtn = screen.getByRole('button', { name: /^selected/i })
+
+      user.click(selectedBtn)
+
+      expect(props.setPhotoIndex).toHaveBeenCalledWith(0)
     })
-    const allBtn = screen.getByRole('button', { name: /^all/i })
+    test('calls lightbox callback if filtered photos are empty', () => {
+      mockStore.collection.filteredPhotos = []
+      render(<FilterButtons {...props} />, { initialState: mockStore })
 
-    user.click(notSelectedBtn)
+      const selectedBtn = screen.getByRole('button', { name: /^selected/i })
 
-    expect(props.setFilteredPhotos).toHaveBeenLastCalledWith([collection.photos[0]])
+      user.click(selectedBtn)
 
-    user.click(allBtn)
-
-    expect(props.setFilteredPhotos).toHaveBeenLastCalledWith(collection.photos)
-  })
-})
-
-describe('<FilterButtons modifyLightbox/>', () => {
-  test('photoIndex is higher or equal to filtered photos length', () => {
-    render(<FilterButtons {...propsModifyLightbox} />)
-
-    const selectedBtn = screen.getByRole('button', { name: /^selected/i })
-
-    user.click(selectedBtn)
-
-    expect(propsModifyLightbox.setPhotoIndex).toHaveBeenCalledWith(0)
-  })
-  test('filtered photos become zero', () => {
-    propsModifyLightbox.collection.photos[1].selected = false
-    render(<FilterButtons {...propsModifyLightbox} />)
-
-    const selectedBtn = screen.getByRole('button', { name: /^selected/i })
-
-    user.click(selectedBtn)
-
-    expect(propsModifyLightbox.setLightboxOpen).toHaveBeenCalledWith(false)
+      expect(props.setLightboxOpen).toHaveBeenCalledWith(false)
+    })
   })
 })

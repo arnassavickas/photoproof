@@ -19,7 +19,7 @@ describe('<CollectionList/>', () => {
   beforeEach(() => {
     // @ts-ignore allow mocking value
     getCollections.mockResolvedValueOnce(collectionList)
-    jest.spyOn(console, 'error').mockImplementation(noop)
+    // jest.spyOn(console, 'error').mockImplementation(noop)
   })
 
   test('renders two rows of collections', async () => {

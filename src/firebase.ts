@@ -392,7 +392,7 @@ export const getCollections = async () => {
     const collectionObj = {
       id: collection.id,
       title: collection.data().title,
-      dateCreated: collection.data().dateCreated,
+      dateCreated: collection.data().dateCreated.seconds,
       minSelect: collection.data().minSelect,
       maxSelect: collection.data().maxSelect,
       allowComments: collection.data().allowComments,

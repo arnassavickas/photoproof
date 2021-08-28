@@ -19,7 +19,7 @@ const props: AddPhotosDialogProps = {
 
 describe('<AddPhotosDialog/>', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(noop)
+    // jest.spyOn(console, 'error').mockImplementation(noop)
   })
 
   test('adding no photos renders error', async () => {

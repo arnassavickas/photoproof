@@ -15,7 +15,7 @@ const mockedGetSingleCollection = getSingleCollection as any
 
 describe('<CollectionPage/>', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(noop)
+    // jest.spyOn(console, 'error').mockImplementation(noop)
   })
 
   test('getSingleCollection is called with correct id', async () => {

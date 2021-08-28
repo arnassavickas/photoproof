@@ -1,6 +1,6 @@
 export interface Collection {
   id: string
-  dateCreated: Date
+  dateCreated: number
   title: string
   minSelect: SelectionGoal
   maxSelect: SelectionGoal
@@ -27,7 +27,7 @@ export type Photo = {
   resizeReady: boolean
   selected: boolean
   comment: string
-  dateTaken: Date | null
+  dateTaken: number | null
 }
 
 export interface NewCollectionInputs {
@@ -142,12 +142,7 @@ export interface StatusIconProps {
   status: Collection['status'] | undefined
 }
 
-// FilterButtons
-interface RequiredFilterButtonsProps {
-  collection: Collection
-}
-
-type TruncateFilterButtonsProps =
+export type FilterButtonsProps =
   | {
       modifyLightbox?: false
       setLightboxOpen?: never
@@ -160,8 +155,6 @@ type TruncateFilterButtonsProps =
       photoIndex: number
       setPhotoIndex: React.Dispatch<React.SetStateAction<number>>
     }
-
-export type FilterButtonsProps = RequiredFilterButtonsProps & TruncateFilterButtonsProps
 
 export enum UiState {
   Idle = 'Idle',
