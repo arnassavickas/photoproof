@@ -10,8 +10,6 @@ const setPhotoIndex = jest.fn()
 const setLightboxOpen = jest.fn()
 
 const props: PhotoTableProps = {
-  collection,
-  filteredPhotos,
   selected: [],
   setSelected,
   setPhotoIndex,
@@ -19,14 +17,19 @@ const props: PhotoTableProps = {
 }
 
 describe('<PhotoTable/>', () => {
-  test('renders two rows plus head', () => {
-    const { container } = render(<PhotoTable {...props} />)
-    const rows = container.querySelectorAll('tr')
-    expect(rows).toHaveLength(3)
+  let mockStore = { collection: { data: collection, filteredPhotos, filter: 'all' } }
+
+  beforeEach(() => {
+    mockStore = { collection: { data: collection, filteredPhotos, filter: 'all' } }
+  })
+  test('renders two rows', () => {
+    render(<PhotoTable {...props} />, { initialState: mockStore })
+
+    expect(screen.getAllByText(/photo/)).toHaveLength(2)
   })
 
   test('renders one comment', () => {
-    render(<PhotoTable {...props} />)
+    render(<PhotoTable {...props} />, { initialState: mockStore })
     const commentCells = screen.getAllByTestId('comment')
     expect(commentCells).toHaveLength(2)
     expect(commentCells[0]).not.toHaveTextContent('test comment')
@@ -34,17 +37,20 @@ describe('<PhotoTable/>', () => {
   })
 
   test('renders one selection icon', () => {
-    render(<PhotoTable {...props} />)
+    render(<PhotoTable {...props} />, { initialState: mockStore })
     const selectedIcons = screen.getAllByTestId('selected')
     expect(selectedIcons).toHaveLength(1)
   })
-})
 
-describe('<PhotoTable/> status="editing"', () => {
-  props.collection.status = 'editing'
-  test('renders two checkboxes', () => {
-    render(<PhotoTable {...props} />)
-    const checkboxes = screen.getAllByTestId('checkbox')
-    expect(checkboxes).toHaveLength(2)
+  describe('when collecction status is editing', () => {
+    beforeEach(() => {
+      mockStore.collection.data.status = 'editing'
+    })
+
+    test('renders two checkboxes', () => {
+      render(<PhotoTable {...props} />, { initialState: mockStore })
+      const checkboxes = screen.getAllByTestId('checkbox')
+      expect(checkboxes).toHaveLength(2)
+    })
   })
 })
