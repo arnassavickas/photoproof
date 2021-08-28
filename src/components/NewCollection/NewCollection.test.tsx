@@ -1,5 +1,4 @@
 import React from 'react'
-import { noop } from 'lodash'
 import { BrowserRouter as Router } from 'react-router-dom'
 import user from '@testing-library/user-event'
 import { axe } from 'jest-axe'

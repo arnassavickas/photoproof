@@ -1,5 +1,4 @@
 import React from 'react'
-import { noop } from 'lodash'
 import user from '@testing-library/user-event'
 
 import { render, waitFor, screen } from '../../../utils/customTestRenderer'

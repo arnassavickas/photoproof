@@ -2,7 +2,6 @@ import React from 'react'
 import user from '@testing-library/user-event'
 import { axe } from 'jest-axe'
 import firebase from 'firebase'
-import { noop } from 'lodash'
 
 import { render, waitFor, screen } from '../../utils/customTestRenderer'
 import SignIn from './SignIn'
