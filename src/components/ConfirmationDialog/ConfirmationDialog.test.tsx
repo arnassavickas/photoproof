@@ -8,22 +8,27 @@ import { ConfirmationDialogProps } from '../../types'
 
 const props: ConfirmationDialogProps = {
   dialogOpen: true,
-  progress: 0,
   onClickCancel: jest.fn(),
   onClickAgree: jest.fn(),
   dialogTitle: 'test title',
   dialogContentText: 'test content text',
 }
 
+let mockStore = { uiState: { loaderProgress: 0 } }
+
+beforeEach(() => {
+  mockStore = { uiState: { loaderProgress: 0 } }
+})
+
 describe('<ConfirmationDialog/>', () => {
   test('renders title and text', () => {
-    render(<ConfirmationDialog {...props} />)
+    render(<ConfirmationDialog {...props} />, { initialState: mockStore })
     expect(screen.getByText(/test title/)).toBeInTheDocument()
     expect(screen.getByText(/test content text/)).toBeInTheDocument()
   })
 
   test('button clicks call their callbacks one time', () => {
-    render(<ConfirmationDialog {...props} />)
+    render(<ConfirmationDialog {...props} />, { initialState: mockStore })
     const yesBtn = screen.getByText('Yes')
     const cancelBtn = screen.getByText('Cancel')
 
@@ -37,19 +42,24 @@ describe('<ConfirmationDialog/>', () => {
     expect(props.onClickAgree).toHaveBeenCalledTimes(1)
   })
 
-  test('positive progress disables buttons', () => {
-    props.progress = 1
-    render(<ConfirmationDialog {...props} />)
-    const yesBtn = screen.getByText('Yes')
-    const cancelBtn = screen.getByText('Cancel')
+  describe('when progress is not zero', () => {
+    beforeEach(() => {
+      mockStore.uiState.loaderProgress = 1
+    })
 
-    expect(props.onClickAgree).toHaveBeenCalledTimes(0)
-    expect(props.onClickAgree).toHaveBeenCalledTimes(0)
+    test('buttons are disabled', () => {
+      render(<ConfirmationDialog {...props} />, { initialState: mockStore })
+      const yesBtn = screen.getByText('Yes')
+      const cancelBtn = screen.getByText('Cancel')
 
-    user.click(yesBtn)
-    user.click(cancelBtn)
+      expect(props.onClickAgree).toHaveBeenCalledTimes(0)
+      expect(props.onClickAgree).toHaveBeenCalledTimes(0)
 
-    expect(props.onClickAgree).toHaveBeenCalledTimes(0)
-    expect(props.onClickAgree).toHaveBeenCalledTimes(0)
+      user.click(yesBtn)
+      user.click(cancelBtn)
+
+      expect(props.onClickAgree).toHaveBeenCalledTimes(0)
+      expect(props.onClickAgree).toHaveBeenCalledTimes(0)
+    })
   })
 })
