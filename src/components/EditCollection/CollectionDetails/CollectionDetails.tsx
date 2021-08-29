@@ -92,9 +92,9 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   const changeStatus = async (status: Collection['status']) => {
     try {
       await changeCollectionStatus(collection.id, status)
-      if (collection) {
-        dispatch(setCollection({ ...collection, status }))
-      }
+
+      dispatch(setCollection({ ...collection, status }))
+
       resetDialog()
     } catch (err) {
       enqueueSnackbar('ERROR: Changing collection status failed', {
@@ -126,24 +126,22 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
         dispatch(setReorderPending(false))
       }
 
-      if (collection) {
-        dispatch(
-          setCollection({
-            ...collection,
-            title: data.title,
-            minSelect: {
-              required: data.minSelectRequired,
-              goal: data.minSelectGoal,
-            },
-            maxSelect: {
-              required: data.maxSelectRequired,
-              goal: data.maxSelectGoal,
-            },
-            allowComments: data.allowComments,
-            status: 'selecting',
-          }),
-        )
-      }
+      dispatch(
+        setCollection({
+          ...collection,
+          title: data.title,
+          minSelect: {
+            required: data.minSelectRequired,
+            goal: data.minSelectGoal,
+          },
+          maxSelect: {
+            required: data.maxSelectRequired,
+            goal: data.maxSelectGoal,
+          },
+          allowComments: data.allowComments,
+          status: 'selecting',
+        }),
+      )
     } catch (err) {
       enqueueSnackbar('ERROR: Saving collection settings failed', {
         variant: 'error',
@@ -152,13 +150,9 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   }
 
   const copySelections = () => {
-    if (collection) {
-      const filenames = collection.photos
-        .filter(photo => photo.selected)
-        .map(photo => photo.filename)
+    const filenames = collection.photos.filter(photo => photo.selected).map(photo => photo.filename)
 
-      navigator.clipboard.writeText(filenames.join(' '))
-    }
+    navigator.clipboard.writeText(filenames.join(' '))
     setCopied(true)
     setTimeout(() => {
       setCopied(false)

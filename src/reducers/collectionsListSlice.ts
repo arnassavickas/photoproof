@@ -4,11 +4,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Collection } from '../types'
 
 export interface CollectionsListState {
-  collectionsList: Collection[]
+  collections: Collection[]
 }
 
 const initialState: CollectionsListState = {
-  collectionsList: [],
+  collections: [],
 }
 
 export const collectionsListSlice = createSlice({
@@ -16,12 +16,10 @@ export const collectionsListSlice = createSlice({
   initialState,
   reducers: {
     setCollectionsList: (state, action: PayloadAction<Collection[]>) => {
-      state.collectionsList = action.payload
+      state.collections = action.payload
     },
     deleteCollectionState: (state, action: PayloadAction<string>) => {
-      state.collectionsList = state.collectionsList.filter(
-        collection => collection.id !== action.payload,
-      )
+      state.collections = state.collections.filter(collection => collection.id !== action.payload)
     },
   },
 })

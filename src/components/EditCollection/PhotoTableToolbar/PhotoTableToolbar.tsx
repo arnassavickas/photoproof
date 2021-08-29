@@ -77,25 +77,24 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
   }
 
   const agreeResetPhotos = async () => {
-    if (collection) {
-      try {
-        await resetPhotos(collection.id, collection.photos)
-        dispatch(
-          setCollection({
-            ...collection,
-            photos: collection.photos.map(photo => ({
-              ...photo,
-              selected: false,
-              comment: '',
-            })),
-          }),
-        )
-        resetDialog()
-      } catch (err) {
-        enqueueSnackbar('ERROR: Resetting photos failed', {
-          variant: 'error',
-        })
-      }
+    try {
+      await resetPhotos(collection.id, collection.photos)
+
+      dispatch(
+        setCollection({
+          ...collection,
+          photos: collection.photos.map(photo => ({
+            ...photo,
+            selected: false,
+            comment: '',
+          })),
+        }),
+      )
+      resetDialog()
+    } catch (err) {
+      enqueueSnackbar('ERROR: Resetting photos failed', {
+        variant: 'error',
+      })
     }
   }
 

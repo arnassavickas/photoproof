@@ -35,26 +35,24 @@ const CollectionList: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
-  const collectionsList = useSelector((state: RootState) => state.collectionsList.collectionsList)
+  const collectionsList = useSelector((state: RootState) => state.collectionsList.collections)
   const collection = useSelector((state: RootState) => state.singleCollection.collection)
 
   useEffect(() => {
-    if (collectionsList.length === 0) {
-      dispatch(setUiState(UiState.Pending))
+    dispatch(setUiState(UiState.Pending))
 
-      getCollections()
-        .then(collections => {
-          dispatch(setCollectionsList(collections))
-          dispatch(setUiState(UiState.Success))
+    getCollections()
+      .then(collections => {
+        dispatch(setCollectionsList(collections))
+        dispatch(setUiState(UiState.Success))
+      })
+      .catch(() => {
+        enqueueSnackbar('ERROR: Getting collections failed. Please refresh the page', {
+          variant: 'error',
+          persist: true,
         })
-        .catch(() => {
-          enqueueSnackbar('ERROR: Getting collections failed. Please refresh the page', {
-            variant: 'error',
-            persist: true,
-          })
-        })
-    }
-  }, [collectionsList.length, dispatch, enqueueSnackbar])
+      })
+  }, [dispatch, enqueueSnackbar])
 
   if (!collectionsList) return null
 
