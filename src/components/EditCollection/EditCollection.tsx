@@ -30,8 +30,8 @@ const EditCollection: React.FC = () => {
   const { id: collectionId } = useParams<{ id: string }>()
 
   const dispatch = useDispatch()
-  const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
-  const collection = useSelector((state: RootState) => state.collection.collection)
+  const filteredPhotos = useSelector((state: RootState) => state.singleCollection.filteredPhotos)
+  const collection = useSelector((state: RootState) => state.singleCollection.collection)
 
   const [photoIndex, setPhotoIndex] = useState(0)
   const [lightboxOpen, setLightboxOpen] = useState(false)

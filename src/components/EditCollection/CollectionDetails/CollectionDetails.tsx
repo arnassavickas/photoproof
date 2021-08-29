@@ -36,8 +36,8 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
-  const collection = useSelector((state: RootState) => state.collection.collection)
-  const reorderPending = useSelector((state: RootState) => state.collection.reorderPending)
+  const collection = useSelector((state: RootState) => state.singleCollection.collection)
+  const reorderPending = useSelector((state: RootState) => state.singleCollection.reorderPending)
 
   const {
     register: registerSettings,

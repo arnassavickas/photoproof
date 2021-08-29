@@ -25,8 +25,8 @@ const CollectionPage: React.FC = () => {
   const history = useHistory()
 
   const dispatch = useDispatch()
-  const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
-  const collection = useSelector((state: RootState) => state.collection.collection)
+  const filteredPhotos = useSelector((state: RootState) => state.singleCollection.filteredPhotos)
+  const collection = useSelector((state: RootState) => state.singleCollection.collection)
 
   useEffect(() => {
     getSingleCollection(collectionId)
@@ -57,7 +57,7 @@ const CollectionPage: React.FC = () => {
     setLightboxOpen(true)
   }
 
-  const selectedPhotos = collection?.photos.filter(photo => photo.selected).length
+  const selectedPhotos = collection.photos.filter(photo => photo.selected).length
 
   const renderMustMessage = () => {
     if (collection.minSelect.required && collection.maxSelect.required) {

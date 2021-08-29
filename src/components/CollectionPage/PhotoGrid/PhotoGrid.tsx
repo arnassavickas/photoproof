@@ -21,8 +21,8 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({ openLightbox, openCommentModal })
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
-  const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
-  const collection = useSelector((state: RootState) => state.collection.collection)
+  const filteredPhotos = useSelector((state: RootState) => state.singleCollection.filteredPhotos)
+  const collection = useSelector((state: RootState) => state.singleCollection.collection)
 
   if (!collection) return null
 

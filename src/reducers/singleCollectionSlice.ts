@@ -44,7 +44,7 @@ const reorder = <T>(list: T[], startIndex: number, endIndex: number): T[] => {
 }
 
 export const singleCollectionSlice = createSlice({
-  name: 'collection',
+  name: 'singleCollection',
   initialState,
   reducers: {
     setCollection: (state, action: PayloadAction<Collection>) => {

@@ -27,7 +27,7 @@ const ImageLoader: React.FC<ImageLoaderProps> = ({
   const [failed, setFailed] = useState(false)
 
   const dispatch = useDispatch()
-  const collection = useSelector((state: RootState) => state.collection.collection)
+  const collection = useSelector((state: RootState) => state.singleCollection.collection)
 
   useEffect(() => {
     if (photo.resizeReady || !collection) {

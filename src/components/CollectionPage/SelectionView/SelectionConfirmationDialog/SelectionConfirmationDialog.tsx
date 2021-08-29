@@ -34,7 +34,7 @@ const SelectionConfirmationDialog: React.FC<SelectionConfirmationDialogProps> = 
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
-  const collection = useSelector((state: RootState) => state.collection.collection)
+  const collection = useSelector((state: RootState) => state.singleCollection.collection)
 
   if (!collection) return null
 

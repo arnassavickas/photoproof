@@ -24,7 +24,7 @@ const customRender = (
 ) => {
   const mockStore = configureStore({
     reducer: {
-      collection: collectionReducer,
+      singleCollection: collectionReducer,
       collectionsList: collectionsReducer,
       uiState: uiStateReducer,
       siteSettings: siteSettingsReducer,

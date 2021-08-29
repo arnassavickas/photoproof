@@ -37,7 +37,7 @@ const CollectionList: React.FC = () => {
 
   const dispatch = useDispatch()
   const { collectionsList } = useSelector((state: RootState) => state.collectionsList)
-  const collection = useSelector((state: RootState) => state.collection.collection)
+  const collection = useSelector((state: RootState) => state.singleCollection.collection)
 
   useEffect(() => {
     if (collectionsList.length === 0) {

@@ -17,10 +17,10 @@ const props: PhotoTableProps = {
 }
 
 describe('<PhotoTable/>', () => {
-  let mockStore = { collection: { data: collection, filteredPhotos, filter: 'all' } }
+  let mockStore = { singleCollection: { collection, filteredPhotos, filter: 'all' } }
 
   beforeEach(() => {
-    mockStore = { collection: { data: collection, filteredPhotos, filter: 'all' } }
+    mockStore = { singleCollection: { collection, filteredPhotos, filter: 'all' } }
   })
   test('renders two rows', () => {
     render(<PhotoTable {...props} />, { initialState: mockStore })
@@ -44,7 +44,7 @@ describe('<PhotoTable/>', () => {
 
   describe('when collecction status is editing', () => {
     beforeEach(() => {
-      mockStore.collection.data.status = 'editing'
+      mockStore.singleCollection.collection.status = 'editing'
     })
 
     test('renders two checkboxes', () => {
