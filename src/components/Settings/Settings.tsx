@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm, Controller } from 'react-hook-form'
@@ -10,7 +10,7 @@ import { changeSiteSettings } from '../../firebase'
 import styles from './styles.module.scss'
 import { RootState } from '../../store'
 import { setLogoUrl, setLogoWidth } from '../../reducers/siteSettingsSlice'
-import { setUiState } from '../../reducers/uiStateSlice'
+import { setLoaderProgress, setUiState } from '../../reducers/uiStateSlice'
 import { UiState } from '../../types'
 
 // TODO implement interactive watermark size/angle adjustment
@@ -22,11 +22,9 @@ const Settings = () => {
     email: string
   }>()
 
-  const [uploading, setUploading] = useState(false)
-  const [uploadProgress, setUploadProgress] = useState(0)
-
   const dispatch = useDispatch()
   const { logoWidth, email } = useSelector((state: RootState) => state.siteSettings)
+  const progress = useSelector((state: RootState) => state.uiState.loaderProgress)
 
   const history = useHistory()
 
@@ -40,13 +38,15 @@ const Settings = () => {
     dispatch(setUiState(UiState.Success))
   }, [dispatch, email, logoWidth, setValue])
 
+  const handleLoaderProgress = (progress: number) => {
+    dispatch(setLoaderProgress(progress))
+  }
+
   const onSubmit = async (data: { logoFile: FileList; logoWidth: number; email: string }) => {
     try {
-      setUploading(true)
+      await changeSiteSettings(data.logoFile, data.logoWidth, data.email, handleLoaderProgress)
 
-      await changeSiteSettings(data.logoFile, data.logoWidth, data.email, setUploadProgress)
-
-      setUploading(false)
+      dispatch(setLoaderProgress(0))
       history.push('/')
     } catch {
       enqueueSnackbar('ERROR: Saving settings failed', {
@@ -87,7 +87,7 @@ const Settings = () => {
             variant="contained"
             color="primary"
             type="submit"
-            disabled={uploading}
+            disabled={!!progress}
           >
             Save
           </Button>
@@ -148,9 +148,9 @@ const Settings = () => {
           defaultValue={email}
         />
         <div>
-          {uploading ? (
+          {progress ? (
             <Box data-testid="uploading" p="3px">
-              <LinearProgress variant="determinate" value={uploadProgress} />
+              <LinearProgress variant="determinate" value={progress} />
             </Box>
           ) : (
             <Box p="5px" />

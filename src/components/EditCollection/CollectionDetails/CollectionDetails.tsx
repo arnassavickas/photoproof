@@ -23,13 +23,13 @@ import { changeCollectionStatus, reorderPhotos, updateSettings } from '../../../
 import StatusIcon from '../../StatusIcon/StatusIcon'
 import { RootState } from '../../../store'
 import { setCollection, setReorderPending } from '../../../reducers/singleCollectionSlice'
+import { setLoaderProgress } from '../../../reducers/uiStateSlice'
 
 const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   setConfirmationDialogOpen,
   setConfirmationDialogTitle,
   setConfirmationDialogContentText,
   setConfirmationDialogAgree,
-  setProgress,
 }) => {
   const [copied, setCopied] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
@@ -85,7 +85,8 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
     setConfirmationDialogTitle('')
     setConfirmationDialogContentText('')
     setConfirmationDialogAgree(noop)
-    setProgress(0)
+
+    dispatch(setLoaderProgress(0))
   }
 
   const changeStatus = async (status: Collection['status']) => {

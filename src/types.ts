@@ -62,7 +62,6 @@ export interface CollectionDetailsProps {
   setConfirmationDialogTitle: React.Dispatch<React.SetStateAction<string>>
   setConfirmationDialogContentText: React.Dispatch<React.SetStateAction<string>>
   setConfirmationDialogAgree: React.Dispatch<React.SetStateAction<(value: any) => void>>
-  setProgress: React.Dispatch<React.SetStateAction<number>>
 }
 
 export interface PhotoTableToolbarProps {
@@ -70,7 +69,6 @@ export interface PhotoTableToolbarProps {
   setConfirmationDialogTitle: React.Dispatch<React.SetStateAction<string>>
   setConfirmationDialogContentText: React.Dispatch<React.SetStateAction<string>>
   setConfirmationDialogAgree: React.Dispatch<React.SetStateAction<(value: any) => void>>
-  setProgress: React.Dispatch<React.SetStateAction<number>>
   selected: string[]
   setSelected: React.Dispatch<React.SetStateAction<string[]>>
   setAddPhotosDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -84,11 +82,8 @@ export interface PhotoTableProps {
 }
 
 export interface AddPhotosDialogProps {
-  collectionId: string
-  setProgress: React.Dispatch<React.SetStateAction<number>>
   addPhotosDialogOpen: boolean
   setAddPhotosDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
-  progress: number
 }
 export interface ConfirmationForbiddenProps {
   selectedPhotos: number | undefined

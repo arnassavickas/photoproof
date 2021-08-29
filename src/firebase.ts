@@ -28,7 +28,7 @@ export const storage = firebase.storage()
 const uploadPhotos = async (
   id: string,
   files: FileList,
-  setUploadProgress: React.Dispatch<React.SetStateAction<number>>,
+  setUploadProgress: (progress: number) => void,
 ) => {
   const photosArray: Photo[] = []
   const progressStep = 85 / files.length
@@ -154,7 +154,7 @@ export const changeSiteSettings = async (
   files: FileList,
   logoWidth: number,
   email: string,
-  setUploadProgress: React.Dispatch<React.SetStateAction<number>>,
+  setUploadProgress: (progress: number) => void,
 ) => {
   const logoStorageRef = storage.ref(`logo`)
   let logoUrl: string | undefined
@@ -198,7 +198,7 @@ export const getSiteSettings = async () => {
 export const addMorePhotos = async (
   id: string,
   files: FileList,
-  setUploadProgress: React.Dispatch<React.SetStateAction<number>>,
+  setUploadProgress: (progress: number) => void,
 ) => {
   const photosRef = firestore.collection('collections').doc(id).collection('photos')
 
@@ -288,7 +288,7 @@ export const confirmCollection = async (
 export const deletePhotos = async (
   collectionId: Collection['id'],
   photoIds: Photo['id'][],
-  setDeleteProgress: React.Dispatch<React.SetStateAction<number>>,
+  setDeleteProgress: (progress: number) => void,
 ) => {
   setDeleteProgress(1)
   const photosRef = firestore.collection('collections').doc(collectionId).collection('photos')

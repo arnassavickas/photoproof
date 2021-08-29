@@ -15,20 +15,19 @@ import CloseIcon from '@material-ui/icons/Close'
 
 import { DropzoneArea } from 'material-ui-dropzone'
 import { useForm, Controller } from 'react-hook-form'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useSnackbar } from 'notistack'
 
 import { getSingleCollection, addMorePhotos } from '../../../firebase'
 import { AddPhotosDialogProps } from '../../../types'
 import styles from './styles.module.scss'
 import { setCollection } from '../../../reducers/singleCollectionSlice'
+import { RootState } from '../../../store'
+import { setLoaderProgress } from '../../../reducers/uiStateSlice'
 
 const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
-  collectionId,
-  setProgress,
   addPhotosDialogOpen,
   setAddPhotosDialogOpen,
-  progress,
 }) => {
   const { handleSubmit, errors, control } = useForm<any>({
     defaultValues: { files: [] },
@@ -36,16 +35,26 @@ const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
+  const collection = useSelector((state: RootState) => state.singleCollection.collection)
+  const progress = useSelector((state: RootState) => state.uiState.loaderProgress)
+
+  if (!collection) return null
+
+  const handleLoaderProgressChange = (progress: number) => {
+    dispatch(setLoaderProgress(progress))
+  }
 
   const onConfirmUpload = async (data: { files: FileList }) => {
     try {
-      await addMorePhotos(collectionId, data.files, setProgress)
+      await addMorePhotos(collection.id, data.files, handleLoaderProgressChange)
+
       setAddPhotosDialogOpen(false)
-      setProgress(0)
 
-      const collection = await getSingleCollection(collectionId)
+      dispatch(setLoaderProgress(0))
 
-      dispatch(setCollection(collection))
+      const updatedCollection = await getSingleCollection(collection.id)
+
+      dispatch(setCollection(updatedCollection))
     } catch (err) {
       enqueueSnackbar('ERROR: Photo upload failed', {
         variant: 'error',

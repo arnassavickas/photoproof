@@ -40,7 +40,6 @@ const EditCollection: React.FC = () => {
   const [confirmationDialogTitle, setConfirmationDialogTitle] = useState('')
   const [confirmationDialogContentText, setConfirmationDialogContentText] = useState('')
   const [confirmationDialogAgree, setConfirmationDialogAgree] = useState<(value: any) => void>(noop)
-  const [progress, setProgress] = useState(0)
   const [addPhotosDialogOpen, setAddPhotosDialogOpen] = useState(false)
   const [commentOpen, setCommentOpen] = useState(false)
   const [commentTextarea, setCommentTextarea] = useState('')
@@ -82,14 +81,12 @@ const EditCollection: React.FC = () => {
         setConfirmationDialogTitle={setConfirmationDialogTitle}
         setConfirmationDialogContentText={setConfirmationDialogContentText}
         setConfirmationDialogAgree={setConfirmationDialogAgree}
-        setProgress={setProgress}
       />
       <PhotoTableToolbar
         setConfirmationDialogOpen={setConfirmationDialogOpen}
         setConfirmationDialogTitle={setConfirmationDialogTitle}
         setConfirmationDialogContentText={setConfirmationDialogContentText}
         setConfirmationDialogAgree={setConfirmationDialogAgree}
-        setProgress={setProgress}
         selected={selected}
         setSelected={setSelected}
         setAddPhotosDialogOpen={setAddPhotosDialogOpen}
@@ -126,18 +123,14 @@ const EditCollection: React.FC = () => {
       )}
       <ConfirmationDialog
         dialogOpen={confirmationDialogOpen}
-        progress={progress}
         onClickCancel={() => setConfirmationDialogOpen(false)}
         onClickAgree={confirmationDialogAgree}
         dialogTitle={confirmationDialogTitle}
         dialogContentText={confirmationDialogContentText}
       />
       <AddPhotosDialog
-        collectionId={collectionId}
-        setProgress={setProgress}
         addPhotosDialogOpen={addPhotosDialogOpen}
         setAddPhotosDialogOpen={setAddPhotosDialogOpen}
-        progress={progress}
       />
       <CommentDialog
         commentOpen={commentOpen}

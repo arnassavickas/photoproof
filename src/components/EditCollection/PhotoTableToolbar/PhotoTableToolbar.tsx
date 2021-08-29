@@ -13,13 +13,13 @@ import { deletePhotos, resetPhotos } from '../../../firebase'
 import FilterButtons from '../../FilterButtons/FilterButtons'
 import { RootState } from '../../../store'
 import { setCollection } from '../../../reducers/singleCollectionSlice'
+import { setLoaderProgress } from '../../../reducers/uiStateSlice'
 
 const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
   setConfirmationDialogOpen,
   setConfirmationDialogTitle,
   setConfirmationDialogContentText,
   setConfirmationDialogAgree,
-  setProgress,
   selected,
   setSelected,
   setAddPhotosDialogOpen,
@@ -36,12 +36,17 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
     setConfirmationDialogTitle('')
     setConfirmationDialogContentText('')
     setConfirmationDialogAgree(noop)
-    setProgress(0)
+
+    dispatch(setLoaderProgress(0))
+  }
+
+  const handleLoaderProgressChange = (progress: number) => {
+    dispatch(setLoaderProgress(progress))
   }
 
   const agreeDelete = async () => {
     try {
-      await deletePhotos(collection.id, selected, setProgress)
+      await deletePhotos(collection.id, selected, handleLoaderProgressChange)
       const removeDeleted = collection.photos
         .filter(photo => {
           for (const id of selected) {
