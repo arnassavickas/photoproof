@@ -42,7 +42,9 @@ const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
       await addMorePhotos(collectionId, data.files, setProgress)
       setAddPhotosDialogOpen(false)
       setProgress(0)
+
       const collection = await getSingleCollection(collectionId)
+
       dispatch(setCollection(collection))
     } catch (err) {
       enqueueSnackbar('ERROR: Photo upload failed', {

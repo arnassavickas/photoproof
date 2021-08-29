@@ -78,7 +78,6 @@ const EditCollection: React.FC = () => {
   return (
     <div>
       <CollectionDetails
-        collectionId={collectionId}
         setConfirmationDialogOpen={setConfirmationDialogOpen}
         setConfirmationDialogTitle={setConfirmationDialogTitle}
         setConfirmationDialogContentText={setConfirmationDialogContentText}
@@ -86,7 +85,6 @@ const EditCollection: React.FC = () => {
         setProgress={setProgress}
       />
       <PhotoTableToolbar
-        collectionId={collectionId}
         setConfirmationDialogOpen={setConfirmationDialogOpen}
         setConfirmationDialogTitle={setConfirmationDialogTitle}
         setConfirmationDialogContentText={setConfirmationDialogContentText}

@@ -58,7 +58,6 @@ export interface SelectionViewProps extends LockedViewProps {
 }
 
 export interface CollectionDetailsProps {
-  collectionId: string
   setConfirmationDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
   setConfirmationDialogTitle: React.Dispatch<React.SetStateAction<string>>
   setConfirmationDialogContentText: React.Dispatch<React.SetStateAction<string>>
@@ -67,7 +66,6 @@ export interface CollectionDetailsProps {
 }
 
 export interface PhotoTableToolbarProps {
-  collectionId: string
   setConfirmationDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
   setConfirmationDialogTitle: React.Dispatch<React.SetStateAction<string>>
   setConfirmationDialogContentText: React.Dispatch<React.SetStateAction<string>>

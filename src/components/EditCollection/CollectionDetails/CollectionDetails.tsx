@@ -25,7 +25,6 @@ import { RootState } from '../../../store'
 import { setCollection, setReorderPending } from '../../../reducers/singleCollectionSlice'
 
 const CollectionDetails: React.FC<CollectionDetailsProps> = ({
-  collectionId,
   setConfirmationDialogOpen,
   setConfirmationDialogTitle,
   setConfirmationDialogContentText,
@@ -91,7 +90,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
 
   const changeStatus = async (status: Collection['status']) => {
     try {
-      await changeCollectionStatus(collectionId, status)
+      await changeCollectionStatus(collection.id, status)
       if (collection) {
         dispatch(setCollection({ ...collection, status }))
       }
@@ -118,11 +117,11 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
           },
           allowComments: data.allowComments,
         },
-        collectionId,
+        collection.id,
       )
 
       if (reorderPending) {
-        await reorderPhotos(collection.photos, collectionId)
+        await reorderPhotos(collection.photos, collection.id)
         dispatch(setReorderPending(false))
       }
 
@@ -234,11 +233,11 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
           <Tooltip title={copied ? 'copied!' : 'copy'}>
             <Button onClick={copyUrl}>
               {/* //TODO make subfolder Context or .env */}
-              {`${window.location.origin.toString()}/photoproof/collection/${collectionId}`}
+              {`${window.location.origin.toString()}/photoproof/collection/${collection.id}`}
             </Button>
           </Tooltip>
           <Button
-            to={`/collection/${collectionId}`}
+            to={`/collection/${collection.id}`}
             component={Link}
             variant="contained"
             size="small"

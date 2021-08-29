@@ -15,7 +15,6 @@ import { RootState } from '../../../store'
 import { setCollection } from '../../../reducers/singleCollectionSlice'
 
 const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
-  collectionId,
   setConfirmationDialogOpen,
   setConfirmationDialogTitle,
   setConfirmationDialogContentText,
@@ -42,27 +41,27 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
 
   const agreeDelete = async () => {
     try {
-      await deletePhotos(collectionId, selected, setProgress)
-      if (collection) {
-        const removeDeleted = collection.photos
-          .filter(photo => {
-            for (const id of selected) {
-              if (photo.id === id) {
-                return false
-              }
+      await deletePhotos(collection.id, selected, setProgress)
+      const removeDeleted = collection.photos
+        .filter(photo => {
+          for (const id of selected) {
+            if (photo.id === id) {
+              return false
             }
-            return true
-          })
-          .map((photo, index) => {
-            return { ...photo, index: index + 1 }
-          })
-        dispatch(
-          setCollection({
-            ...collection,
-            photos: removeDeleted,
-          }),
-        )
-      }
+          }
+          return true
+        })
+        .map((photo, index) => {
+          return { ...photo, index: index + 1 }
+        })
+
+      dispatch(
+        setCollection({
+          ...collection,
+          photos: removeDeleted,
+        }),
+      )
+
       setSelected([])
       resetDialog()
     } catch (err) {
@@ -75,7 +74,7 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
   const agreeResetPhotos = async () => {
     if (collection) {
       try {
-        await resetPhotos(collectionId, collection.photos)
+        await resetPhotos(collection.id, collection.photos)
         dispatch(
           setCollection({
             ...collection,
