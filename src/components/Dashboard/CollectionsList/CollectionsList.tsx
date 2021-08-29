@@ -36,23 +36,25 @@ const CollectionList: React.FC = () => {
 
   const dispatch = useDispatch()
   const collectionsList = useSelector((state: RootState) => state.collections.collectionsList)
-  const collection = useSelector((state: RootState) => state.collections.collection)
+  const listFetchPending = useSelector((state: RootState) => state.collections.listFetchPending)
 
   useEffect(() => {
-    dispatch(setUiState(UiState.Pending))
+    if (listFetchPending) {
+      dispatch(setUiState(UiState.Pending))
 
-    getCollections()
-      .then(collections => {
-        dispatch(setCollectionsList(collections))
-        dispatch(setUiState(UiState.Success))
-      })
-      .catch(() => {
-        enqueueSnackbar('ERROR: Getting collections failed. Please refresh the page', {
-          variant: 'error',
-          persist: true,
+      getCollections()
+        .then(collections => {
+          dispatch(setCollectionsList(collections))
+          dispatch(setUiState(UiState.Success))
         })
-      })
-  }, [dispatch, enqueueSnackbar])
+        .catch(() => {
+          enqueueSnackbar('ERROR: Getting collections failed. Please refresh the page', {
+            variant: 'error',
+            persist: true,
+          })
+        })
+    }
+  }, [dispatch, enqueueSnackbar, listFetchPending])
 
   if (!collectionsList) return null
 
@@ -78,9 +80,6 @@ const CollectionList: React.FC = () => {
   }
 
   const handleRowClick = (collectionId: string) => {
-    if (collection?.id !== collectionId) {
-      dispatch(setUiState(UiState.Pending))
-    }
     history.push(`edit/${collectionId}`)
   }
 

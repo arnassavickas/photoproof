@@ -11,9 +11,9 @@ import { PhotoTableToolbarProps } from '../../../types'
 import { deletePhotos, resetPhotos } from '../../../firebase'
 
 import FilterButtons from '../../FilterButtons/FilterButtons'
-import { RootState } from '../../../store'
 import { setCollection } from '../../../reducers/collectionsSlice'
 import { setLoaderProgress } from '../../../reducers/uiStateSlice'
+import { getCurrentCollection } from '../../../reducers/collectionsSelectors'
 
 const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
   setConfirmationDialogOpen,
@@ -27,7 +27,7 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
-  const collection = useSelector((state: RootState) => state.collections.collection)
+  const collection = useSelector(getCurrentCollection())
 
   if (!collection) return null
 

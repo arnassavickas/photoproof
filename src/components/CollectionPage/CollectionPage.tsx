@@ -11,10 +11,10 @@ import { getSingleCollection } from '../../firebase'
 import LockedView from './LockedView/LockedView'
 import SelectionView from './SelectionView/SelectionView'
 import FilterButtons from '../FilterButtons/FilterButtons'
-import { RootState } from '../../store'
-import { setCollection } from '../../reducers/collectionsSlice'
+import { setCollection, setCurrentId } from '../../reducers/collectionsSlice'
 import { setUiState } from '../../reducers/uiStateSlice'
 import { UiState } from '../../types'
+import { getCurrentCollection, getFilteredPhotos } from '../../reducers/collectionsSelectors'
 
 const CollectionPage: React.FC = () => {
   const { id: collectionId } = useParams<{ id: string }>()
@@ -25,20 +25,24 @@ const CollectionPage: React.FC = () => {
   const history = useHistory()
 
   const dispatch = useDispatch()
-  const filteredPhotos = useSelector((state: RootState) => state.collections.filteredPhotos)
-  const collection = useSelector((state: RootState) => state.collections.collection)
+  const filteredPhotos = useSelector(getFilteredPhotos())
+  const collection = useSelector(getCurrentCollection())
 
   useEffect(() => {
-    getSingleCollection(collectionId)
-      .then(collection => {
-        dispatch(setCollection(collection))
-        dispatch(setUiState(UiState.Success))
-      })
-      .catch(() => {
-        dispatch(setUiState(UiState.Idle))
-        history.push('/error')
-      })
-  }, [collectionId, dispatch, history])
+    dispatch(setCurrentId(collectionId))
+
+    if (!collection) {
+      getSingleCollection(collectionId)
+        .then(collection => {
+          dispatch(setCollection(collection))
+          dispatch(setUiState(UiState.Success))
+        })
+        .catch(() => {
+          dispatch(setUiState(UiState.Idle))
+          history.push('/error')
+        })
+    }
+  }, [collection, collectionId, dispatch, history])
 
   if (!collection) return null
 

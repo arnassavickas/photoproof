@@ -9,7 +9,7 @@ import { Typography } from '@material-ui/core'
 
 import styles from './styles.module.scss'
 import { LightboxProps } from '../../types'
-import { RootState } from '../../store'
+import { getFilteredPhotos } from '../../reducers/collectionsSelectors'
 
 const LightboxComponent: React.FC<LightboxProps> = ({
   lightboxOpen,
@@ -18,7 +18,7 @@ const LightboxComponent: React.FC<LightboxProps> = ({
   setLightboxIndex,
   toolbarButtons,
 }) => {
-  const filteredPhotos = useSelector((state: RootState) => state.collections.filteredPhotos)
+  const filteredPhotos = useSelector(getFilteredPhotos())
 
   useEffect(() => {
     if (window.innerHeight < document.body.clientHeight) {

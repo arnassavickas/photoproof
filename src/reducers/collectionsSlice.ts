@@ -7,34 +7,18 @@ type Filter = 'all' | 'selected' | 'unselected'
 
 export interface CollectionsState {
   collectionsList: Collection[]
-  collection: Collection | null
+  currentId: string | null
   filter: Filter
-  filteredPhotos: Collection['photos']
   reorderPending: boolean
+  listFetchPending: boolean
 }
 
 const initialState: CollectionsState = {
   collectionsList: [],
-  collection: null,
+  currentId: null,
   filter: 'all',
-  filteredPhotos: [],
   reorderPending: false,
-}
-
-const getFilteredPhotos = (filter: Filter, photos: Collection['photos']) => {
-  if (filter === 'all') {
-    return photos
-  }
-
-  if (filter === 'selected') {
-    return photos.filter(photo => photo.selected)
-  }
-
-  if (filter === 'unselected') {
-    return photos.filter(photo => !photo.selected)
-  }
-
-  return []
+  listFetchPending: true,
 }
 
 const reorder = <T>(list: T[], startIndex: number, endIndex: number): T[] => {
@@ -45,12 +29,27 @@ const reorder = <T>(list: T[], startIndex: number, endIndex: number): T[] => {
   return result
 }
 
+const getCurrentCollection = (collections: Collection[], id: string | null) =>
+  collections.find(collection => collection.id === id)
+
+const getSelectedPhoto = (
+  photoId: string,
+  collections: Collection[],
+  collectionId: string | null,
+) => {
+  const currentCollection = getCurrentCollection(collections, collectionId)
+  if (!currentCollection) return null
+
+  return currentCollection.photos.find(photo => photo.id === photoId)
+}
+
 export const collectionsSlice = createSlice({
   name: 'collections',
   initialState,
   reducers: {
     setCollectionsList: (state, action: PayloadAction<Collection[]>) => {
       state.collectionsList = action.payload
+      state.listFetchPending = false
     },
     deleteCollectionState: (state, action: PayloadAction<string>) => {
       state.collectionsList = state.collectionsList.filter(
@@ -58,37 +57,60 @@ export const collectionsSlice = createSlice({
       )
     },
     setCollection: (state, action: PayloadAction<Collection>) => {
-      state.collection = action.payload
-
-      state.filteredPhotos = getFilteredPhotos('all', state.collection.photos)
+      state.collectionsList = [...state.collectionsList, action.payload]
     },
     setPhotoFilter: (state, action: PayloadAction<Filter>) => {
-      if (!state.collection) return
-
       state.filter = action.payload
-
-      state.filteredPhotos = getFilteredPhotos(action.payload, state.collection.photos)
     },
     changeOrder: (state, action: PayloadAction<{ source: number; destination: number }>) => {
-      if (!state.collection) return
-
       state.reorderPending = true
 
+      const currentCollection = getCurrentCollection(state.collectionsList, state.currentId)
+      if (!currentCollection) return
+
       const reorderedPhotos = reorder(
-        state.collection.photos,
+        currentCollection.photos,
         action.payload.source,
         action.payload.destination,
       )
 
-      state.collection.photos = reorderedPhotos.map((photo, index) => ({
+      currentCollection.photos = reorderedPhotos.map((photo, index) => ({
         ...photo,
         index: index + 1,
       }))
+    },
+    setCollectionStatus: (state, action: PayloadAction<Collection['status']>) => {
+      const currentCollection = getCurrentCollection(state.collectionsList, state.currentId)
+      if (!currentCollection) return
 
-      state.filteredPhotos = getFilteredPhotos(state.filter, state.collection.photos)
+      currentCollection.status = action.payload
+    },
+    editCollectionDetails: (
+      state,
+      action: PayloadAction<
+        Pick<Collection, 'title' | 'minSelect' | 'maxSelect' | 'allowComments' | 'status'>
+      >,
+    ) => {
+      const currentCollection = getCurrentCollection(state.collectionsList, state.currentId)
+      if (!currentCollection) return
+
+      currentCollection.title = action.payload.title
+      currentCollection.minSelect = action.payload.minSelect
+      currentCollection.maxSelect = action.payload.maxSelect
+      currentCollection.allowComments = action.payload.allowComments
+      currentCollection.status = action.payload.status
     },
     setReorderPending: (state, action: PayloadAction<boolean>) => {
       state.reorderPending = action.payload
+    },
+    setCurrentId: (state, action: PayloadAction<string>) => {
+      state.currentId = action.payload
+    },
+    setPhotoSelection: (state, action: PayloadAction<string>) => {
+      const selectedPhoto = getSelectedPhoto(action.payload, state.collectionsList, state.currentId)
+      if (!selectedPhoto) return
+
+      selectedPhoto.selected = !selectedPhoto.selected
     },
   },
 })
@@ -100,6 +122,10 @@ export const {
   changeOrder,
   setReorderPending,
   setCollectionsList,
+  setCurrentId,
+  setCollectionStatus,
+  editCollectionDetails,
+  setPhotoSelection,
 } = collectionsSlice.actions
 
 export default collectionsSlice.reducer

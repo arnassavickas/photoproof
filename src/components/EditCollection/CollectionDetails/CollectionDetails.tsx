@@ -22,8 +22,13 @@ import { Collection, CollectionDetailsProps } from '../../../types'
 import { changeCollectionStatus, reorderPhotos, updateSettings } from '../../../firebase'
 import StatusIcon from '../../StatusIcon/StatusIcon'
 import { RootState } from '../../../store'
-import { setCollection, setReorderPending } from '../../../reducers/collectionsSlice'
+import {
+  editCollectionDetails,
+  setCollectionStatus,
+  setReorderPending,
+} from '../../../reducers/collectionsSlice'
 import { setLoaderProgress } from '../../../reducers/uiStateSlice'
+import { getCurrentCollection } from '../../../reducers/collectionsSelectors'
 
 const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   setConfirmationDialogOpen,
@@ -35,7 +40,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
-  const collection = useSelector((state: RootState) => state.collections.collection)
+  const collection = useSelector(getCurrentCollection())
   const reorderPending = useSelector((state: RootState) => state.collections.reorderPending)
 
   const {
@@ -93,7 +98,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
     try {
       await changeCollectionStatus(collection.id, status)
 
-      dispatch(setCollection({ ...collection, status }))
+      dispatch(setCollectionStatus(status))
 
       resetDialog()
     } catch (err) {
@@ -127,8 +132,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
       }
 
       dispatch(
-        setCollection({
-          ...collection,
+        editCollectionDetails({
           title: data.title,
           minSelect: {
             required: data.minSelectRequired,

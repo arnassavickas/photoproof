@@ -22,6 +22,7 @@ import styles from './styles.module.scss'
 import { setCollection } from '../../../reducers/collectionsSlice'
 import { RootState } from '../../../store'
 import { setLoaderProgress } from '../../../reducers/uiStateSlice'
+import { getCurrentCollection } from '../../../reducers/collectionsSelectors'
 
 const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
   addPhotosDialogOpen,
@@ -33,7 +34,7 @@ const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
-  const collection = useSelector((state: RootState) => state.collections.collection)
+  const collection = useSelector(getCurrentCollection())
   const progress = useSelector((state: RootState) => state.uiState.loaderProgress)
 
   if (!collection) return null

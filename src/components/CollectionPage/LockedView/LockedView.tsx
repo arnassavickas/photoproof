@@ -13,7 +13,7 @@ import styles from './styles.module.scss'
 import Lightbox from '../../Lightbox/Lightbox'
 import CommentDialog from '../../CommentDialog/CommentDialog'
 import PhotoGrid from '../PhotoGrid/PhotoGrid'
-import { RootState } from '../../../store'
+import { getCurrentCollection, getFilteredPhotos } from '../../../reducers/collectionsSelectors'
 
 const LockedView: React.FC<LockedViewProps> = ({
   lightboxOpen,
@@ -26,8 +26,8 @@ const LockedView: React.FC<LockedViewProps> = ({
   setCommentOpen,
   commentTextarea,
 }) => {
-  const filteredPhotos = useSelector((state: RootState) => state.collections.filteredPhotos)
-  const collection = useSelector((state: RootState) => state.collections.collection)
+  const filteredPhotos = useSelector(getFilteredPhotos())
+  const collection = useSelector(getCurrentCollection())
 
   if (!collection) return null
 
