@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
 
 import NotificationProvider from '../providers/NotificationProvider'
-import collectionReducer from '../reducers/collectionSlice'
+import collectionReducer from '../reducers/singleCollectionSlice'
 import collectionsReducer from '../reducers/collectionsListSlice'
 import siteSettingsReducer from '../reducers/siteSettingsSlice'
 import uiStateReducer from '../reducers/uiStateSlice'

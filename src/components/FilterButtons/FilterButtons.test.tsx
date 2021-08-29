@@ -6,7 +6,7 @@ import { render, screen } from '../../utils/customTestRenderer'
 import { FilterButtonsProps } from '../../types'
 import FilterButtons from './FilterButtons'
 import { collection, filteredPhotos } from '../../utils/testUtils'
-import * as collectionSlice from '../../reducers/collectionSlice'
+import * as collectionSlice from '../../reducers/singleCollectionSlice'
 
 const props: FilterButtonsProps = {
   modifyLightbox: true,

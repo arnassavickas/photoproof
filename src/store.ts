@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import collectionReducer from './reducers/collectionSlice'
+import collectionReducer from './reducers/singleCollectionSlice'
 import collectionsReducer from './reducers/collectionsListSlice'
 import siteSettingsReducer from './reducers/siteSettingsSlice'
 import uiStateReducer from './reducers/uiStateSlice'

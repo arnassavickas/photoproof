@@ -15,14 +15,16 @@ import { updatePhotoSelection } from '../../../firebase'
 import { PhotoGridProps } from '../../../types'
 import styles from './styles.module.scss'
 import { RootState } from '../../../store'
-import { setCollection } from '../../../reducers/collectionSlice'
+import { setCollection } from '../../../reducers/singleCollectionSlice'
 
 const PhotoGrid: React.FC<PhotoGridProps> = ({ openLightbox, openCommentModal }) => {
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
   const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
-  const collection = useSelector((state: RootState) => state.collection.data)
+  const collection = useSelector((state: RootState) => state.collection.collection)
+
+  if (!collection) return null
 
   const selectPhoto = (photoId: string) => async () => {
     try {

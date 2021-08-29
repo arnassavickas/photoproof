@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import styles from './styles.module.scss'
 import { FilterButtonsProps } from '../../types'
-import { setPhotoFilter } from '../../reducers/collectionSlice'
+import { setPhotoFilter } from '../../reducers/singleCollectionSlice'
 import { RootState } from '../../store'
 
 const FilterButtons: React.FC<FilterButtonsProps> = ({
@@ -16,7 +16,9 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({
 
   const dispatch = useDispatch()
   const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
-  const collection = useSelector((state: RootState) => state.collection.data)
+  const collection = useSelector((state: RootState) => state.collection.collection)
+
+  if (!collection) return null
 
   const modifyLightbox = () => {
     if (setLightboxOpen && photoIndex && setPhotoIndex) {

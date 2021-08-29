@@ -18,7 +18,7 @@ import PhotoGrid from '../PhotoGrid/PhotoGrid'
 import ConfirmationForbiddenDialog from './ConfirmationForbiddenDialog/ConfirmationForbiddenDialog'
 import SelectionConfirmationDialog from './SelectionConfirmationDialog/SelectionConfirmationDialog'
 import { RootState } from '../../../store'
-import { setCollection } from '../../../reducers/collectionSlice'
+import { setCollection } from '../../../reducers/singleCollectionSlice'
 
 const SelectionView: React.FC<SelectionViewProps> = ({
   lightboxOpen,
@@ -39,7 +39,7 @@ const SelectionView: React.FC<SelectionViewProps> = ({
 
   const dispatch = useDispatch()
   const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
-  const collection = useSelector((state: RootState) => state.collection.data)
+  const collection = useSelector((state: RootState) => state.collection.collection)
 
   const selectPhotoLightbox = async () => {
     if (filteredPhotos && collection) {
@@ -89,6 +89,8 @@ const SelectionView: React.FC<SelectionViewProps> = ({
     return () => null
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lightboxOpen, photoIndex])
+
+  if (!collection) return null
 
   const savePhotoComment = async () => {
     setCommentOpen(false)

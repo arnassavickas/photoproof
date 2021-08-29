@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Photo } from '../../types'
 import { setResizeReady } from '../../firebase'
 import { RootState } from '../../store'
-import { setCollection } from '../../reducers/collectionSlice'
+import { setCollection } from '../../reducers/singleCollectionSlice'
 
 interface ImageLoaderProps {
   collectionId: string
@@ -27,10 +27,10 @@ const ImageLoader: React.FC<ImageLoaderProps> = ({
   const [failed, setFailed] = useState(false)
 
   const dispatch = useDispatch()
-  const collection = useSelector((state: RootState) => state.collection.data)
+  const collection = useSelector((state: RootState) => state.collection.collection)
 
   useEffect(() => {
-    if (photo.resizeReady) {
+    if (photo.resizeReady || !collection) {
       return
     }
     fetch(photo.cloudUrlWebp, {}).then(res => {
@@ -47,7 +47,7 @@ const ImageLoader: React.FC<ImageLoaderProps> = ({
               dispatch(
                 setCollection({
                   ...collection,
-                  photos: collection?.photos.map(collectionPhoto =>
+                  photos: collection.photos.map(collectionPhoto =>
                     collectionPhoto.id === photo.id
                       ? { ...photo, resizeReady: true }
                       : collectionPhoto,

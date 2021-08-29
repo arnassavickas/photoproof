@@ -21,7 +21,7 @@ import { useSnackbar } from 'notistack'
 import { getSingleCollection, addMorePhotos } from '../../../firebase'
 import { AddPhotosDialogProps } from '../../../types'
 import styles from './styles.module.scss'
-import { setCollection } from '../../../reducers/collectionSlice'
+import { setCollection } from '../../../reducers/singleCollectionSlice'
 
 const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
   collectionId,

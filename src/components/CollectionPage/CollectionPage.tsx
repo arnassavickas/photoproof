@@ -12,7 +12,7 @@ import LockedView from './LockedView/LockedView'
 import SelectionView from './SelectionView/SelectionView'
 import FilterButtons from '../FilterButtons/FilterButtons'
 import { RootState } from '../../store'
-import { setCollection } from '../../reducers/collectionSlice'
+import { setCollection } from '../../reducers/singleCollectionSlice'
 import { setUiState } from '../../reducers/uiStateSlice'
 import { UiState } from '../../types'
 
@@ -26,7 +26,7 @@ const CollectionPage: React.FC = () => {
 
   const dispatch = useDispatch()
   const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
-  const collection = useSelector((state: RootState) => state.collection.data)
+  const collection = useSelector((state: RootState) => state.collection.collection)
 
   useEffect(() => {
     getSingleCollection(collectionId)
@@ -38,18 +38,17 @@ const CollectionPage: React.FC = () => {
         dispatch(setUiState(UiState.Idle))
         history.push('/error')
       })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collectionId])
+  }, [collectionId, dispatch, history])
+
+  if (!collection) return null
 
   const openCommentModal = (index?: number) => {
     setCommentOpen(true)
-    if (filteredPhotos) {
-      if (index) {
-        setPhotoIndex(index)
-        setCommentTextarea(filteredPhotos[index].comment)
-      } else {
-        setCommentTextarea(filteredPhotos[photoIndex].comment)
-      }
+    if (index) {
+      setPhotoIndex(index)
+      setCommentTextarea(filteredPhotos[index].comment)
+    } else {
+      setCommentTextarea(filteredPhotos[photoIndex].comment)
     }
   }
 

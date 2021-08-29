@@ -27,7 +27,9 @@ const LockedView: React.FC<LockedViewProps> = ({
   commentTextarea,
 }) => {
   const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
-  const collection = useSelector((state: RootState) => state.collection.data)
+  const collection = useSelector((state: RootState) => state.collection.collection)
+
+  if (!collection) return null
 
   return (
     <div>
