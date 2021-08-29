@@ -42,7 +42,6 @@ function App() {
   useEffect(() => {
     getSiteSettings()
       .then(settings => {
-        console.log(settings)
         dispatch(
           setSiteSettings({
             logoUrl: settings?.logoUrl,
