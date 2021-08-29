@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm, Controller } from 'react-hook-form'
-import { Button, Typography, Slider, Box, LinearProgress, TextField } from '@material-ui/core'
+import { Button, Typography, Slider, Box, TextField } from '@material-ui/core'
 import { useSnackbar } from 'notistack'
 
 import { changeSiteSettings } from '../../firebase'
@@ -147,15 +147,6 @@ const Settings = () => {
           inputProps={{ type: 'email' }}
           defaultValue={email}
         />
-        <div>
-          {progress ? (
-            <Box data-testid="uploading" p="3px">
-              <LinearProgress variant="determinate" value={progress} />
-            </Box>
-          ) : (
-            <Box p="5px" />
-          )}
-        </div>
       </form>
     </div>
   )

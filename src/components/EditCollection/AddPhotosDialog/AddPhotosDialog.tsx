@@ -6,8 +6,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  LinearProgress,
-  Box,
   IconButton,
   Typography,
 } from '@material-ui/core'
@@ -70,13 +68,6 @@ const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
           <CloseIcon />
         </IconButton>
         <DialogContent>
-          {progress ? (
-            <Box p="3px">
-              <LinearProgress variant="determinate" value={progress} />
-            </Box>
-          ) : (
-            <Box p="5px" />
-          )}
           <div className={styles.dropzoneError}>
             <Typography data-testid="error" variant="body1">
               {errors.files ? 'Images are required' : <>&#8203;</>}

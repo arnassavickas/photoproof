@@ -79,7 +79,7 @@ const uploadPhotos = async (
 export const generateNewCollection = async (
   data: Omit<Collection, 'status' | 'finalComment' | 'photos' | 'id' | 'dateCreated'>,
   files: FileList,
-  setUploadProgress: React.Dispatch<React.SetStateAction<number>>,
+  setUploadProgress: (progress: number) => void,
 ): Promise<string> => {
   if (!data || !files) {
     throw new Error('missing data or files')
