@@ -76,6 +76,8 @@ const EditCollection: React.FC = () => {
     }
   }
 
+  if (!collection) return null
+
   return (
     <div>
       <CollectionDetails

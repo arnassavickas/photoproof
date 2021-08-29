@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   Checkbox,
@@ -49,7 +49,6 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
     watch: watchSettings,
     errors: errorsSettings,
     getValues: getValuesSettings,
-    setValue: setValueSettings,
     control: controlSettings,
   } = useForm({
     defaultValues: {
@@ -61,15 +60,6 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
       maxSelectGoal: collection?.maxSelect.goal,
     },
   })
-
-  useEffect(() => {
-    setValueSettings('title', collection?.title)
-    setValueSettings('allowComments', collection?.allowComments)
-    setValueSettings('maxSelectRequired', collection?.maxSelect.required)
-    setValueSettings('minSelectRequired', collection?.minSelect.required)
-    setValueSettings('minSelectGoal', collection?.minSelect.goal)
-    setValueSettings('maxSelectGoal', collection?.maxSelect.goal)
-  }, [collection, setValueSettings])
 
   if (!collection) return null
 
@@ -210,7 +200,6 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
               label="Title"
               id="title"
               name="title"
-              defaultValue={collection.title}
               variant="outlined"
               classes={{ root: styles.titleTextarea }}
               margin="dense"
@@ -231,7 +220,6 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
           Client URL:
           <Tooltip title={copied ? 'copied!' : 'copy'}>
             <Button onClick={copyUrl}>
-              {/* //TODO make subfolder Context or .env */}
               {`${window.location.origin.toString()}/photoproof/collection/${collection.id}`}
             </Button>
           </Tooltip>
@@ -343,7 +331,6 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
             <div style={{ display: maxToggle ? 'inline' : 'none' }}>
               <TextField
                 name="maxSelectGoal"
-                label="maxSelectGoal"
                 type="number"
                 variant="outlined"
                 size="small"
