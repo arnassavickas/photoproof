@@ -5,12 +5,10 @@ import { Collection } from '../types'
 
 export interface CollectionsListState {
   collectionsList: Collection[]
-  currentRequestId: string
 }
 
 const initialState: CollectionsListState = {
   collectionsList: [],
-  currentRequestId: '',
 }
 
 export const collectionsListSlice = createSlice({

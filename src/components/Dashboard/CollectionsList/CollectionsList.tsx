@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { MouseEvent, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import {
   Table,
@@ -62,17 +62,6 @@ const CollectionList: React.FC = () => {
     return photos.filter(photo => photo.selected).length
   }
 
-  const requestToDelete = (collectionId: string) => {
-    setDialogOpen(true)
-    setRequestDeleteId(collectionId)
-    if (collectionsList) {
-      const collectionToDelete = collectionsList.find(collection => collection.id === collectionId)
-      if (collectionToDelete) {
-        setRequestDeleteName(collectionToDelete.title)
-      }
-    }
-  }
-
   const handleLoaderProgressChange = (progress: number) => {
     dispatch(setLoaderProgress(progress))
   }
@@ -97,24 +86,36 @@ const CollectionList: React.FC = () => {
     history.push(`edit/${collectionId}`)
   }
 
+  const handleDeleteClick = (collectionId: string) => (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation()
+
+    setDialogOpen(true)
+    setRequestDeleteId(collectionId)
+    const collectionToDelete = collectionsList.find(collection => collection.id === collectionId)
+    if (collectionToDelete) {
+      setRequestDeleteName(collectionToDelete.title)
+    }
+  }
+
   return (
     <div className={styles.tableContainer}>
       <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell width="10%">first image</TableCell>
-              <TableCell width="30%">name</TableCell>
-              <TableCell width="20%">status</TableCell>
-              <TableCell>selected photos</TableCell>
-              <TableCell />
+              <TableCell width="10%" />
+              <TableCell>Title</TableCell>
+              <TableCell width="15%">Status</TableCell>
+              <TableCell width="15%">Selected Photos</TableCell>
+              <TableCell width="15%">Created at</TableCell>
+              <TableCell width="5%" />
             </TableRow>
           </TableHead>
           <TableBody>
             {collectionsList?.map(collection => {
               return (
-                <TableRow key={collection.id} hover>
-                  <TableCell onClick={() => handleRowClick(collection.id)}>
+                <TableRow key={collection.id} hover onClick={() => handleRowClick(collection.id)}>
+                  <TableCell>
                     {collection.photos[0] ? (
                       <picture>
                         <source srcSet={collection.photos[0].thumbnailWebp} type="image/webp" />
@@ -126,23 +127,22 @@ const CollectionList: React.FC = () => {
                       </picture>
                     ) : null}
                   </TableCell>
-                  <TableCell onClick={() => handleRowClick(collection.id)}>
-                    {collection.title}
-                  </TableCell>
-                  <TableCell onClick={() => handleRowClick(collection.id)}>
+                  <TableCell>{collection.title}</TableCell>
+                  <TableCell>
                     <StatusIcon status={collection.status} />
                   </TableCell>
-                  <TableCell onClick={() => handleRowClick(collection.id)}>
-                    {selectedPhotos(collection.photos)}
-                    {' / '}
-                    {collection.photos.length}
+                  <TableCell>
+                    {`${selectedPhotos(collection.photos)} / ${collection.photos.length}`}
+                  </TableCell>
+                  <TableCell>
+                    {new Date(collection.dateCreated * 1000).toLocaleDateString()}
                   </TableCell>
                   <TableCell align="right">
                     <Tooltip title="Delete">
                       <IconButton
                         color="inherit"
                         aria-label="delete"
-                        onClick={() => requestToDelete(collection.id)}
+                        onClick={handleDeleteClick(collection.id)}
                       >
                         <DeleteIcon />
                       </IconButton>
