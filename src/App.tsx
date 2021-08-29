@@ -42,15 +42,14 @@ function App() {
   useEffect(() => {
     getSiteSettings()
       .then(settings => {
-        if (settings && settings.logoUrl && settings.logoWidth) {
-          dispatch(
-            setSiteSettings({
-              logoUrl: settings.logoUrl,
-              logoWidth: settings.logoWidth,
-              email: settings.email,
-            }),
-          )
-        }
+        console.log(settings)
+        dispatch(
+          setSiteSettings({
+            logoUrl: settings?.logoUrl,
+            logoWidth: settings?.logoWidth,
+            email: settings?.email,
+          }),
+        )
       })
       .catch(() => {
         enqueueSnackbar('ERROR: Getting site settings failed', {
