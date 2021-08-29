@@ -36,6 +36,7 @@ const ImageLoader: React.FC<ImageLoaderProps> = ({
     fetch(photo.cloudUrlWebp, {}).then(res => {
       if (res.ok) {
         setImageReady(true)
+        setResizeReady(collectionId, photo.id)
       } else {
         let trie = 1
         const intervalId = setInterval(() => {
