@@ -112,7 +112,6 @@ export interface LightboxProps {
 
 export interface ConfirmationDialogProps {
   dialogOpen: boolean
-  progress?: number
   onClickCancel: React.MouseEventHandler<HTMLButtonElement>
   onClickAgree: React.MouseEventHandler<HTMLButtonElement>
   dialogTitle: string

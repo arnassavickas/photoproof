@@ -9,18 +9,21 @@ import {
   IconButton,
 } from '@material-ui/core'
 import CloseIcon from '@material-ui/icons/Close'
+import { useSelector } from 'react-redux'
 
 import styles from './styles.module.scss'
 import { ConfirmationDialogProps } from '../../types'
+import { RootState } from '../../store'
 
 const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   dialogOpen,
-  progress,
   onClickCancel,
   onClickAgree,
   dialogTitle,
   dialogContentText,
 }) => {
+  const progress = useSelector((state: RootState) => state.uiState.loaderProgress)
+
   return (
     <Dialog open={dialogOpen}>
       <DialogTitle id="alert-dialog-title">{dialogTitle}</DialogTitle>

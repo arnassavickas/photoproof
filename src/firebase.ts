@@ -332,7 +332,7 @@ const deleteMailDoc = async (collectionId: Collection['id']) => {
 
 export const deleteCollection = async (
   collectionId: Collection['id'],
-  setDeleteProgress: React.Dispatch<React.SetStateAction<number>>,
+  setDeleteProgress: (progress: number) => void,
 ) => {
   setDeleteProgress(1)
   const photosRef = firestore.collection('collections').doc(collectionId).collection('photos')

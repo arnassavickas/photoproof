@@ -22,11 +22,10 @@ import styles from './styles.module.scss'
 import ConfirmationDialog from '../../ConfirmationDialog/ConfirmationDialog'
 import StatusIcon from '../../StatusIcon/StatusIcon'
 import { RootState } from '../../../store'
-import { setUiState } from '../../../reducers/uiStateSlice'
+import { setLoaderProgress, setUiState } from '../../../reducers/uiStateSlice'
 import { deleteCollectionState, setCollectionsList } from '../../../reducers/collectionsListSlice'
 
 const CollectionList: React.FC = () => {
-  const [deleteProgress, setDeleteProgress] = useState(0)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [requestDeleteId, setRequestDeleteId] = useState('')
   const [requestDeleteName, setRequestDeleteName] = useState('')
@@ -36,7 +35,7 @@ const CollectionList: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
-  const { collectionsList } = useSelector((state: RootState) => state.collectionsList)
+  const collectionsList = useSelector((state: RootState) => state.collectionsList.collectionsList)
   const collection = useSelector((state: RootState) => state.singleCollection.collection)
 
   useEffect(() => {
@@ -74,11 +73,15 @@ const CollectionList: React.FC = () => {
     }
   }
 
+  const handleLoaderProgressChange = (progress: number) => {
+    dispatch(setLoaderProgress(progress))
+  }
+
   const handleDelete = async () => {
     try {
-      await deleteCollection(requestDeleteId, setDeleteProgress)
+      await deleteCollection(requestDeleteId, handleLoaderProgressChange)
       setDialogOpen(false)
-      setDeleteProgress(0)
+      dispatch(setLoaderProgress(0))
       dispatch(deleteCollectionState(requestDeleteId))
     } catch (err) {
       enqueueSnackbar('ERROR: Photo deletion failed', {
@@ -153,7 +156,6 @@ const CollectionList: React.FC = () => {
       </TableContainer>
       <ConfirmationDialog
         dialogOpen={dialogOpen}
-        progress={deleteProgress}
         onClickCancel={() => setDialogOpen(false)}
         onClickAgree={handleDelete}
         dialogTitle={`Do you really want to delete collection '${requestDeleteName}'?`}
