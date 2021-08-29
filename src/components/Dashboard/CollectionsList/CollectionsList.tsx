@@ -15,7 +15,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSnackbar } from 'notistack'
 
-import { Photo, UiState } from '../../../types'
+import { Collection, Photo, UiState } from '../../../types'
 import { getCollections, deleteCollection } from '../../../firebase'
 import styles from './styles.module.scss'
 
@@ -24,6 +24,7 @@ import StatusIcon from '../../StatusIcon/StatusIcon'
 import { RootState } from '../../../store'
 import { setLoaderProgress, setUiState } from '../../../reducers/uiStateSlice'
 import { deleteCollectionState, setCollectionsList } from '../../../reducers/collectionsListSlice'
+import { setCollection } from '../../../reducers/singleCollectionSlice'
 
 const CollectionList: React.FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -36,7 +37,6 @@ const CollectionList: React.FC = () => {
 
   const dispatch = useDispatch()
   const collectionsList = useSelector((state: RootState) => state.collectionsList.collections)
-  const collection = useSelector((state: RootState) => state.singleCollection.collection)
 
   useEffect(() => {
     dispatch(setUiState(UiState.Pending))
@@ -77,11 +77,9 @@ const CollectionList: React.FC = () => {
     }
   }
 
-  const handleRowClick = (collectionId: string) => {
-    if (collection?.id !== collectionId) {
-      dispatch(setUiState(UiState.Pending))
-    }
-    history.push(`edit/${collectionId}`)
+  const handleRowClick = (collection: Collection) => {
+    dispatch(setCollection(collection))
+    history.push(`edit/${collection.id}`)
   }
 
   const handleDeleteClick = (collectionId: string) => (event: MouseEvent<HTMLButtonElement>) => {
@@ -112,7 +110,7 @@ const CollectionList: React.FC = () => {
           <TableBody>
             {collectionsList?.map(collection => {
               return (
-                <TableRow key={collection.id} hover onClick={() => handleRowClick(collection.id)}>
+                <TableRow key={collection.id} hover onClick={() => handleRowClick(collection)}>
                   <TableCell>
                     {collection.photos[0] ? (
                       <picture>
