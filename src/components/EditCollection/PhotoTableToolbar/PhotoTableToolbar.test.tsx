@@ -10,12 +10,10 @@ import { collection } from '../../../utils/testUtils'
 jest.mock('../../../firebase')
 
 const props: PhotoTableToolbarProps = {
-  collectionId: 'collectionId',
   setConfirmationDialogOpen: jest.fn(),
   setConfirmationDialogTitle: jest.fn(),
   setConfirmationDialogContentText: jest.fn(),
   setConfirmationDialogAgree: jest.fn(),
-  setProgress: jest.fn(),
   selected: [],
   setSelected: jest.fn(),
   setAddPhotosDialogOpen: jest.fn(),

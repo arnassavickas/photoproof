@@ -4,7 +4,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  LinearProgress,
   DialogActions,
   Button,
   IconButton,
@@ -30,7 +29,6 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
       </IconButton>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">{dialogContentText}</DialogContentText>
-        {progress ? <LinearProgress variant="determinate" value={progress} /> : null}
       </DialogContent>
       <DialogActions>
         <Button disabled={!!progress} onClick={onClickCancel} color="primary" autoFocus>

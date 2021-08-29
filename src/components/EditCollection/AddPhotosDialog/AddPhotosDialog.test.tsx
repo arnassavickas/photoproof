@@ -5,24 +5,24 @@ import { render, waitFor, screen } from '../../../utils/customTestRenderer'
 import { AddPhotosDialogProps } from '../../../types'
 import AddPhotosDialog from './AddPhotosDialog'
 import { getSingleCollection, addMorePhotos } from '../../../firebase'
+import { collection } from '../../../utils/testUtils'
 
 jest.mock('../../../firebase')
 
 const props: AddPhotosDialogProps = {
-  collectionId: 'collectionId',
-  setProgress: jest.fn(),
   addPhotosDialogOpen: true,
   setAddPhotosDialogOpen: jest.fn(),
-  progress: 0,
 }
 
 describe('<AddPhotosDialog/>', () => {
+  let mockStore = { singleCollection: { collection } }
+
   beforeEach(() => {
-    // jest.spyOn(console, 'error').mockImplementation(noop)
+    mockStore = { singleCollection: { collection } }
   })
 
   test('adding no photos renders error', async () => {
-    render(<AddPhotosDialog {...props} />)
+    render(<AddPhotosDialog {...props} />, { initialState: mockStore })
 
     const addButton = screen.getByText('Add')
     user.click(addButton)
@@ -33,7 +33,7 @@ describe('<AddPhotosDialog/>', () => {
   })
 
   test('adding photos calls firebase functions one time', async () => {
-    render(<AddPhotosDialog {...props} />)
+    render(<AddPhotosDialog {...props} />, { initialState: mockStore })
     const filesToUplaod = [
       new File([new ArrayBuffer(1)], 'file1.jpeg', { type: 'image/jpeg' }),
       new File([new ArrayBuffer(1)], 'file2.jpeg', { type: 'image/jpeg' }),

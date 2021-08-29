@@ -1,27 +1,22 @@
-import React, { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import { useForm, Controller } from 'react-hook-form'
-import {
-  Checkbox,
-  Typography,
-  Button,
-  TextField,
-  FormControlLabel,
-  LinearProgress,
-  Box,
-} from '@material-ui/core'
+import { Checkbox, Typography, Button, TextField, FormControlLabel } from '@material-ui/core'
 import { DropzoneArea } from 'material-ui-dropzone'
 import { useSnackbar } from 'notistack'
 
 import { NewCollectionInputs } from '../../types'
 import { generateNewCollection } from '../../firebase'
 import styles from './styles.module.scss'
+import { setLoaderProgress } from '../../reducers/uiStateSlice'
+import { RootState } from '../../store'
 
 const NewCollection: React.FC = () => {
   const { register, handleSubmit, watch, errors, getValues, control } =
     useForm<NewCollectionInputs>()
-  const [uploading, setUploading] = useState(false)
-  const [uploadProgress, setUploadProgress] = useState(0)
+
+  const dispatch = useDispatch()
+  const progress = useSelector((state: RootState) => state.uiState.loaderProgress)
 
   const history = useHistory()
 
@@ -30,9 +25,12 @@ const NewCollection: React.FC = () => {
   const minToggle = watch('minSelectRequired')
   const maxToggle = watch('maxSelectRequired')
 
+  const handleLoaderProgressChange = (progress: number) => {
+    dispatch(setLoaderProgress(progress))
+  }
+
   const onSubmit = async (data: NewCollectionInputs) => {
     try {
-      setUploading(true)
       const collectionId = await generateNewCollection(
         {
           title: data.title,
@@ -47,9 +45,9 @@ const NewCollection: React.FC = () => {
           allowComments: data.allowComments,
         },
         data.files,
-        setUploadProgress,
+        handleLoaderProgressChange,
       )
-      setUploading(false)
+      dispatch(setLoaderProgress(0))
       history.push(`/edit/${collectionId}`)
     } catch (err) {
       enqueueSnackbar('ERROR: Creating new collection failed', {
@@ -73,17 +71,11 @@ const NewCollection: React.FC = () => {
               color="primary"
               variant="contained"
               type="submit"
+              disabled={!!progress}
             >
               Create
             </Button>
           </div>
-          {uploading ? (
-            <Box data-testid="uploading" p="3px">
-              <LinearProgress variant="determinate" value={uploadProgress} />
-            </Box>
-          ) : (
-            <Box p="5px" />
-          )}
         </div>
         <TextField
           id="title"

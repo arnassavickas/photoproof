@@ -19,6 +19,7 @@ import { auth, getSiteSettings } from './firebase'
 import { RootState } from './store'
 import { setSiteSettings } from './reducers/siteSettingsSlice'
 import { UiState } from './types'
+import LinearProgressLoader from './components/LinearProgressLoader/LinearProgressLoader'
 
 function App() {
   const [user, setUser] = useState<null | string>(null)
@@ -65,6 +66,7 @@ function App() {
 
   return (
     <Container maxWidth="xl">
+      <LinearProgressLoader />
       <Backdrop
         open={uiState === UiState.Pending}
         transitionDuration={{ appear: 500, enter: 0, exit: 500 }}
