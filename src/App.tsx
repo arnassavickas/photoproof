@@ -65,40 +65,42 @@ function App() {
   if (isLoading) return null
 
   return (
-    <Container maxWidth="xl">
+    <>
       <LinearProgressLoader />
-      <Backdrop
-        open={uiState === UiState.Pending}
-        transitionDuration={{ appear: 500, enter: 0, exit: 500 }}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-      <Box ml={2} mr={2}>
-        {logoUrl && (
-          <a href={window.location.origin.toString()}>
-            <img className={styles.logo} src={logoUrl} style={{ width: logoWidth }} alt="logo" />
-          </a>
-        )}
-        {user && (
-          <div className={styles.logoutBtn}>
-            <Button onClick={() => auth.signOut()} variant="outlined">
-              Logout
-            </Button>
-          </div>
-        )}
-        <Router basename="/photoproof/">
-          <Switch>
-            <Route path="/collection/:id" render={() => <CollectionPage />} />
-            {!user ? <Route path="/" render={() => <SignIn />} /> : null}
-            <Route path="/settings" render={() => <Settings />} />
-            <Route path="/new" render={() => <NewCollection />} />
-            <Route path="/edit/:id" render={() => <EditCollection />} />
-            <Route exact path="/" render={() => <Dashboard />} />
-            <Route render={() => <ErrorPage />} />
-          </Switch>
-        </Router>
-      </Box>
-    </Container>
+      <Container maxWidth="xl">
+        <Backdrop
+          open={uiState === UiState.Pending}
+          transitionDuration={{ appear: 500, enter: 0, exit: 500 }}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+        <Box ml={2} mr={2}>
+          {logoUrl && (
+            <a href={window.location.origin.toString()}>
+              <img className={styles.logo} src={logoUrl} style={{ width: logoWidth }} alt="logo" />
+            </a>
+          )}
+          {user && (
+            <div className={styles.logoutBtn}>
+              <Button onClick={() => auth.signOut()} variant="outlined">
+                Logout
+              </Button>
+            </div>
+          )}
+          <Router basename="/photoproof/">
+            <Switch>
+              <Route path="/collection/:id" render={() => <CollectionPage />} />
+              {!user ? <Route path="/" render={() => <SignIn />} /> : null}
+              <Route path="/settings" render={() => <Settings />} />
+              <Route path="/new" render={() => <NewCollection />} />
+              <Route path="/edit/:id" render={() => <EditCollection />} />
+              <Route exact path="/" render={() => <Dashboard />} />
+              <Route render={() => <ErrorPage />} />
+            </Switch>
+          </Router>
+        </Box>
+      </Container>
+    </>
   )
 }
 
