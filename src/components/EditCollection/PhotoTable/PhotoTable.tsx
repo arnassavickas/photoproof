@@ -50,7 +50,7 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
     setSelected([])
   }
 
-  const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
+  const handleClick = (id: string) => {
     const selectedIndex = selected.indexOf(id)
     let newSelected: string[] = []
 
@@ -105,12 +105,12 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
               </TableCell>
             ) : null}
             <TableCell width="5%" size="medium">
-              no.
+              No.
             </TableCell>
-            <TableCell width="10%">thumbnail</TableCell>
-            <TableCell width="30%">filename</TableCell>
+            <TableCell width="10%" />
+            <TableCell width="30%">Filename</TableCell>
             <TableCell padding="checkbox" />
-            <TableCell>comment</TableCell>
+            <TableCell>Comment</TableCell>
           </TableRow>
         </TableHead>
         <TableBody component={DroppableComponent(onDragEnd, collection.status !== 'editing')}>
@@ -124,7 +124,7 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
                 <TableCell
                   data-testid="checkbox"
                   padding="checkbox"
-                  onClick={event => handleClick(event, photo.id)}
+                  onClick={() => handleClick(photo.id)}
                 >
                   <Checkbox checked={isSelected(photo.id)} />
                 </TableCell>
