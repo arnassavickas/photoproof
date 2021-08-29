@@ -21,10 +21,10 @@ const props: CollectionDetailsProps = {
 }
 
 describe('<CollectionDetails/>', () => {
-  let mockStore = { collection: { data: collection, reorderPending: false } }
+  let mockStore = { singleCollection: { collection, reorderPending: false } }
 
   beforeEach(() => {
-    mockStore = { collection: { data: collection, reorderPending: false } }
+    mockStore = { singleCollection: { collection, reorderPending: false } }
   })
 
   describe('when collection stattus is selecting', () => {
@@ -61,10 +61,7 @@ describe('<CollectionDetails/>', () => {
 
   describe('when collection status is confirmed', () => {
     beforeEach(() => {
-      // jest.spyOn(console, 'error').mockImplementation(noop)
-    })
-    beforeAll(() => {
-      mockStore.collection.data.status = 'confirmed'
+      mockStore.singleCollection.collection.status = 'confirmed'
     })
 
     test('clicking "edit" button calls setConfirmationDialogAgree one time', async () => {
@@ -109,10 +106,7 @@ describe('<CollectionDetails/>', () => {
 
   describe('when collection stattus is editing', () => {
     beforeEach(() => {
-      // jest.spyOn(console, 'error').mockImplementation(noop)
-    })
-    beforeEach(() => {
-      mockStore.collection.data.status = 'editing'
+      mockStore.singleCollection.collection.status = 'editing'
     })
 
     test('saving empty title renders error', async () => {

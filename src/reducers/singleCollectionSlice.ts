@@ -5,25 +5,15 @@ import { Collection } from '../types'
 
 type Filter = 'all' | 'selected' | 'unselected'
 
-export interface CollectionState {
-  data: Collection
+export interface SingleCollectionState {
+  collection: Collection | null
   filter: Filter
   filteredPhotos: Collection['photos']
   reorderPending: boolean
 }
 
-const initialState: CollectionState = {
-  data: {
-    id: '',
-    dateCreated: 0,
-    title: '',
-    minSelect: { required: false, goal: 0 },
-    maxSelect: { required: false, goal: 0 },
-    allowComments: true,
-    status: 'editing',
-    finalComment: '',
-    photos: [],
-  },
+const initialState: SingleCollectionState = {
+  collection: null,
   filter: 'all',
   filteredPhotos: [],
   reorderPending: false,
@@ -53,27 +43,39 @@ const reorder = <T>(list: T[], startIndex: number, endIndex: number): T[] => {
   return result
 }
 
-export const collectionSlice = createSlice({
-  name: 'collection',
+export const singleCollectionSlice = createSlice({
+  name: 'singleCollection',
   initialState,
   reducers: {
     setCollection: (state, action: PayloadAction<Collection>) => {
-      state.data = action.payload
-      state.filteredPhotos = getFilteredPhotos('all', state.data.photos)
+      state.collection = action.payload
+
+      state.filteredPhotos = getFilteredPhotos('all', state.collection.photos)
     },
     setPhotoFilter: (state, action: PayloadAction<Filter>) => {
+      if (!state.collection) return
+
       state.filter = action.payload
-      state.filteredPhotos = getFilteredPhotos(action.payload, state.data.photos)
+
+      state.filteredPhotos = getFilteredPhotos(action.payload, state.collection.photos)
     },
     changeOrder: (state, action: PayloadAction<{ source: number; destination: number }>) => {
+      if (!state.collection) return
+
       state.reorderPending = true
+
       const reorderedPhotos = reorder(
-        state.data.photos,
+        state.collection.photos,
         action.payload.source,
         action.payload.destination,
       )
-      state.data.photos = reorderedPhotos.map((photo, index) => ({ ...photo, index: index + 1 }))
-      state.filteredPhotos = getFilteredPhotos(state.filter, state.data.photos)
+
+      state.collection.photos = reorderedPhotos.map((photo, index) => ({
+        ...photo,
+        index: index + 1,
+      }))
+
+      state.filteredPhotos = getFilteredPhotos(state.filter, state.collection.photos)
     },
     setReorderPending: (state, action: PayloadAction<boolean>) => {
       state.reorderPending = action.payload
@@ -82,6 +84,6 @@ export const collectionSlice = createSlice({
 })
 
 export const { setCollection, setPhotoFilter, changeOrder, setReorderPending } =
-  collectionSlice.actions
+  singleCollectionSlice.actions
 
-export default collectionSlice.reducer
+export default singleCollectionSlice.reducer

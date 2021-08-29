@@ -22,6 +22,8 @@ import { UiState } from './types'
 
 function App() {
   const [user, setUser] = useState<null | string>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
   const uiState = useSelector((state: RootState) => state.uiState.value)
 
   const dispatch = useDispatch()
@@ -36,6 +38,7 @@ function App() {
       } else {
         setUser(null)
       }
+      setIsLoading(false)
     })
   }, [])
 
@@ -57,6 +60,8 @@ function App() {
         })
       })
   }, [dispatch, enqueueSnackbar])
+
+  if (isLoading) return null
 
   return (
     <Container maxWidth="xl">

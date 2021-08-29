@@ -22,7 +22,7 @@ import { Collection, CollectionDetailsProps } from '../../../types'
 import { changeCollectionStatus, reorderPhotos, updateSettings } from '../../../firebase'
 import StatusIcon from '../../StatusIcon/StatusIcon'
 import { RootState } from '../../../store'
-import { setCollection, setReorderPending } from '../../../reducers/collectionSlice'
+import { setCollection, setReorderPending } from '../../../reducers/singleCollectionSlice'
 
 const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   collectionId,
@@ -36,8 +36,8 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
-  const collection = useSelector((state: RootState) => state.collection.data)
-  const reorderPending = useSelector((state: RootState) => state.collection.reorderPending)
+  const collection = useSelector((state: RootState) => state.singleCollection.collection)
+  const reorderPending = useSelector((state: RootState) => state.singleCollection.reorderPending)
 
   const {
     register: registerSettings,
@@ -49,23 +49,25 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
     control: controlSettings,
   } = useForm({
     defaultValues: {
-      title: collection.title,
-      allowComments: collection.allowComments,
-      maxSelectRequired: collection.maxSelect.required,
-      minSelectRequired: collection.minSelect.required,
-      minSelectGoal: collection.minSelect.goal,
-      maxSelectGoal: collection.maxSelect.goal,
+      title: collection?.title,
+      allowComments: collection?.allowComments,
+      maxSelectRequired: collection?.maxSelect.required,
+      minSelectRequired: collection?.minSelect.required,
+      minSelectGoal: collection?.minSelect.goal,
+      maxSelectGoal: collection?.maxSelect.goal,
     },
   })
 
   useEffect(() => {
-    setValueSettings('title', collection.title)
-    setValueSettings('allowComments', collection.allowComments)
-    setValueSettings('maxSelectRequired', collection.maxSelect.required)
-    setValueSettings('minSelectRequired', collection.minSelect.required)
-    setValueSettings('minSelectGoal', collection.minSelect.goal)
-    setValueSettings('maxSelectGoal', collection.maxSelect.goal)
+    setValueSettings('title', collection?.title)
+    setValueSettings('allowComments', collection?.allowComments)
+    setValueSettings('maxSelectRequired', collection?.maxSelect.required)
+    setValueSettings('minSelectRequired', collection?.minSelect.required)
+    setValueSettings('minSelectGoal', collection?.minSelect.goal)
+    setValueSettings('maxSelectGoal', collection?.maxSelect.goal)
   }, [collection, setValueSettings])
+
+  if (!collection) return null
 
   const minToggle = watchSettings('minSelectRequired')
   const maxToggle = watchSettings('maxSelectRequired')
@@ -311,7 +313,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
                     lowerThanMax: value =>
                       !getValuesSettings('maxSelectRequired') ||
                       !getValuesSettings('minSelectRequired') ||
-                      getValuesSettings('maxSelectGoal') >= value,
+                      (getValuesSettings('maxSelectGoal') || 0) >= value,
                   },
                 })}
                 error={!!errorsSettings.minSelectGoal}
@@ -362,7 +364,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
                     higherThanMin: value =>
                       !getValuesSettings('minSelectRequired') ||
                       !getValuesSettings('maxSelectRequired') ||
-                      getValuesSettings('minSelectGoal') <= value,
+                      (getValuesSettings('minSelectGoal') || 0) <= value,
                   },
                 })}
                 error={!!errorsSettings.maxSelectGoal}

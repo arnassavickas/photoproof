@@ -21,7 +21,7 @@ import { confirmCollection } from '../../../../firebase'
 import { SelectionConfirmationDialogProps } from '../../../../types'
 import styles from './styles.module.scss'
 import { RootState } from '../../../../store'
-import { setCollection } from '../../../../reducers/collectionSlice'
+import { setCollection } from '../../../../reducers/singleCollectionSlice'
 
 const SelectionConfirmationDialog: React.FC<SelectionConfirmationDialogProps> = ({
   selectedPhotos,
@@ -34,7 +34,9 @@ const SelectionConfirmationDialog: React.FC<SelectionConfirmationDialogProps> = 
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
-  const collection = useSelector((state: RootState) => state.collection.data)
+  const collection = useSelector((state: RootState) => state.singleCollection.collection)
+
+  if (!collection) return null
 
   const confirmSelections = async (data: { finalComment: string }) => {
     try {

@@ -37,7 +37,7 @@ const CollectionList: React.FC = () => {
 
   const dispatch = useDispatch()
   const { collectionsList } = useSelector((state: RootState) => state.collectionsList)
-  const collection = useSelector((state: RootState) => state.collection.data)
+  const collection = useSelector((state: RootState) => state.singleCollection.collection)
 
   useEffect(() => {
     if (collectionsList.length === 0) {
@@ -56,6 +56,8 @@ const CollectionList: React.FC = () => {
         })
     }
   }, [collectionsList.length, dispatch, enqueueSnackbar])
+
+  if (!collectionsList) return null
 
   const selectedPhotos = (photos: Photo[]) => {
     return photos.filter(photo => photo.selected).length
@@ -86,7 +88,7 @@ const CollectionList: React.FC = () => {
   }
 
   const handleRowClick = (collectionId: string) => {
-    if (collection.id !== collectionId) {
+    if (collection?.id !== collectionId) {
       dispatch(setUiState(UiState.Pending))
     }
     history.push(`edit/${collectionId}`)

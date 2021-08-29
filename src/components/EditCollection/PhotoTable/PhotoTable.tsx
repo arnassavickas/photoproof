@@ -19,7 +19,7 @@ import ImageLoader from '../../ImageLoader/ImageLoader'
 import DraggableComponent from './DraggableComponent/DraggableComponent'
 import DroppableComponent from './DroppableComponent/DroppableComponent'
 import { RootState } from '../../../store'
-import { changeOrder } from '../../../reducers/collectionSlice'
+import { changeOrder } from '../../../reducers/singleCollectionSlice'
 
 const PhotoTable: React.FC<PhotoTableProps> = ({
   selected,
@@ -28,11 +28,13 @@ const PhotoTable: React.FC<PhotoTableProps> = ({
   setLightboxOpen,
 }) => {
   const dispatch = useDispatch()
-  const collection = useSelector((state: RootState) => state.collection.data)
-  const filteredPhotos = useSelector((state: RootState) => state.collection.filteredPhotos)
-  const filter = useSelector((state: RootState) => state.collection.filter)
+  const collection = useSelector((state: RootState) => state.singleCollection.collection)
+  const filteredPhotos = useSelector((state: RootState) => state.singleCollection.filteredPhotos)
+  const filter = useSelector((state: RootState) => state.singleCollection.filter)
 
   const { enqueueSnackbar } = useSnackbar()
+
+  if (!collection) return null
 
   const openLightbox = (index: number) => () => {
     setPhotoIndex(index)

@@ -21,7 +21,9 @@ const ConfirmationForbiddenDialog: React.FC<ConfirmationForbiddenProps> = ({
   confirmForbidDialogOpen,
   setConfirmForbidDialogOpen,
 }) => {
-  const collection = useSelector((state: RootState) => state.collection.data)
+  const collection = useSelector((state: RootState) => state.singleCollection.collection)
+
+  if (!collection) return null
 
   const requirementsText = () => {
     if (collection.minSelect.required && collection.maxSelect.required) {

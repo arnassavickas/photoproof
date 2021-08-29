@@ -13,10 +13,10 @@ const props: ConfirmationForbiddenProps = {
 }
 
 describe('<ConfirmationForbiddenDialog/>', () => {
-  let mockStore = { collection: { data: collection } }
+  let mockStore = { singleCollection: { collection } }
 
   beforeEach(() => {
-    mockStore = { collection: { data: collection } }
+    mockStore = { singleCollection: { collection } }
   })
 
   test('renders correct min max requirement', async () => {
@@ -28,7 +28,7 @@ describe('<ConfirmationForbiddenDialog/>', () => {
   })
 
   test('renders correct max requirement', async () => {
-    mockStore.collection.data.minSelect.required = false
+    mockStore.singleCollection.collection.minSelect.required = false
     render(<ConfirmationForbiddenDialog {...props} />, { initialState: mockStore })
 
     expect(screen.getByText(/you must select/)).toHaveTextContent(
@@ -37,8 +37,8 @@ describe('<ConfirmationForbiddenDialog/>', () => {
   })
 
   test('renders correct min requirement', async () => {
-    mockStore.collection.data.minSelect.required = true
-    mockStore.collection.data.maxSelect.required = false
+    mockStore.singleCollection.collection.minSelect.required = true
+    mockStore.singleCollection.collection.maxSelect.required = false
     render(<ConfirmationForbiddenDialog {...props} />, { initialState: mockStore })
 
     expect(screen.getByText(/you must select/)).toHaveTextContent(
