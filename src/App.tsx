@@ -20,6 +20,7 @@ import { RootState } from './store'
 import { setSiteSettings } from './reducers/siteSettingsSlice'
 import { UiState } from './types'
 import LinearProgressLoader from './components/LinearProgressLoader/LinearProgressLoader'
+import ScrollToTop from './components/ScrollToTop/ScrollToTop'
 
 function App() {
   const [user, setUser] = useState<null | string>(null)
@@ -88,6 +89,7 @@ function App() {
             </div>
           )}
           <Router basename="/photoproof/">
+            <ScrollToTop />
             <Switch>
               <Route path="/collection/:id" render={() => <CollectionPage />} />
               {!user ? <Route path="/" render={() => <SignIn />} /> : null}
