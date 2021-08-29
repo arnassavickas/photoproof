@@ -19,7 +19,7 @@ import { useSnackbar } from 'notistack'
 import { getSingleCollection, addMorePhotos } from '../../../firebase'
 import { AddPhotosDialogProps } from '../../../types'
 import styles from './styles.module.scss'
-import { setCollection } from '../../../reducers/singleCollectionSlice'
+import { setCollection } from '../../../reducers/collectionsSlice'
 import { RootState } from '../../../store'
 import { setLoaderProgress } from '../../../reducers/uiStateSlice'
 
@@ -33,7 +33,7 @@ const AddPhotosDialog: React.FC<AddPhotosDialogProps> = ({
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
-  const collection = useSelector((state: RootState) => state.singleCollection.collection)
+  const collection = useSelector((state: RootState) => state.collections.collection)
   const progress = useSelector((state: RootState) => state.uiState.loaderProgress)
 
   if (!collection) return null

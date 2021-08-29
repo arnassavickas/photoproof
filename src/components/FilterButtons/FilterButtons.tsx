@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import styles from './styles.module.scss'
 import { FilterButtonsProps } from '../../types'
-import { setPhotoFilter } from '../../reducers/singleCollectionSlice'
+import { setPhotoFilter } from '../../reducers/collectionsSlice'
 import { RootState } from '../../store'
 
 const FilterButtons: React.FC<FilterButtonsProps> = ({
@@ -15,8 +15,8 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({
   const [filter, setFilter] = useState('all')
 
   const dispatch = useDispatch()
-  const filteredPhotos = useSelector((state: RootState) => state.singleCollection.filteredPhotos)
-  const collection = useSelector((state: RootState) => state.singleCollection.collection)
+  const filteredPhotos = useSelector((state: RootState) => state.collections.filteredPhotos)
+  const collection = useSelector((state: RootState) => state.collections.collection)
 
   if (!collection) return null
 

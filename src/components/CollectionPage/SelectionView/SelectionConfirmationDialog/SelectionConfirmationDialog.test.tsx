@@ -16,10 +16,10 @@ const props: SelectionConfirmationDialogProps = {
 }
 
 describe('<SelectionConfirmationDialog/>', () => {
-  let mockStore = { singleCollection: { collection } }
+  let mockStore = { collections: { collection } }
 
   beforeEach(() => {
-    mockStore = { singleCollection: { collection } }
+    mockStore = { collections: { collection } }
   })
 
   test('renders content', async () => {
@@ -40,8 +40,8 @@ describe('<SelectionConfirmationDialog/>', () => {
 
     await waitFor(() => {
       expect(confirmCollection).toHaveBeenCalledWith(
-        mockStore.singleCollection.collection.id,
-        mockStore.singleCollection.collection.title,
+        mockStore.collections.collection.id,
+        mockStore.collections.collection.title,
         expect.anything(),
         1,
         '',
@@ -60,8 +60,8 @@ describe('<SelectionConfirmationDialog/>', () => {
 
     await waitFor(() => {
       expect(confirmCollection).toHaveBeenCalledWith(
-        mockStore.singleCollection.collection.id,
-        mockStore.singleCollection.collection.title,
+        mockStore.collections.collection.id,
+        mockStore.collections.collection.title,
         expect.anything(),
         1,
         'some final comment',

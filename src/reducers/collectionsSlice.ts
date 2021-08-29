@@ -5,14 +5,16 @@ import { Collection } from '../types'
 
 type Filter = 'all' | 'selected' | 'unselected'
 
-export interface SingleCollectionState {
+export interface CollectionsState {
+  collectionsList: Collection[]
   collection: Collection | null
   filter: Filter
   filteredPhotos: Collection['photos']
   reorderPending: boolean
 }
 
-const initialState: SingleCollectionState = {
+const initialState: CollectionsState = {
+  collectionsList: [],
   collection: null,
   filter: 'all',
   filteredPhotos: [],
@@ -43,10 +45,18 @@ const reorder = <T>(list: T[], startIndex: number, endIndex: number): T[] => {
   return result
 }
 
-export const singleCollectionSlice = createSlice({
-  name: 'singleCollection',
+export const collectionsSlice = createSlice({
+  name: 'collections',
   initialState,
   reducers: {
+    setCollectionsList: (state, action: PayloadAction<Collection[]>) => {
+      state.collectionsList = action.payload
+    },
+    deleteCollectionState: (state, action: PayloadAction<string>) => {
+      state.collectionsList = state.collectionsList.filter(
+        collection => collection.id !== action.payload,
+      )
+    },
     setCollection: (state, action: PayloadAction<Collection>) => {
       state.collection = action.payload
 
@@ -83,7 +93,13 @@ export const singleCollectionSlice = createSlice({
   },
 })
 
-export const { setCollection, setPhotoFilter, changeOrder, setReorderPending } =
-  singleCollectionSlice.actions
+export const {
+  setCollection,
+  deleteCollectionState,
+  setPhotoFilter,
+  changeOrder,
+  setReorderPending,
+  setCollectionsList,
+} = collectionsSlice.actions
 
-export default singleCollectionSlice.reducer
+export default collectionsSlice.reducer

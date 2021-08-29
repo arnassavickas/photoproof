@@ -18,7 +18,7 @@ import PhotoGrid from '../PhotoGrid/PhotoGrid'
 import ConfirmationForbiddenDialog from './ConfirmationForbiddenDialog/ConfirmationForbiddenDialog'
 import SelectionConfirmationDialog from './SelectionConfirmationDialog/SelectionConfirmationDialog'
 import { RootState } from '../../../store'
-import { setCollection } from '../../../reducers/singleCollectionSlice'
+import { setCollection } from '../../../reducers/collectionsSlice'
 
 const SelectionView: React.FC<SelectionViewProps> = ({
   lightboxOpen,
@@ -38,8 +38,8 @@ const SelectionView: React.FC<SelectionViewProps> = ({
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
-  const filteredPhotos = useSelector((state: RootState) => state.singleCollection.filteredPhotos)
-  const collection = useSelector((state: RootState) => state.singleCollection.collection)
+  const filteredPhotos = useSelector((state: RootState) => state.collections.filteredPhotos)
+  const collection = useSelector((state: RootState) => state.collections.collection)
 
   const selectPhotoLightbox = async () => {
     if (filteredPhotos && collection) {

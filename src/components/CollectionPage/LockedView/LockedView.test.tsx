@@ -21,10 +21,10 @@ const props: LockedViewProps = {
 }
 
 describe('<LockedView/>', () => {
-  let mockStore = { singleCollection: { collection, filteredPhotos } }
+  let mockStore = { collections: { collection, filteredPhotos } }
 
   beforeEach(() => {
-    mockStore = { singleCollection: { collection, filteredPhotos } }
+    mockStore = { collections: { collection, filteredPhotos } }
   })
 
   test(`select and comment buttons are visible`, async () => {

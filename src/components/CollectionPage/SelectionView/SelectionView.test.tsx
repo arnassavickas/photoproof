@@ -24,10 +24,10 @@ const props: SelectionViewProps = {
 }
 
 describe('<SelectionView/>', () => {
-  let mockStore = { singleCollection: { collection, filteredPhotos } }
+  let mockStore = { collections: { collection, filteredPhotos } }
 
   beforeEach(() => {
-    mockStore = { singleCollection: { collection, filteredPhotos } }
+    mockStore = { collections: { collection, filteredPhotos } }
   })
 
   test(`confirm button calls confimation dialog if allowed`, async () => {

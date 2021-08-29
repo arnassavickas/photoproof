@@ -12,19 +12,17 @@ import { changeCollectionStatus, updateSettings } from '../../../firebase'
 jest.mock('../../../firebase')
 
 const props: CollectionDetailsProps = {
-  collectionId: 'collectionId',
   setConfirmationDialogOpen: jest.fn(),
   setConfirmationDialogTitle: jest.fn(),
   setConfirmationDialogContentText: jest.fn(),
   setConfirmationDialogAgree: jest.fn(),
-  setProgress: jest.fn(),
 }
 
 describe('<CollectionDetails/>', () => {
-  let mockStore = { singleCollection: { collection, reorderPending: false } }
+  let mockStore = { collections: { collection, reorderPending: false } }
 
   beforeEach(() => {
-    mockStore = { singleCollection: { collection, reorderPending: false } }
+    mockStore = { collections: { collection, reorderPending: false } }
   })
 
   describe('when collection stattus is selecting', () => {
@@ -61,7 +59,7 @@ describe('<CollectionDetails/>', () => {
 
   describe('when collection status is confirmed', () => {
     beforeEach(() => {
-      mockStore.singleCollection.collection.status = 'confirmed'
+      mockStore.collections.collection.status = 'confirmed'
     })
 
     test('clicking "edit" button calls setConfirmationDialogAgree one time', async () => {
@@ -106,7 +104,7 @@ describe('<CollectionDetails/>', () => {
 
   describe('when collection stattus is editing', () => {
     beforeEach(() => {
-      mockStore.singleCollection.collection.status = 'editing'
+      mockStore.collections.collection.status = 'editing'
     })
 
     test('saving empty title renders error', async () => {

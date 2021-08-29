@@ -15,10 +15,10 @@ const props: AddPhotosDialogProps = {
 }
 
 describe('<AddPhotosDialog/>', () => {
-  let mockStore = { singleCollection: { collection } }
+  let mockStore = { collections: { collection } }
 
   beforeEach(() => {
-    mockStore = { singleCollection: { collection } }
+    mockStore = { collections: { collection } }
   })
 
   test('adding no photos renders error', async () => {

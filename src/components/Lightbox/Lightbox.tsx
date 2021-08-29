@@ -18,7 +18,7 @@ const LightboxComponent: React.FC<LightboxProps> = ({
   setLightboxIndex,
   toolbarButtons,
 }) => {
-  const filteredPhotos = useSelector((state: RootState) => state.singleCollection.filteredPhotos)
+  const filteredPhotos = useSelector((state: RootState) => state.collections.filteredPhotos)
 
   useEffect(() => {
     if (window.innerHeight < document.body.clientHeight) {

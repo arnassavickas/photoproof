@@ -19,23 +19,23 @@ const props: PhotoGridProps = {
 const updatePhotoSelection = jest.spyOn(firebase, 'updatePhotoSelection')
 
 describe('<PhotoGrid />', () => {
-  let mockStore = { singleCollection: { collection, filteredPhotos } }
+  let mockStore = { collections: { collection, filteredPhotos } }
 
   beforeEach(() => {
-    mockStore = { singleCollection: { collection, filteredPhotos } }
+    mockStore = { collections: { collection, filteredPhotos } }
 
     updatePhotoSelection.mockReturnValue(new Promise(noop))
   })
 
   describe('when collection status is selecting', () => {
     beforeEach(() => {
-      mockStore.singleCollection.collection.status = 'selecting'
+      mockStore.collections.collection.status = 'selecting'
     })
 
     test('renders one photo', async () => {
       render(<PhotoGrid {...props} />, { initialState: mockStore })
 
-      const photos = screen.getAllByAltText(mockStore.singleCollection.collection.title)
+      const photos = screen.getAllByAltText(mockStore.collections.collection.title)
 
       expect(photos).toHaveLength(2)
     })
@@ -43,7 +43,7 @@ describe('<PhotoGrid />', () => {
     test('photo click calls one time', () => {
       render(<PhotoGrid {...props} />, { initialState: mockStore })
 
-      const photos = screen.getAllByAltText(mockStore.singleCollection.collection.title)
+      const photos = screen.getAllByAltText(mockStore.collections.collection.title)
       userEvent.click(photos[0])
 
       expect(openLightbox.mock.calls).toHaveLength(1)
@@ -69,7 +69,7 @@ describe('<PhotoGrid />', () => {
 
       expect(updatePhotoSelection).toHaveBeenCalledTimes(1)
       expect(updatePhotoSelection).toHaveBeenCalledWith(
-        mockStore.singleCollection.collection.id,
+        mockStore.collections.collection.id,
         filteredPhotos[0].id,
         !filteredPhotos[0].selected,
       )
@@ -78,7 +78,7 @@ describe('<PhotoGrid />', () => {
 
   describe('when collection status is confirmed', () => {
     beforeEach(() => {
-      mockStore.singleCollection.collection.status = 'confirmed'
+      mockStore.collections.collection.status = 'confirmed'
     })
 
     test('renders only one comment button', () => {

@@ -12,7 +12,7 @@ import { deletePhotos, resetPhotos } from '../../../firebase'
 
 import FilterButtons from '../../FilterButtons/FilterButtons'
 import { RootState } from '../../../store'
-import { setCollection } from '../../../reducers/singleCollectionSlice'
+import { setCollection } from '../../../reducers/collectionsSlice'
 import { setLoaderProgress } from '../../../reducers/uiStateSlice'
 
 const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
@@ -27,7 +27,7 @@ const PhotoTableToolbar: React.FC<PhotoTableToolbarProps> = ({
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
-  const collection = useSelector((state: RootState) => state.singleCollection.collection)
+  const collection = useSelector((state: RootState) => state.collections.collection)
 
   if (!collection) return null
 

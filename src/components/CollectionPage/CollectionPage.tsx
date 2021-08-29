@@ -12,7 +12,7 @@ import LockedView from './LockedView/LockedView'
 import SelectionView from './SelectionView/SelectionView'
 import FilterButtons from '../FilterButtons/FilterButtons'
 import { RootState } from '../../store'
-import { setCollection } from '../../reducers/singleCollectionSlice'
+import { setCollection } from '../../reducers/collectionsSlice'
 import { setUiState } from '../../reducers/uiStateSlice'
 import { UiState } from '../../types'
 
@@ -25,8 +25,8 @@ const CollectionPage: React.FC = () => {
   const history = useHistory()
 
   const dispatch = useDispatch()
-  const filteredPhotos = useSelector((state: RootState) => state.singleCollection.filteredPhotos)
-  const collection = useSelector((state: RootState) => state.singleCollection.collection)
+  const filteredPhotos = useSelector((state: RootState) => state.collections.filteredPhotos)
+  const collection = useSelector((state: RootState) => state.collections.collection)
 
   useEffect(() => {
     getSingleCollection(collectionId)

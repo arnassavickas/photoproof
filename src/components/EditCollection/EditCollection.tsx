@@ -22,7 +22,7 @@ import PhotoTable from './PhotoTable/PhotoTable'
 import AddPhotosDialog from './AddPhotosDialog/AddPhotosDialog'
 import Lightbox from '../Lightbox/Lightbox'
 import CommentDialog from '../CommentDialog/CommentDialog'
-import { setCollection } from '../../reducers/singleCollectionSlice'
+import { setCollection } from '../../reducers/collectionsSlice'
 import { setUiState } from '../../reducers/uiStateSlice'
 import { RootState } from '../../store'
 
@@ -30,8 +30,8 @@ const EditCollection: React.FC = () => {
   const { id: collectionId } = useParams<{ id: string }>()
 
   const dispatch = useDispatch()
-  const filteredPhotos = useSelector((state: RootState) => state.singleCollection.filteredPhotos)
-  const collection = useSelector((state: RootState) => state.singleCollection.collection)
+  const filteredPhotos = useSelector((state: RootState) => state.collections.filteredPhotos)
+  const collection = useSelector((state: RootState) => state.collections.collection)
 
   const [photoIndex, setPhotoIndex] = useState(0)
   const [lightboxOpen, setLightboxOpen] = useState(false)

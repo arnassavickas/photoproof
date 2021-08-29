@@ -23,7 +23,7 @@ import ConfirmationDialog from '../../ConfirmationDialog/ConfirmationDialog'
 import StatusIcon from '../../StatusIcon/StatusIcon'
 import { RootState } from '../../../store'
 import { setLoaderProgress, setUiState } from '../../../reducers/uiStateSlice'
-import { deleteCollectionState, setCollectionsList } from '../../../reducers/collectionsListSlice'
+import { setCollectionsList, deleteCollectionState } from '../../../reducers/collectionsSlice'
 
 const CollectionList: React.FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -35,8 +35,8 @@ const CollectionList: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
-  const collectionsList = useSelector((state: RootState) => state.collectionsList.collections)
-  const collection = useSelector((state: RootState) => state.singleCollection.collection)
+  const collectionsList = useSelector((state: RootState) => state.collections.collectionsList)
+  const collection = useSelector((state: RootState) => state.collections.collection)
 
   useEffect(() => {
     dispatch(setUiState(UiState.Pending))

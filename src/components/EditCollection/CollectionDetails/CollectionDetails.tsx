@@ -22,7 +22,7 @@ import { Collection, CollectionDetailsProps } from '../../../types'
 import { changeCollectionStatus, reorderPhotos, updateSettings } from '../../../firebase'
 import StatusIcon from '../../StatusIcon/StatusIcon'
 import { RootState } from '../../../store'
-import { setCollection, setReorderPending } from '../../../reducers/singleCollectionSlice'
+import { setCollection, setReorderPending } from '../../../reducers/collectionsSlice'
 import { setLoaderProgress } from '../../../reducers/uiStateSlice'
 
 const CollectionDetails: React.FC<CollectionDetailsProps> = ({
@@ -35,8 +35,8 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
-  const collection = useSelector((state: RootState) => state.singleCollection.collection)
-  const reorderPending = useSelector((state: RootState) => state.singleCollection.reorderPending)
+  const collection = useSelector((state: RootState) => state.collections.collection)
+  const reorderPending = useSelector((state: RootState) => state.collections.reorderPending)
 
   const {
     register: registerSettings,

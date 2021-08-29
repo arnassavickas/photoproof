@@ -6,7 +6,7 @@ import { render, screen } from '../../utils/customTestRenderer'
 import { FilterButtonsProps } from '../../types'
 import FilterButtons from './FilterButtons'
 import { collection, filteredPhotos } from '../../utils/testUtils'
-import * as collectionSlice from '../../reducers/singleCollectionSlice'
+import * as collectionSlice from '../../reducers/collectionsSlice'
 
 const props: FilterButtonsProps = {
   modifyLightbox: true,
@@ -18,12 +18,12 @@ const props: FilterButtonsProps = {
 const setPhotoFilter = jest.spyOn(collectionSlice, 'setPhotoFilter')
 
 describe('<FilterButtons/>', () => {
-  let mockStore = { singleCollection: { collection, filteredPhotos } }
+  let mockStore = { collections: { collection, filteredPhotos } }
 
   beforeEach(() => {
     setPhotoFilter.mockReturnValue({ type: '', payload: 'selected' })
 
-    mockStore = { singleCollection: { collection, filteredPhotos } }
+    mockStore = { collections: { collection, filteredPhotos } }
   })
 
   test('button clicks call action creator with correct args', async () => {
@@ -48,7 +48,7 @@ describe('<FilterButtons/>', () => {
 
   describe('when props are provided', () => {
     test('calls photo index callback if filtered photos quantity is less than photo index', () => {
-      mockStore.singleCollection.filteredPhotos = [filteredPhotos[0]]
+      mockStore.collections.filteredPhotos = [filteredPhotos[0]]
       render(<FilterButtons {...props} />, { initialState: mockStore })
 
       const selectedBtn = screen.getByRole('button', { name: /^selected/i })
@@ -58,7 +58,7 @@ describe('<FilterButtons/>', () => {
       expect(props.setPhotoIndex).toHaveBeenCalledWith(0)
     })
     test('calls lightbox callback if filtered photos are empty', () => {
-      mockStore.singleCollection.filteredPhotos = []
+      mockStore.collections.filteredPhotos = []
       render(<FilterButtons {...props} />, { initialState: mockStore })
 
       const selectedBtn = screen.getByRole('button', { name: /^selected/i })
