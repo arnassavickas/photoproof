@@ -1,34 +1,24 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, ButtonGroup } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
 
 import styles from './styles.module.scss'
-import { FilterButtonsProps } from '../../types'
 import { setPhotoFilter } from '../../reducers/collectionsSlice'
-import { getCurrentCollection, getFilteredPhotos } from '../../reducers/collectionsSelectors'
+import { getCurrentCollection } from '../../reducers/collectionsSelectors'
 
-const FilterButtons: React.FC<FilterButtonsProps> = ({
-  setLightboxOpen,
-  photoIndex,
-  setPhotoIndex,
-}) => {
+const FilterButtons = () => {
   const [filter, setFilter] = useState('all')
 
   const dispatch = useDispatch()
-  const filteredPhotos = useSelector(getFilteredPhotos())
   const collection = useSelector(getCurrentCollection())
 
-  if (!collection) return null
-
-  const modifyLightbox = () => {
-    if (setLightboxOpen && photoIndex && setPhotoIndex) {
-      if (filteredPhotos.length === 0) {
-        setLightboxOpen(false)
-      } else if (filteredPhotos.length <= photoIndex) {
-        setPhotoIndex(filteredPhotos.length - 1)
-      }
+  useEffect(() => {
+    return () => {
+      dispatch(setPhotoFilter('all'))
     }
-  }
+  }, [dispatch])
+
+  if (!collection) return null
 
   const photosCount = (() => {
     const all = collection.photos.length
@@ -45,13 +35,11 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({
   const handleSelectedClick = () => {
     dispatch(setPhotoFilter('selected'))
     setFilter('selected')
-    modifyLightbox()
   }
 
   const handleUnselectedClick = () => {
     dispatch(setPhotoFilter('unselected'))
     setFilter('unselected')
-    modifyLightbox()
   }
 
   return (

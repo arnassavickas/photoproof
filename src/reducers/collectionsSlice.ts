@@ -112,6 +112,16 @@ export const collectionsSlice = createSlice({
 
       selectedPhoto.selected = !selectedPhoto.selected
     },
+    setPhotoComment: (state, action: PayloadAction<{ id: string; comment: string }>) => {
+      const selectedPhoto = getSelectedPhoto(
+        action.payload.id,
+        state.collectionsList,
+        state.currentId,
+      )
+      if (!selectedPhoto) return
+
+      selectedPhoto.comment = action.payload.comment
+    },
   },
 })
 
@@ -126,6 +136,7 @@ export const {
   setCollectionStatus,
   editCollectionDetails,
   setPhotoSelection,
+  setPhotoComment,
 } = collectionsSlice.actions
 
 export default collectionsSlice.reducer

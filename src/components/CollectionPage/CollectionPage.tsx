@@ -105,12 +105,7 @@ const CollectionPage: React.FC = () => {
       <div>
         <div className={styles.horizontal}>
           <div className={styles.selectedDetails}>{renderMustMessage()}</div>
-          <FilterButtons
-            modifyLightbox
-            setLightboxOpen={setLightboxOpen}
-            photoIndex={photoIndex}
-            setPhotoIndex={setPhotoIndex}
-          />
+          <FilterButtons />
         </div>
       </div>
       {renderWarningMessage()}

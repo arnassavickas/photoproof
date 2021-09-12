@@ -12,12 +12,16 @@ jest.mock('../../firebase')
 const getSingleCollection = jest.spyOn(firebase, 'getSingleCollection')
 
 describe('<CollectionPage/>', () => {
-  let mockStore = { collections: { collection, filteredPhotos } }
+  let mockStore = {
+    collections: { collectionsList: [collection], currentId: collection.id, filteredPhotos },
+  }
 
   beforeEach(() => {
     getSingleCollection.mockResolvedValue(collection)
 
-    mockStore = { collections: { collection, filteredPhotos } }
+    mockStore = {
+      collections: { collectionsList: [collection], currentId: '', filteredPhotos },
+    }
   })
 
   test('getSingleCollection is called with correct id', async () => {
@@ -58,8 +62,8 @@ describe('<CollectionPage/>', () => {
     mockStore = {
       ...mockStore,
       collections: {
-        filteredPhotos,
-        collection: { ...collection, minSelect: { required: false, goal: 0 } },
+        ...mockStore.collections,
+        collectionsList: [{ ...collection, minSelect: { required: false, goal: 0 } }],
       },
     }
 
@@ -82,12 +86,14 @@ describe('<CollectionPage/>', () => {
     mockStore = {
       ...mockStore,
       collections: {
-        filteredPhotos,
-        collection: {
-          ...collection,
-          minSelect: { required: true, goal: 1 },
-          maxSelect: { required: false, goal: 0 },
-        },
+        ...mockStore.collections,
+        collectionsList: [
+          {
+            ...collection,
+            minSelect: { required: true, goal: 1 },
+            maxSelect: { required: false, goal: 0 },
+          },
+        ],
       },
     }
 

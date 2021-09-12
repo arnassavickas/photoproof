@@ -21,3 +21,7 @@ export const getFilteredPhotos = () => (state: RootState) => {
 
   return currentCollection.photos
 }
+
+export const getCurrentId = () => (state: RootState) => {
+  return state.collections.currentId
+}

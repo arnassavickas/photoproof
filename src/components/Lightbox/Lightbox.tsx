@@ -40,54 +40,51 @@ const LightboxComponent: React.FC<LightboxProps> = ({
     }, 100)
   }
 
-  const unblurRoot = () => {
-    if (root instanceof HTMLElement) {
-      root.style.filter = ''
+  useEffect(() => {
+    return () => {
+      if (root instanceof HTMLElement) {
+        root.style.filter = ''
+      }
     }
-  }
+  })
 
-  if (lightboxOpen) {
-    return (
-      <Lightbox
-        mainSrc={
-          isWebpSupported
-            ? filteredPhotos[lightboxIndex].cloudUrlWebp
-            : filteredPhotos[lightboxIndex].cloudUrl
-        }
-        nextSrc={
-          isWebpSupported
-            ? filteredPhotos[(lightboxIndex + 1) % filteredPhotos.length].cloudUrlWebp
-            : filteredPhotos[(lightboxIndex + 1) % filteredPhotos.length].cloudUrl
-        }
-        prevSrc={
-          isWebpSupported
-            ? filteredPhotos[(lightboxIndex + filteredPhotos.length - 1) % filteredPhotos.length]
-                .cloudUrlWebp
-            : filteredPhotos[(lightboxIndex + filteredPhotos.length - 1) % filteredPhotos.length]
-                .cloudUrl
-        }
-        onCloseRequest={() => {
-          unblurRoot()
-          setLightboxOpen(false)
-        }}
-        onMovePrevRequest={() =>
-          setLightboxIndex((lightboxIndex + filteredPhotos.length - 1) % filteredPhotos.length)
-        }
-        onMoveNextRequest={() => setLightboxIndex((lightboxIndex + 1) % filteredPhotos.length)}
-        toolbarButtons={toolbarButtons}
-        enableZoom={false}
-        imageTitle={
-          <Typography classes={{ root: styles.photoIndex }}>
-            {filteredPhotos[lightboxIndex].index}
-          </Typography>
-        }
-        onImageLoad={blurRoot}
-        animationDisabled
-      />
-    )
-  }
+  if (!lightboxOpen) return null
 
-  return <></>
+  return (
+    <Lightbox
+      mainSrc={
+        isWebpSupported
+          ? filteredPhotos[lightboxIndex]?.cloudUrlWebp
+          : filteredPhotos[lightboxIndex]?.cloudUrl
+      }
+      nextSrc={
+        isWebpSupported
+          ? filteredPhotos[(lightboxIndex + 1) % filteredPhotos.length]?.cloudUrlWebp
+          : filteredPhotos[(lightboxIndex + 1) % filteredPhotos.length]?.cloudUrl
+      }
+      prevSrc={
+        isWebpSupported
+          ? filteredPhotos[(lightboxIndex + filteredPhotos.length - 1) % filteredPhotos.length]
+              ?.cloudUrlWebp
+          : filteredPhotos[(lightboxIndex + filteredPhotos.length - 1) % filteredPhotos.length]
+              ?.cloudUrl
+      }
+      onCloseRequest={() => setLightboxOpen(false)}
+      onMovePrevRequest={() =>
+        setLightboxIndex((lightboxIndex + filteredPhotos.length - 1) % filteredPhotos.length)
+      }
+      onMoveNextRequest={() => setLightboxIndex((lightboxIndex + 1) % filteredPhotos.length)}
+      toolbarButtons={toolbarButtons}
+      enableZoom={false}
+      imageTitle={
+        <Typography classes={{ root: styles.photoIndex }}>
+          {filteredPhotos[lightboxIndex]?.index}
+        </Typography>
+      }
+      onImageLoad={blurRoot}
+      animationDisabled
+    />
+  )
 }
 
 export default LightboxComponent

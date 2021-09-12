@@ -1,5 +1,4 @@
 import React from 'react'
-import { noop } from 'lodash'
 import user from '@testing-library/user-event'
 import { BrowserRouter as Router } from 'react-router-dom'
 
@@ -19,10 +18,19 @@ const props: CollectionDetailsProps = {
 }
 
 describe('<CollectionDetails/>', () => {
-  let mockStore = { collections: { collection, reorderPending: false } }
+  let mockStore = {
+    collections: { collectionsList: [collection], currentId: collection.id, reorderPending: false },
+  }
+  const writeText = jest.spyOn(navigator.clipboard, 'writeText')
 
   beforeEach(() => {
-    mockStore = { collections: { collection, reorderPending: false } }
+    mockStore = {
+      collections: {
+        collectionsList: [collection],
+        currentId: collection.id,
+        reorderPending: false,
+      },
+    }
   })
 
   describe('when collection stattus is selecting', () => {
@@ -59,7 +67,7 @@ describe('<CollectionDetails/>', () => {
 
   describe('when collection status is confirmed', () => {
     beforeEach(() => {
-      mockStore.collections.collection.status = 'confirmed'
+      mockStore.collections.collectionsList[0].status = 'confirmed'
     })
 
     test('clicking "edit" button calls setConfirmationDialogAgree one time', async () => {
@@ -79,13 +87,6 @@ describe('<CollectionDetails/>', () => {
     })
 
     test('clicking "copy selections" calls navigator.clipboard.writeText one time', async () => {
-      Object.assign(navigator, {
-        clipboard: {
-          writeText: noop,
-        },
-      })
-      jest.spyOn(navigator.clipboard, 'writeText')
-
       render(
         <Router>
           <CollectionDetails {...props} />
@@ -97,14 +98,14 @@ describe('<CollectionDetails/>', () => {
       user.click(copyButton)
 
       await waitFor(() => {
-        expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(1)
+        expect(writeText).toHaveBeenCalledTimes(1)
       })
     })
   })
 
   describe('when collection stattus is editing', () => {
     beforeEach(() => {
-      mockStore.collections.collection.status = 'editing'
+      mockStore.collections.collectionsList[0].status = 'editing'
     })
 
     test('saving empty title renders error', async () => {

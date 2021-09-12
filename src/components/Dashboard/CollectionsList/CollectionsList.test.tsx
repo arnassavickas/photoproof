@@ -1,7 +1,7 @@
 import React from 'react'
 import user from '@testing-library/user-event'
 
-import { render, screen } from '../../../utils/customTestRenderer'
+import { render, screen, waitForElementToBeRemoved } from '../../../utils/customTestRenderer'
 import CollectionList from './CollectionsList'
 import { collectionList } from '../../../utils/testUtils'
 import { getCollections, deleteCollection } from '../../../firebase'
@@ -47,5 +47,6 @@ describe('<CollectionList/>', () => {
     user.click(yesBtn)
 
     expect(deleteCollection).toHaveBeenCalledWith(collectionList[0].id, expect.anything())
+    await waitForElementToBeRemoved(() => screen.queryByText('Yes'))
   })
 })

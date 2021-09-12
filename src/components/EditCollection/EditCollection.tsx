@@ -24,7 +24,11 @@ import Lightbox from '../Lightbox/Lightbox'
 import CommentDialog from '../CommentDialog/CommentDialog'
 import { setCollection, setCurrentId } from '../../reducers/collectionsSlice'
 import { setUiState } from '../../reducers/uiStateSlice'
-import { getCurrentCollection, getFilteredPhotos } from '../../reducers/collectionsSelectors'
+import {
+  getCurrentCollection,
+  getCurrentId,
+  getFilteredPhotos,
+} from '../../reducers/collectionsSelectors'
 
 const EditCollection: React.FC = () => {
   const { id: collectionId } = useParams<{ id: string }>()
@@ -32,6 +36,7 @@ const EditCollection: React.FC = () => {
   const dispatch = useDispatch()
   const filteredPhotos = useSelector(getFilteredPhotos())
   const collection = useSelector(getCurrentCollection())
+  const currentId = useSelector(getCurrentId())
 
   const [photoIndex, setPhotoIndex] = useState(0)
   const [lightboxOpen, setLightboxOpen] = useState(false)
@@ -47,9 +52,13 @@ const EditCollection: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
-    dispatch(setCurrentId(collectionId))
+    if (!currentId) {
+      dispatch(setCurrentId(collectionId))
+    }
+  }, [collectionId, currentId, dispatch])
 
-    if (!collection) {
+  useEffect(() => {
+    if (!collection && !currentId) {
       getSingleCollection(collectionId)
         .then(collection => {
           dispatch(setCollection(collection))
@@ -62,7 +71,7 @@ const EditCollection: React.FC = () => {
           dispatch(setUiState(UiState.Idle))
         })
     }
-  }, [collection, collectionId, dispatch, enqueueSnackbar])
+  }, [collection, collectionId, currentId, dispatch, enqueueSnackbar])
 
   const openCommentModal = (index?: number) => {
     setCommentOpen(true)

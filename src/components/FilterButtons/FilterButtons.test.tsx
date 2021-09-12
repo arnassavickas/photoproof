@@ -3,27 +3,23 @@ import React from 'react'
 import user from '@testing-library/user-event'
 
 import { render, screen } from '../../utils/customTestRenderer'
-import { FilterButtonsProps } from '../../types'
 import FilterButtons from './FilterButtons'
 import { collection, filteredPhotos } from '../../utils/testUtils'
 import * as collectionSlice from '../../reducers/collectionsSlice'
 
-const props: FilterButtonsProps = {
-  modifyLightbox: true,
-  setLightboxOpen: jest.fn(),
-  photoIndex: 1,
-  setPhotoIndex: jest.fn(),
-}
-
 const setPhotoFilter = jest.spyOn(collectionSlice, 'setPhotoFilter')
 
 describe('<FilterButtons/>', () => {
-  let mockStore = { collections: { collection, filteredPhotos } }
+  let mockStore = {
+    collections: { collectionsList: [collection], currentId: collection.id, filteredPhotos },
+  }
 
   beforeEach(() => {
     setPhotoFilter.mockReturnValue({ type: '', payload: 'selected' })
 
-    mockStore = { collections: { collection, filteredPhotos } }
+    mockStore = {
+      collections: { collectionsList: [collection], currentId: collection.id, filteredPhotos },
+    }
   })
 
   test('button clicks call action creator with correct args', async () => {
@@ -44,28 +40,5 @@ describe('<FilterButtons/>', () => {
     )
 
     expect(setPhotoFilter).toHaveBeenLastCalledWith('unselected')
-  })
-
-  describe('when props are provided', () => {
-    test('calls photo index callback if filtered photos quantity is less than photo index', () => {
-      mockStore.collections.filteredPhotos = [filteredPhotos[0]]
-      render(<FilterButtons {...props} />, { initialState: mockStore })
-
-      const selectedBtn = screen.getByRole('button', { name: /^selected/i })
-
-      user.click(selectedBtn)
-
-      expect(props.setPhotoIndex).toHaveBeenCalledWith(0)
-    })
-    test('calls lightbox callback if filtered photos are empty', () => {
-      mockStore.collections.filteredPhotos = []
-      render(<FilterButtons {...props} />, { initialState: mockStore })
-
-      const selectedBtn = screen.getByRole('button', { name: /^selected/i })
-
-      user.click(selectedBtn)
-
-      expect(props.setLightboxOpen).toHaveBeenCalledWith(false)
-    })
   })
 })

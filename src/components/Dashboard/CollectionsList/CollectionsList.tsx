@@ -23,7 +23,11 @@ import ConfirmationDialog from '../../ConfirmationDialog/ConfirmationDialog'
 import StatusIcon from '../../StatusIcon/StatusIcon'
 import { RootState } from '../../../store'
 import { setLoaderProgress, setUiState } from '../../../reducers/uiStateSlice'
-import { setCollectionsList, deleteCollectionState } from '../../../reducers/collectionsSlice'
+import {
+  setCollectionsList,
+  deleteCollectionState,
+  setCurrentId,
+} from '../../../reducers/collectionsSlice'
 
 const CollectionList: React.FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -80,6 +84,7 @@ const CollectionList: React.FC = () => {
   }
 
   const handleRowClick = (collectionId: string) => {
+    dispatch(setCurrentId(collectionId))
     history.push(`edit/${collectionId}`)
   }
 

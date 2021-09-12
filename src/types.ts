@@ -131,20 +131,6 @@ export interface StatusIconProps {
   status: Collection['status'] | undefined
 }
 
-export type FilterButtonsProps =
-  | {
-      modifyLightbox?: false
-      setLightboxOpen?: never
-      photoIndex?: never
-      setPhotoIndex?: never
-    }
-  | {
-      modifyLightbox: true
-      setLightboxOpen: React.Dispatch<React.SetStateAction<boolean>>
-      photoIndex: number
-      setPhotoIndex: React.Dispatch<React.SetStateAction<number>>
-    }
-
 export enum UiState {
   Idle = 'Idle',
   Pending = 'Pending',
