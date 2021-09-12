@@ -21,6 +21,7 @@ import { setSiteSettings } from './reducers/siteSettingsSlice'
 import { UiState } from './types'
 import LinearProgressLoader from './components/LinearProgressLoader/LinearProgressLoader'
 import ScrollToTop from './components/ScrollToTop/ScrollToTop'
+import { setUiState } from './reducers/uiStateSlice'
 
 function App() {
   const [user, setUser] = useState<null | string>(null)
@@ -54,6 +55,7 @@ function App() {
             email: settings?.email,
           }),
         )
+        dispatch(setUiState(UiState.Success))
       })
       .catch(() => {
         enqueueSnackbar('ERROR: Getting site settings failed', {

@@ -13,8 +13,8 @@ const SignIn = () => {
   const signInWithEmailAndPasswordHandler = async (data: any) => {
     try {
       await auth.signInWithEmailAndPassword(data.email, data.password)
-    } catch (err) {
-      if (err.code === 'auth/wrong-password') {
+    } catch (error: any) {
+      if (error.code === 'auth/wrong-password') {
         setError('email', {
           message: ' ',
         })
