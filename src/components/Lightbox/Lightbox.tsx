@@ -32,21 +32,21 @@ const LightboxComponent: React.FC<LightboxProps> = ({
 
   const root = document.querySelector('#root')
 
-  const blurRoot = () => {
-    setTimeout(() => {
-      if (root instanceof HTMLElement) {
-        root.style.filter = 'blur(10px)'
-      }
-    }, 100)
-  }
-
   useEffect(() => {
+    if (lightboxOpen) {
+      setTimeout(() => {
+        if (root instanceof HTMLElement) {
+          root.style.filter = 'blur(10px)'
+        }
+      }, 100)
+    }
+
     return () => {
       if (root instanceof HTMLElement) {
         root.style.filter = ''
       }
     }
-  })
+  }, [lightboxOpen, root])
 
   if (!lightboxOpen) return null
 
@@ -81,7 +81,6 @@ const LightboxComponent: React.FC<LightboxProps> = ({
           {filteredPhotos[lightboxIndex]?.index}
         </Typography>
       }
-      onImageLoad={blurRoot}
       animationDisabled
     />
   )
