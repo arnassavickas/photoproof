@@ -4,8 +4,7 @@ import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
 
 import NotificationProvider from '../providers/NotificationProvider'
-import collectionReducer from '../reducers/singleCollectionSlice'
-import collectionsReducer from '../reducers/collectionsListSlice'
+import collectionReducer from '../reducers/collectionsSlice'
 import siteSettingsReducer from '../reducers/siteSettingsSlice'
 import uiStateReducer from '../reducers/uiStateSlice'
 
@@ -24,8 +23,7 @@ const customRender = (
 ) => {
   const mockStore = configureStore({
     reducer: {
-      singleCollection: collectionReducer,
-      collectionsList: collectionsReducer,
+      collections: collectionReducer,
       uiState: uiStateReducer,
       siteSettings: siteSettingsReducer,
     },

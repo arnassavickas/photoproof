@@ -1,14 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import singleCollectionReducer from './reducers/singleCollectionSlice'
-import collectionsReducer from './reducers/collectionsListSlice'
+import collectionsReducer from './reducers/collectionsSlice'
 import siteSettingsReducer from './reducers/siteSettingsSlice'
 import uiStateReducer from './reducers/uiStateSlice'
 
 export const store = configureStore({
   reducer: {
-    singleCollection: singleCollectionReducer,
-    collectionsList: collectionsReducer,
+    collections: collectionsReducer,
     uiState: uiStateReducer,
     siteSettings: siteSettingsReducer,
   },

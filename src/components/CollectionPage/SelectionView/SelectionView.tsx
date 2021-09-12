@@ -17,8 +17,8 @@ import CommentDialog from '../../CommentDialog/CommentDialog'
 import PhotoGrid from '../PhotoGrid/PhotoGrid'
 import ConfirmationForbiddenDialog from './ConfirmationForbiddenDialog/ConfirmationForbiddenDialog'
 import SelectionConfirmationDialog from './SelectionConfirmationDialog/SelectionConfirmationDialog'
-import { RootState } from '../../../store'
-import { setCollection } from '../../../reducers/singleCollectionSlice'
+import { setPhotoSelection, setPhotoComment } from '../../../reducers/collectionsSlice'
+import { getCurrentCollection, getFilteredPhotos } from '../../../reducers/collectionsSelectors'
 
 const SelectionView: React.FC<SelectionViewProps> = ({
   lightboxOpen,
@@ -38,26 +38,27 @@ const SelectionView: React.FC<SelectionViewProps> = ({
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
-  const filteredPhotos = useSelector((state: RootState) => state.singleCollection.filteredPhotos)
-  const collection = useSelector((state: RootState) => state.singleCollection.collection)
+  const filteredPhotos = useSelector(getFilteredPhotos())
+  const collection = useSelector(getCurrentCollection())
+
+  useEffect(() => {
+    if (filteredPhotos.length === 0) {
+      setLightboxOpen(false)
+    } else if (filteredPhotos.length <= photoIndex) {
+      setPhotoIndex(filteredPhotos.length - 1)
+    }
+  }, [dispatch, filteredPhotos.length, photoIndex, setLightboxOpen, setPhotoIndex])
 
   const selectPhotoLightbox = async () => {
-    if (filteredPhotos && collection) {
+    if (collection) {
       try {
         const clickedPhoto = filteredPhotos[photoIndex]
         if (clickedPhoto && collection) {
           await updatePhotoSelection(collection.id, clickedPhoto.id, !clickedPhoto.selected)
-          clickedPhoto.selected = !clickedPhoto?.selected
-          dispatch(
-            setCollection({
-              ...collection,
-              photos: collection.photos.map(photo =>
-                photo.id === clickedPhoto.id ? clickedPhoto : photo,
-              ),
-            }),
-          )
+
+          dispatch(setPhotoSelection(clickedPhoto.id))
         }
-      } catch (err) {
+      } catch {
         enqueueSnackbar('ERROR: Photo selection failed', {
           variant: 'error',
         })
@@ -99,13 +100,8 @@ const SelectionView: React.FC<SelectionViewProps> = ({
         const clickedPhoto = filteredPhotos[photoIndex]
         if (clickedPhoto && collection) {
           await updatePhotoComment(collection.id, clickedPhoto.id, commentTextarea)
-          clickedPhoto.comment = commentTextarea
-          setCollection({
-            ...collection,
-            photos: collection.photos.map(photo =>
-              photo.id === clickedPhoto.id ? clickedPhoto : photo,
-            ),
-          })
+
+          dispatch(setPhotoComment({ id: clickedPhoto.id, comment: commentTextarea }))
         }
       } catch (err) {
         enqueueSnackbar('ERROR: Photo commenting failed', {
@@ -126,7 +122,7 @@ const SelectionView: React.FC<SelectionViewProps> = ({
           setLightboxIndex={setPhotoIndex}
           toolbarButtons={[
             <IconButton aria-label="selectLighbox" onClick={selectPhotoLightbox}>
-              {filteredPhotos[photoIndex].selected ? (
+              {filteredPhotos[photoIndex]?.selected ? (
                 <FavoriteIcon className={styles.toolbarIcon} />
               ) : (
                 <FavoriteBorderIcon className={styles.toolbarIcon} />

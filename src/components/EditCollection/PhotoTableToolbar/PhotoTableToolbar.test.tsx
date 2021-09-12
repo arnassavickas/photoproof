@@ -20,15 +20,15 @@ const props: PhotoTableToolbarProps = {
 }
 
 describe('<PhotoTableToolbar/>', () => {
-  let mockStore = { singleCollection: { collection } }
+  let mockStore = { collections: { collectionsList: [collection], currentId: collection.id } }
 
   beforeEach(() => {
-    mockStore = { singleCollection: { collection } }
+    mockStore = { collections: { collectionsList: [collection], currentId: collection.id } }
   })
 
   describe('when collection is with editing status', () => {
     beforeEach(() => {
-      mockStore.singleCollection.collection.status = 'editing'
+      mockStore.collections.collectionsList[0].status = 'editing'
     })
 
     test('clicking "add photos" calls setAddPhotosDialogOpen', async () => {

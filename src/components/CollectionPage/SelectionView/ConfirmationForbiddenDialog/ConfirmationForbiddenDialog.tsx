@@ -14,14 +14,14 @@ import CloseIcon from '@material-ui/icons/Close'
 
 import styles from './styles.module.scss'
 import { ConfirmationForbiddenProps } from '../../../../types'
-import { RootState } from '../../../../store'
+import { getCurrentCollection } from '../../../../reducers/collectionsSelectors'
 
 const ConfirmationForbiddenDialog: React.FC<ConfirmationForbiddenProps> = ({
   selectedPhotos,
   confirmForbidDialogOpen,
   setConfirmForbidDialogOpen,
 }) => {
-  const collection = useSelector((state: RootState) => state.singleCollection.collection)
+  const collection = useSelector(getCurrentCollection())
 
   if (!collection) return null
 

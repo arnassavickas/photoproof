@@ -1,5 +1,4 @@
 import React from 'react'
-import { noop } from 'lodash'
 import user from '@testing-library/user-event'
 import { BrowserRouter as Router } from 'react-router-dom'
 
@@ -12,19 +11,26 @@ import { changeCollectionStatus, updateSettings } from '../../../firebase'
 jest.mock('../../../firebase')
 
 const props: CollectionDetailsProps = {
-  collectionId: 'collectionId',
   setConfirmationDialogOpen: jest.fn(),
   setConfirmationDialogTitle: jest.fn(),
   setConfirmationDialogContentText: jest.fn(),
   setConfirmationDialogAgree: jest.fn(),
-  setProgress: jest.fn(),
 }
 
 describe('<CollectionDetails/>', () => {
-  let mockStore = { singleCollection: { collection, reorderPending: false } }
+  let mockStore = {
+    collections: { collectionsList: [collection], currentId: collection.id, reorderPending: false },
+  }
+  const writeText = jest.spyOn(navigator.clipboard, 'writeText')
 
   beforeEach(() => {
-    mockStore = { singleCollection: { collection, reorderPending: false } }
+    mockStore = {
+      collections: {
+        collectionsList: [collection],
+        currentId: collection.id,
+        reorderPending: false,
+      },
+    }
   })
 
   describe('when collection stattus is selecting', () => {
@@ -61,7 +67,7 @@ describe('<CollectionDetails/>', () => {
 
   describe('when collection status is confirmed', () => {
     beforeEach(() => {
-      mockStore.singleCollection.collection.status = 'confirmed'
+      mockStore.collections.collectionsList[0].status = 'confirmed'
     })
 
     test('clicking "edit" button calls setConfirmationDialogAgree one time', async () => {
@@ -81,13 +87,6 @@ describe('<CollectionDetails/>', () => {
     })
 
     test('clicking "copy selections" calls navigator.clipboard.writeText one time', async () => {
-      Object.assign(navigator, {
-        clipboard: {
-          writeText: noop,
-        },
-      })
-      jest.spyOn(navigator.clipboard, 'writeText')
-
       render(
         <Router>
           <CollectionDetails {...props} />
@@ -99,14 +98,14 @@ describe('<CollectionDetails/>', () => {
       user.click(copyButton)
 
       await waitFor(() => {
-        expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(1)
+        expect(writeText).toHaveBeenCalledTimes(1)
       })
     })
   })
 
   describe('when collection stattus is editing', () => {
     beforeEach(() => {
-      mockStore.singleCollection.collection.status = 'editing'
+      mockStore.collections.collectionsList[0].status = 'editing'
     })
 
     test('saving empty title renders error', async () => {

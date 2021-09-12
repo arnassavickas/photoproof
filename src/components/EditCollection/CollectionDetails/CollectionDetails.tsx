@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   Checkbox,
@@ -22,8 +22,13 @@ import { Collection, CollectionDetailsProps } from '../../../types'
 import { changeCollectionStatus, reorderPhotos, updateSettings } from '../../../firebase'
 import StatusIcon from '../../StatusIcon/StatusIcon'
 import { RootState } from '../../../store'
-import { setCollection, setReorderPending } from '../../../reducers/singleCollectionSlice'
+import {
+  editCollectionDetails,
+  setCollectionStatus,
+  setReorderPending,
+} from '../../../reducers/collectionsSlice'
 import { setLoaderProgress } from '../../../reducers/uiStateSlice'
+import { getCurrentCollection } from '../../../reducers/collectionsSelectors'
 
 const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   setConfirmationDialogOpen,
@@ -35,8 +40,8 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
-  const collection = useSelector((state: RootState) => state.singleCollection.collection)
-  const reorderPending = useSelector((state: RootState) => state.singleCollection.reorderPending)
+  const collection = useSelector(getCurrentCollection())
+  const reorderPending = useSelector((state: RootState) => state.collections.reorderPending)
 
   const {
     register: registerSettings,
@@ -44,7 +49,6 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
     watch: watchSettings,
     errors: errorsSettings,
     getValues: getValuesSettings,
-    setValue: setValueSettings,
     control: controlSettings,
   } = useForm({
     defaultValues: {
@@ -56,15 +60,6 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
       maxSelectGoal: collection?.maxSelect.goal,
     },
   })
-
-  useEffect(() => {
-    setValueSettings('title', collection?.title)
-    setValueSettings('allowComments', collection?.allowComments)
-    setValueSettings('maxSelectRequired', collection?.maxSelect.required)
-    setValueSettings('minSelectRequired', collection?.minSelect.required)
-    setValueSettings('minSelectGoal', collection?.minSelect.goal)
-    setValueSettings('maxSelectGoal', collection?.maxSelect.goal)
-  }, [collection, setValueSettings])
 
   if (!collection) return null
 
@@ -93,7 +88,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
     try {
       await changeCollectionStatus(collection.id, status)
 
-      dispatch(setCollection({ ...collection, status }))
+      dispatch(setCollectionStatus(status))
 
       resetDialog()
     } catch (err) {
@@ -127,8 +122,7 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
       }
 
       dispatch(
-        setCollection({
-          ...collection,
+        editCollectionDetails({
           title: data.title,
           minSelect: {
             required: data.minSelectRequired,
@@ -206,7 +200,6 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
               label="Title"
               id="title"
               name="title"
-              defaultValue={collection.title}
               variant="outlined"
               classes={{ root: styles.titleTextarea }}
               margin="dense"
@@ -227,7 +220,6 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
           Client URL:
           <Tooltip title={copied ? 'copied!' : 'copy'}>
             <Button onClick={copyUrl}>
-              {/* //TODO make subfolder Context or .env */}
               {`${window.location.origin.toString()}/photoproof/collection/${collection.id}`}
             </Button>
           </Tooltip>
@@ -339,7 +331,6 @@ const CollectionDetails: React.FC<CollectionDetailsProps> = ({
             <div style={{ display: maxToggle ? 'inline' : 'none' }}>
               <TextField
                 name="maxSelectGoal"
-                label="maxSelectGoal"
                 type="number"
                 variant="outlined"
                 size="small"

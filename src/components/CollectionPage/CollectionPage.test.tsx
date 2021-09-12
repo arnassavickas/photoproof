@@ -12,12 +12,16 @@ jest.mock('../../firebase')
 const getSingleCollection = jest.spyOn(firebase, 'getSingleCollection')
 
 describe('<CollectionPage/>', () => {
-  let mockStore = { singleCollection: { collection, filteredPhotos } }
+  let mockStore = {
+    collections: { collectionsList: [collection], currentId: collection.id, filteredPhotos },
+  }
 
   beforeEach(() => {
     getSingleCollection.mockResolvedValue(collection)
 
-    mockStore = { singleCollection: { collection, filteredPhotos } }
+    mockStore = {
+      collections: { collectionsList: [collection], currentId: '', filteredPhotos },
+    }
   })
 
   test('getSingleCollection is called with correct id', async () => {
@@ -57,9 +61,9 @@ describe('<CollectionPage/>', () => {
   test('correct details are rendered (min: no, max: yes)', async () => {
     mockStore = {
       ...mockStore,
-      singleCollection: {
-        filteredPhotos,
-        collection: { ...collection, minSelect: { required: false, goal: 0 } },
+      collections: {
+        ...mockStore.collections,
+        collectionsList: [{ ...collection, minSelect: { required: false, goal: 0 } }],
       },
     }
 
@@ -81,13 +85,15 @@ describe('<CollectionPage/>', () => {
   test('correct details are rendered (min: yes, max: no)', async () => {
     mockStore = {
       ...mockStore,
-      singleCollection: {
-        filteredPhotos,
-        collection: {
-          ...collection,
-          minSelect: { required: true, goal: 1 },
-          maxSelect: { required: false, goal: 0 },
-        },
+      collections: {
+        ...mockStore.collections,
+        collectionsList: [
+          {
+            ...collection,
+            minSelect: { required: true, goal: 1 },
+            maxSelect: { required: false, goal: 0 },
+          },
+        ],
       },
     }
 

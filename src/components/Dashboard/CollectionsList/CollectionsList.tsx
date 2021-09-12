@@ -15,7 +15,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSnackbar } from 'notistack'
 
-import { Collection, Photo, UiState } from '../../../types'
+import { Photo, UiState } from '../../../types'
 import { getCollections, deleteCollection } from '../../../firebase'
 import styles from './styles.module.scss'
 
@@ -23,8 +23,11 @@ import ConfirmationDialog from '../../ConfirmationDialog/ConfirmationDialog'
 import StatusIcon from '../../StatusIcon/StatusIcon'
 import { RootState } from '../../../store'
 import { setLoaderProgress, setUiState } from '../../../reducers/uiStateSlice'
-import { deleteCollectionState, setCollectionsList } from '../../../reducers/collectionsListSlice'
-import { setCollection } from '../../../reducers/singleCollectionSlice'
+import {
+  setCollectionsList,
+  deleteCollectionState,
+  setCurrentId,
+} from '../../../reducers/collectionsSlice'
 
 const CollectionList: React.FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -36,23 +39,26 @@ const CollectionList: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
-  const collectionsList = useSelector((state: RootState) => state.collectionsList.collections)
+  const collectionsList = useSelector((state: RootState) => state.collections.collectionsList)
+  const listFetchPending = useSelector((state: RootState) => state.collections.listFetchPending)
 
   useEffect(() => {
-    dispatch(setUiState(UiState.Pending))
+    if (listFetchPending) {
+      dispatch(setUiState(UiState.Pending))
 
-    getCollections()
-      .then(collections => {
-        dispatch(setCollectionsList(collections))
-        dispatch(setUiState(UiState.Success))
-      })
-      .catch(() => {
-        enqueueSnackbar('ERROR: Getting collections failed. Please refresh the page', {
-          variant: 'error',
-          persist: true,
+      getCollections()
+        .then(collections => {
+          dispatch(setCollectionsList(collections))
+          dispatch(setUiState(UiState.Success))
         })
-      })
-  }, [dispatch, enqueueSnackbar])
+        .catch(() => {
+          enqueueSnackbar('ERROR: Getting collections failed. Please refresh the page', {
+            variant: 'error',
+            persist: true,
+          })
+        })
+    }
+  }, [dispatch, enqueueSnackbar, listFetchPending])
 
   if (!collectionsList) return null
 
@@ -77,9 +83,9 @@ const CollectionList: React.FC = () => {
     }
   }
 
-  const handleRowClick = (collection: Collection) => {
-    dispatch(setCollection(collection))
-    history.push(`edit/${collection.id}`)
+  const handleRowClick = (collectionId: string) => {
+    dispatch(setCurrentId(collectionId))
+    history.push(`edit/${collectionId}`)
   }
 
   const handleDeleteClick = (collectionId: string) => (event: MouseEvent<HTMLButtonElement>) => {
@@ -110,7 +116,7 @@ const CollectionList: React.FC = () => {
           <TableBody>
             {collectionsList?.map(collection => {
               return (
-                <TableRow key={collection.id} hover onClick={() => handleRowClick(collection)}>
+                <TableRow key={collection.id} hover onClick={() => handleRowClick(collection.id)}>
                   <TableCell>
                     {collection.photos[0] ? (
                       <picture>

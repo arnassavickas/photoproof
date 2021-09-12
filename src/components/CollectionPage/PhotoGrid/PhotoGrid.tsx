@@ -14,15 +14,15 @@ import { useSnackbar } from 'notistack'
 import { updatePhotoSelection } from '../../../firebase'
 import { PhotoGridProps } from '../../../types'
 import styles from './styles.module.scss'
-import { RootState } from '../../../store'
-import { setCollection } from '../../../reducers/singleCollectionSlice'
+import { setPhotoSelection } from '../../../reducers/collectionsSlice'
+import { getCurrentCollection, getFilteredPhotos } from '../../../reducers/collectionsSelectors'
 
 const PhotoGrid: React.FC<PhotoGridProps> = ({ openLightbox, openCommentModal }) => {
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch = useDispatch()
-  const filteredPhotos = useSelector((state: RootState) => state.singleCollection.filteredPhotos)
-  const collection = useSelector((state: RootState) => state.singleCollection.collection)
+  const filteredPhotos = useSelector(getFilteredPhotos())
+  const collection = useSelector(getCurrentCollection())
 
   if (!collection) return null
 
@@ -33,14 +33,7 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({ openLightbox, openCommentModal })
       if (clickedPhoto) {
         await updatePhotoSelection(collection.id, photoId, !clickedPhoto.selected)
 
-        dispatch(
-          setCollection({
-            ...collection,
-            photos: collection.photos.map(photo =>
-              photo.id === photoId ? { ...photo, selected: !clickedPhoto.selected } : photo,
-            ),
-          }),
-        )
+        dispatch(setPhotoSelection(clickedPhoto.id))
       }
     } catch (err) {
       enqueueSnackbar('ERROR: Photo selection failed', {

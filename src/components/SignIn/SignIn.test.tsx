@@ -8,8 +8,18 @@ import SignIn from './SignIn'
 import { auth } from '../../firebase'
 
 describe('<SignIn/>', () => {
+  const signInWithEmailAndPassword = jest.spyOn(auth, 'signInWithEmailAndPassword')
+
   beforeEach(() => {
-    // jest.spyOn(console, 'error').mockImplementation(noop)
+    signInWithEmailAndPassword.mockImplementation((email, password) => {
+      if (email === 'correct' && password === 'correct') {
+        return Promise.resolve(null as unknown as firebase.auth.UserCredential)
+      }
+      const error = new Error('incorrect credentials')
+      // @ts-ignore adds special firestore modifier
+      error.code = 'auth/wrong-password'
+      throw error
+    })
   })
 
   test('has no violations', async () => {
@@ -32,9 +42,9 @@ describe('<SignIn/>', () => {
   })
 
   test('displays errors', async () => {
-    const { container } = render(<SignIn />)
+    render(<SignIn />)
 
-    expect(container).not.toHaveTextContent('Email is required')
+    expect(screen.queryByText('Email is required')).not.toBeInTheDocument()
 
     user.click(
       screen.getByRole('button', {
@@ -47,18 +57,6 @@ describe('<SignIn/>', () => {
   })
 
   test('login fails with wrong credentials', async () => {
-    // TODO find more elegant way to mock
-    const mockHandler = jest.fn((email, password) => {
-      if (email === 'correct' && password === 'correct') {
-        return Promise.resolve(null as unknown as firebase.auth.UserCredential)
-      }
-      const error = new Error('incorrect credentials')
-      // @ts-ignore adds special firestore modifier
-      error.code = 'auth/wrong-password'
-      throw error
-    })
-    auth.signInWithEmailAndPassword = mockHandler
-
     render(<SignIn />)
     const email = screen.getByLabelText(/email/i)
     user.paste(email, 'incorrect')
@@ -73,20 +71,10 @@ describe('<SignIn/>', () => {
     )
 
     expect(await screen.findByText('Email or password is incorrect')).toBeInTheDocument()
-    expect(mockHandler.mock.calls).toHaveLength(1)
-    mockHandler.mockRestore()
+    expect(signInWithEmailAndPassword).toHaveBeenCalledTimes(1)
   })
 
   test('login works with correct implementation', async () => {
-    const mockHandler = jest.fn((email, password) => {
-      if (email === 'correct' && password === 'correct') {
-        return Promise.resolve(null as unknown as firebase.auth.UserCredential)
-      }
-      throw new Error('incorrect credentials')
-    })
-
-    auth.signInWithEmailAndPassword = mockHandler
-
     render(<SignIn />)
 
     const email = screen.getByLabelText(/email/i)
@@ -102,10 +90,8 @@ describe('<SignIn/>', () => {
     )
 
     await waitFor(() => {
-      expect(mockHandler.mock.calls).toHaveLength(1)
+      expect(signInWithEmailAndPassword).toHaveBeenCalledTimes(1)
     })
     expect(screen.queryByText('Email or password is incorrect')).not.toBeInTheDocument()
-
-    mockHandler.mockRestore()
   })
 })
